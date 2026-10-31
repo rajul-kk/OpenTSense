@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "opentsense"
+version = "0.0.1"
+description = "Open testbed for per-die power and temperature sensing in 2.5D/3D chip stacks"
+requires-python = ">=3.10"
+dependencies = ["numpy", "scipy", "pyyaml"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+include = ["opentsense*"]

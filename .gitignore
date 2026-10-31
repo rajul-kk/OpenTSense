@@ -1,0 +1,10 @@
+__pycache__/
+*.egg-info/
+.venv/
+.pytest_cache/
+# large tool outputs stay out of git
+gates/*/runs/
+gates/*/out/
+*.vcd
+*.odb
+*.flp

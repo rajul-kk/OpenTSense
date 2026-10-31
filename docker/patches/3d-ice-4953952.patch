@@ -1,0 +1,37 @@
+Build fixes for 3D-ICE 4.0 (commit 4953952) with SuperLU_MT 4.0 on a current GCC.
+Same changes as the exploratory WSL build (int LU index for SuperLU_MT; drop -Werror).
+--- a/include/types.h
++++ b/include/types.h
+@@ -215,7 +215,7 @@ extern "C"
+     /*! Definition of the type LUIndex_t
+      *
+      * For LU factorization */
+-    typedef long LUIndex_t ;
++    typedef int LUIndex_t ;
+ 
+ 
+ /******************************************************************************/
+--- a/makefile.def
++++ b/makefile.def
+@@ -179,8 +179,8 @@ DOXYGEN   = doxygen
+ DOXYFILE  = Doxyfile
+ 
+ CXX       = g++
+-CXXFLAGS  = -std=c++11 -O2 -Wall -Wextra -Werror -fopenmp
+-#CXXFLAGS  = -std=c++11 -g -O0 -fsanitize=address -Wall -Wextra -Werror -fopenmp
++CXXFLAGS  = -std=c++11 -O2 -Wall -Wextra  -fopenmp
++#CXXFLAGS  = -std=c++11 -g -O0 -fsanitize=address -Wall -Wextra  -fopenmp
+ 
+ INC_DIRS  = $(CINCLUDES) -I$(SYSTEMC_INCLUDE)
+ 
+--- a/sources/Makefile
++++ b/sources/Makefile
+@@ -42,7 +42,7 @@ include $(3DICE_MAIN)/makefile.def
+ 
+ CINCLUDES := $(CINCLUDES) -I$(SLU_INCLUDE)
+ 
+-CFLAGS := $(CFLAGS) -Wall -Wextra -Werror
++CFLAGS := $(CFLAGS) -Wall -Wextra
+ #CFLAGS := $(CFLAGS) -DPRINT_SYSTEM_MATRIX
+ #CFLAGS := $(CFLAGS) -DPRINT_SYSTEM_VECTOR
+ 

@@ -1,0 +1,26 @@
+Compatibility fixes for PACT (commit bb7f05a) with numpy >= 2 and pandas >= 2. No change to PACT's model.
+Same changes as exploratory gate G47, without its debug prints.
+--- a/src/GridManager.py
++++ b/src/GridManager.py
+@@ -459,7 +459,7 @@
+             conditions = [mask >= 0.9]
+             choice = [label]
+             self.g2bmap[topY:bottomY+1, leftX:rightX +
+-                        1] = np.select(conditions, choice)
++                        1] = np.select(conditions, choice, default='0')   # numpy>=2 compat: old default 0 was cast to '0'
+ 
+             mask_I = np.ones(
+                 (self.I.shape[0], bottomY - topY + 1, rightX - leftX + 1))
+--- a/src/PACT.py
++++ b/src/PACT.py
+@@ -1,3 +1,10 @@
++import pandas as _pd
++if not hasattr(_pd.DataFrame, 'append'):   # compatibility shim for pandas >= 2 (no change to PACT logic)
++    def _df_append(self, other, ignore_index=False, sort=False):
++        other = other if isinstance(other, (_pd.DataFrame, _pd.Series)) else _pd.DataFrame(other)
++        if isinstance(other, _pd.Series): other = other.to_frame().T
++        return _pd.concat([self, other], ignore_index=ignore_index, sort=sort)
++    _pd.DataFrame.append = _df_append
+ import sys
+ import argparse
+ import os

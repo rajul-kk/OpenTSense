@@ -1,0 +1,14 @@
+# Single flip-chip die under a copper spreader. size_um is overridden by the design's die area when a run supplies one.
+name: single_die
+size_um: [1000, 1000]
+grid: [16, 16]
+ambient_K: 300
+heat_sink: {htc: 5.0e4}
+materials:
+  silicon: {k: 130, cv: 1.63566e6}
+  tim: {k: 4.0, cv: 2.0e6}
+  copper: {k: 400, cv: 3.45e6}
+layers:
+  - {name: spreader, material: copper, thickness_um: 500}
+  - {name: tim, material: tim, thickness_um: 25}
+  - {name: die0, die: true, material: silicon, thickness_um: 50, source_um: 2}
