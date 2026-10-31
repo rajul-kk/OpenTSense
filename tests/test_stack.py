@@ -21,3 +21,19 @@ def test_writers(tmp_path):
     rows = open(lcf).read().splitlines()[1:]
     assert len(rows) == len(s.layers) + 1          # each die is split into source + bulk
     assert src == {"die0": 0}                       # bottom-up: the die's source is PACT layer 0
+
+
+def test_sublayers_and_source_side(tmp_path):
+    s = model.load(CFG)
+    s.layers[0].n_sub = 4                            # spreader
+    s.layers[2].n_sub = 3                            # die0 bulk
+    s.layers[2].source_side = "top"
+    P = np.full(s.grid[::-1], 1e-3)
+    stk = open(to_3dice.write(s, {"die0": P}, tmp_path / "ice")).read()
+    assert stk.count("layer S_spreader_") == 4
+    die = stk.split("die D_die0 :")[1].split("stack:")[0].split(";")
+    assert "source" in die[0] and all("layer" in d for d in die[1:4])   # top source first, then 3 bulk layers
+    (lcf, _, _), src = to_pact.write(s, {"die0": P}, tmp_path / "pact")
+    rows = open(lcf).read().splitlines()[1:]
+    assert len(rows) == 4 + 1 + 4                    # 4 spreader + 1 tim + (3 bulk + 1 source)
+    assert src == {"die0": 3}                        # bottom-up: 3 bulk layers, then the source

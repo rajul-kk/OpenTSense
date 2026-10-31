@@ -1,0 +1,19 @@
+# G71 stack 3: 2.5D, two flip-chip chiplets (2 x 2 mm, 0.2 mm apart) on micro-bumps and a 100 um silicon interposer.
+# 3D-ICE can't vary the material inside a layer, so the chiplet layer is silicon across the whole footprint
+# (monolithic approximation); power and dark power sit only inside the chiplet regions.
+name: g71_25d
+size_um: [4400, 3000]
+grid: [88, 60]
+ambient_K: 300
+heat_sink: {htc: 5.0e4}
+materials:
+  silicon: {k: 130, cv: 1.63566e6}
+  tim: {k: 4.0, cv: 2.0e6}
+  copper: {k: 400, cv: 3.45e6}
+  bond: {k: 1.5, cv: 2.0e6}
+layers:
+  - {name: spreader, material: copper, thickness_um: 500, n_sub: 10}
+  - {name: tim, material: tim, thickness_um: 25, n_sub: 3}
+  - {name: chiplets, die: true, material: silicon, thickness_um: 50, source_um: 2, n_sub: 6}
+  - {name: ubump, material: bond, thickness_um: 20, n_sub: 3}
+  - {name: interposer, material: silicon, thickness_um: 100, n_sub: 8}

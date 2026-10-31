@@ -14,6 +14,10 @@ Units in the YAML are SI except lengths, which are in micrometres. Example:
       - {name: spreader, material: copper, thickness_um: 500}
       - {name: tim, material: tim, thickness_um: 25}
       - {name: die0, die: true, material: silicon, thickness_um: 50, source_um: 2}
+
+Optional per layer: n_sub (split the layer, or a die's bulk, into n_sub equal sublayers; both solvers use one
+node per sublayer, so thick layers need splitting for hotspots to converge) and, for dies, source_side
+(bottom, the default, or top).
 """
 from dataclasses import dataclass, field
 
@@ -32,7 +36,13 @@ class Layer:
     material: str
     thickness_um: float
     die: bool = False
-    source_um: float = 0.0  # active (source) sub-layer at the bottom of a die; counted inside thickness_um
+    source_um: float = 0.0  # active (source) sub-layer of a die; counted inside thickness_um
+    source_side: str = "bottom"  # which face of the die the source sits on
+    n_sub: int = 1  # sublayers for the layer (for a die: for its bulk; the source stays one layer)
+
+    @property
+    def bulk_um(self):
+        return self.thickness_um - self.source_um
 
 
 @dataclass
@@ -55,8 +65,10 @@ class Stack:
         for l in self.layers:
             assert l.material in self.materials, f"layer {l.name}: unknown material {l.material}"
             assert l.thickness_um > 0, f"layer {l.name}: thickness must be > 0"
+            assert l.n_sub >= 1, f"layer {l.name}: n_sub must be >= 1"
             if l.die:
                 assert 0 < l.source_um < l.thickness_um, f"die {l.name}: need 0 < source_um < thickness_um"
+                assert l.source_side in ("bottom", "top"), f"die {l.name}: source_side must be bottom or top"
         names = [l.name for l in self.layers]
         assert len(set(names)) == len(names), "layer names must be unique"
         return self

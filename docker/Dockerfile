@@ -23,11 +23,16 @@ RUN apt-get update -qq && apt-get install -y -qq --no-install-recommends ca-cert
 # 3D-ICE 4.0 at a fixed commit. SuperLU_MT comes from its own repo at a fixed commit (its prototype fixes are needed
 # under GCC 15; the 4.0.0 zip shipped with 3D-ICE does not compile), built with the exploratory WSL make.inc
 # (C99, OpenBLAS). It sits where 3D-ICE's makefile.def expects superlu_mt-4.0.0.
+# SuperLU_MT allocates its L and U storage once, as a multiple of nnz(A) set in sp_ienv.c, and can't grow it. The
+# default (50x, 30x for L subscripts) is too small for finely layered stacks (G71), so it is raised to 400x / 250x.
+# Linux only commits pages that are touched, so small problems use no more memory than before.
 COPY docker/patches/3d-ice-4953952.patch docker/patches/superlu_mt-4.0.0.make.inc /tmp/
 RUN git clone -q https://github.com/esl-epfl/3d-ice.git /opt/3d-ice && cd /opt/3d-ice && \
     git checkout -q "${ICE_COMMIT}" && patch -p1 < /tmp/3d-ice-4953952.patch && \
     git clone -q https://github.com/xiaoyeli/superlu_mt.git superlu_mt-4.0.0 && \
     git -C superlu_mt-4.0.0 checkout -q "${SLU_COMMIT}" && cp /tmp/superlu_mt-4.0.0.make.inc superlu_mt-4.0.0/make.inc && mkdir -p superlu_mt-4.0.0/lib && \
+    sed -i 's/case 6: return (-50);/case 6: return (-400);/; s/case 7: return (-50);/case 7: return (-400);/; s/case 8: return (-30);/case 8: return (-250);/' superlu_mt-4.0.0/SRC/sp_ienv.c && \
+    grep -q 'case 7: return (-400);' superlu_mt-4.0.0/SRC/sp_ienv.c && \
     { make -C superlu_mt-4.0.0 superlulib > /tmp/slu.log 2>&1 || { tail -40 /tmp/slu.log; exit 1; }; } && \
     { make -j"$(nproc)" > /tmp/ice.log 2>&1 || { tail -60 /tmp/ice.log; exit 1; }; } && \
     git rev-parse HEAD > COMMIT && test -x bin/3D-ICE-Emulator

@@ -31,18 +31,22 @@ def write(stack, power, workdir):
         s += [f"material {m} :", f"   thermal conductivity {v.k * 1e-6:.6e} ;", f"   volumetric heat capacity {v.cv * 1e-18:.6e} ;"]
     s += ["top heat sink :", f"   heat transfer coefficient {stack.htc * 1e-12:.6e} ;", f"   temperature {stack.ambient_K:.3f} ;"]
     s += ["dimensions :", f"  chip length {L:.6f} , width {W:.6f} ;", f"  cell length {cx:.6f} , width {cy:.6f} ;"]
+    # 3D-ICE's grammar wants every layer definition before the first die definition
     for l in stack.layers:
-        if l.die:
-            s += [f"die D_{l.name} :", f"   layer {l.thickness_um - l.source_um:.6f} {l.material} ;", f"   source {l.source_um:.6f} {l.material} ;"]
-        else:
-            s += [f"layer L_{l.name} :", f"   height {l.thickness_um:.6f} ;", f"   material {l.material} ;"]
+        if not l.die:
+            s += [f"layer L_{l.name} :", f"   height {l.thickness_um / l.n_sub:.6f} ;", f"   material {l.material} ;"]
+    for l in stack.dies:
+        # within a die, 3D-ICE lists layers top first, like the stack
+        bulk = [f"   layer {l.bulk_um / l.n_sub:.6f} {l.material} ;"] * l.n_sub
+        src = [f"   source {l.source_um:.6f} {l.material} ;"]
+        s += [f"die D_{l.name} :"] + (bulk + src if l.source_side == "bottom" else src + bulk)
     s += ["stack:"]
     for l in stack.layers:
         if l.die:
             write_flp(os.path.join(workdir, f"{l.name}.flp"), power[l.name], cx, cy)
             s += [f'   die S_{l.name} D_{l.name} floorplan "{l.name}.flp" ;']
         else:
-            s += [f"   layer S_{l.name} L_{l.name} ;"]
+            s += [f"   layer S_{l.name}_{k} L_{l.name} ;" for k in range(l.n_sub)]
     s += ["solver:", "  steady ;", f"  initial temperature {stack.ambient_K:.3f} ;", "output:"]
     s += [f'  Tmap ( S_{d.name}, "tmap_{d.name}.txt", final ) ;' for d in stack.dies]
     path = os.path.join(workdir, "stack.stk")

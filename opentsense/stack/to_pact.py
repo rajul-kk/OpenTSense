@@ -88,10 +88,14 @@ def write(stack, power, workdir):
     for m in stack.materials:
         model += f"\n[{lab[m]}]\nlibrary_name = Solid\nlibrary = Solid.py\ntransient = False\nvirtual_node = bottom_center\nmode = single\n"
     model += "\n[Solid]\nproperties = thermalresistivity ((m-k)/w), specificheatcapacity (j/m^3k)\n"
-    # bottom-up: each die is (source, bulk) from the bottom, since its source sits at its lower face
+    # bottom-up: a die with its source on the bottom face is (source, bulk...), one with it on top is (bulk..., source)
     rows, src_index, li = ["Layer,FloorplanFile,Thickness (m),PtraceFile,LateralHeatFlow"], {}, 0
     for l in reversed(stack.layers):
-        parts = [("src", l.source_um), ("bulk", l.thickness_um - l.source_um)] if l.die else [("", l.thickness_um)]
+        if l.die:
+            bulk = [("bulk", l.bulk_um / l.n_sub)] * l.n_sub
+            parts = [("src", l.source_um)] + bulk if l.source_side == "bottom" else bulk + [("src", l.source_um)]
+        else:
+            parts = [("", l.thickness_um / l.n_sub)] * l.n_sub
         for kind, th in parts:
             fl = os.path.join(workdir, f"L{li}_flp.csv")
             if kind == "src":

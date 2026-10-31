@@ -33,12 +33,15 @@ def read_pact(path, nx, ny):
     return np.loadtxt(path, delimiter=",", ndmin=2)[:, -1].reshape(ny, nx)[::-1]
 
 
-def run_pact(stack, power, workdir, timeout=7200):
+def run_pact(stack, power, workdir, timeout=7200, capture=False, return_src=False):
+    """capture=True also saves PACT's matrix and right-hand side as <workdir>/pact.A.npz and pact.b.npy."""
     (lcf, cfg, model), src = to_pact.write(stack, power, workdir)
     grid = os.path.join(os.path.abspath(workdir), "grid.steady")
-    r = subprocess.run([sys.executable, "PACT.py", os.path.abspath(lcf), os.path.abspath(cfg), os.path.abspath(model), "--gridSteadyFile", grid],
+    pre = [os.path.join(os.path.dirname(__file__), "pact_capture.py"), os.path.join(os.path.abspath(workdir), "pact")] if capture else ["PACT.py"]
+    r = subprocess.run([sys.executable] + pre + [os.path.abspath(lcf), os.path.abspath(cfg), os.path.abspath(model), "--gridSteadyFile", grid],
                        cwd=PACT_SRC, capture_output=True, text=True, timeout=timeout)
     if r.returncode:
         raise RuntimeError("PACT failed:\n" + r.stdout[-1500:] + r.stderr[-1500:])
     nx, ny = stack.grid
-    return {d: read_pact(f"{grid}.layer{li}", nx, ny) for d, li in src.items()}
+    maps = {d: read_pact(f"{grid}.layer{li}", nx, ny) for d, li in src.items()}
+    return (maps, src) if return_src else maps
