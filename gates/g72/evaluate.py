@@ -73,7 +73,7 @@ def main(run, build):
         "a_checksums": exp_ok and tpu_ok,
         "b_annotation": min(anns) >= BAR["annotation"],
         "c_density": abs(ib_dens / BAR["ibex_density"] - 1) <= BAR["density_rel"] and abs(tp_dens / BAR["tpu_density"] - 1) <= BAR["density_rel"],
-        "d_tiles": max(tiles) <= BAR["tile_rel"],
+        "d_tiles": bool(max(tiles) <= BAR["tile_rel"]),
     }
     out["summary"] = {"ibex_compute_density": ib_dens, "ibex_density_rel": ib_dens / BAR["ibex_density"] - 1,
                       "tpu_W1_density": tp_dens, "tpu_density_rel": tp_dens / BAR["tpu_density"] - 1,
