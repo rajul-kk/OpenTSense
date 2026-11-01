@@ -25,6 +25,14 @@ def read_power(path):
     return inst, (float(m.group(4)) if m else None)
 
 
+def read_annotation(path):
+    """(annotated, unannotated) pin counts from OpenSTA's report_activity_annotation, or None without a VCD."""
+    txt = open(path, errors="replace").read()
+    a = re.search(r"Annotated (\d+) pin", txt)
+    u = re.search(r"unannotated\s+(\d+)", txt)
+    return (int(a.group(1)), int(u.group(1))) if a and u else None
+
+
 def tile_map(inst, box, pos, grid, col=3):
     """Sum column `col` of each instance into a (ny, nx) map; row i = y index from the die's lower edge.
     Instances without a location (hierarchical modules, whose children are listed and placed) are skipped and counted."""
