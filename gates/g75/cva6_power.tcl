@@ -2,7 +2,7 @@
 set L /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM
 source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
 foreach vt {RVT LVT SLVT} {
-  foreach f [glob $L/asap7sc7p5t_{AO,INVBUF,OA,SIMPLE}_${vt}_FF_nldm_2*.lib.gz $L/asap7sc7p5t_SEQ_${vt}_FF_nldm_2*.lib] { read_liberty $f }
+  foreach f [list AO_${vt}_FF_nldm_211120.lib.gz INVBUF_${vt}_FF_nldm_220122.lib.gz OA_${vt}_FF_nldm_211120.lib.gz SIMPLE_${vt}_FF_nldm_211120.lib.gz SEQ_${vt}_FF_nldm_220123.lib] { read_liberty $L/asap7sc7p5t_$f }
 }
 foreach m {64x256 128x64 64x28 64x25} { read_liberty $L/fakeram7_$m.lib }
 read_db -hier $::env(RES)/6_final.odb

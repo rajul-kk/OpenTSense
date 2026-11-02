@@ -1,0 +1,166 @@
+{
+ "ihp": {
+  "ratio": 1.7324278631847083,
+  "band": [
+   1.558,
+   1.904
+  ],
+  "ok": true,
+  "recorded": 1.7314,
+  "annotation": 0.9999220734691333,
+  "max_tile_rel": 2.150154281855207e-05,
+  "tiles": {
+   "k0": {
+    "rel_l2": 0.9546310937351975,
+    "pattern_rel_l2": 0.49334582133501786,
+    "worst_tile_ratio": 708.3937143387483,
+    "median_tile_ratio": 1.586706749272672
+   },
+   "k1": {
+    "rel_l2": 0.8852599626685486,
+    "pattern_rel_l2": 0.46601598486332557,
+    "worst_tile_ratio": 921.5569292243111,
+    "median_tile_ratio": 1.538657438259083
+   },
+   "k2": {
+    "rel_l2": 0.8971953528039068,
+    "pattern_rel_l2": 0.4850310345031101,
+    "worst_tile_ratio": 795.7573609325975,
+    "median_tile_ratio": 1.5282575134791583
+   },
+   "k3": {
+    "rel_l2": 0.9750248582165358,
+    "pattern_rel_l2": 0.5119272527179706,
+    "worst_tile_ratio": 9281.533655008892,
+    "median_tile_ratio": 1.5986761679188408
+   },
+   "k4": {
+    "rel_l2": 2.0929171168385605,
+    "pattern_rel_l2": 0.7645335217719224,
+    "worst_tile_ratio": 9281.533655008892,
+    "median_tile_ratio": 514.584653890299
+   }
+  }
+ },
+ "cva6": {
+  "ok": null,
+  "note": "COULD NOT RUN: windows missing",
+  "have": []
+ },
+ "asap7_ibex": {
+  "ratio_to_mean_real": 3.019416207468171,
+  "corner": "TT",
+  "tiles": {
+   "k0": {
+    "rel_l2": 2.5301579737485667,
+    "pattern_rel_l2": 0.7813096584900877,
+    "worst_tile_ratio": 903.7084511150699,
+    "median_tile_ratio": 2.988805072150045
+   },
+   "k1": {
+    "rel_l2": 2.307502875963118,
+    "pattern_rel_l2": 0.729660478210232,
+    "worst_tile_ratio": 901.7696178262081,
+    "median_tile_ratio": 2.7248150882882882
+   },
+   "k2": {
+    "rel_l2": 2.391241499277252,
+    "pattern_rel_l2": 0.7771081988729487,
+    "worst_tile_ratio": 901.3319360586788,
+    "median_tile_ratio": 2.6964554047640856
+   },
+   "k3": {
+    "rel_l2": 2.535237764838438,
+    "pattern_rel_l2": 0.7880700541362344,
+    "worst_tile_ratio": 10914.977929573753,
+    "median_tile_ratio": 3.087768785738605
+   }
+  }
+ },
+ "asap7_tpu": {
+  "ratio_to_mean_real": 1.627616214396136,
+  "corner": "TT",
+  "tiles": {
+   "W1": {
+    "rel_l2": 0.6920038198315283,
+    "pattern_rel_l2": 0.4156176296997261,
+    "worst_tile_ratio": 7.58683001282409,
+    "median_tile_ratio": 1.327925843939992
+   },
+   "W2": {
+    "rel_l2": 0.8290073457024253,
+    "pattern_rel_l2": 0.45493631608775403,
+    "worst_tile_ratio": 20.585750205520284,
+    "median_tile_ratio": 1.6546846675496825
+   }
+  }
+ },
+ "shortcut2": {
+  "status": "COULD NOT RUN",
+  "reason": "SPICE models are outside the working folder and not in the image; library half only",
+  "library_values_unchanged": true,
+  "recorded_range": [
+   0.893,
+   4.233
+  ]
+ },
+ "shortcut3": {
+  "0": {
+   "uncoupled_rise_K": {
+    "bot": 50.45999999999998,
+    "top": 61.589999999999975
+   },
+   "coupled_rise_K": {
+    "bot": 51.27999999999997,
+    "top": 62.89999999999998
+   },
+   "peak_shift_K": 1.3100000000000023,
+   "iters": 3,
+   "leak_ratio": 6.093516990642589,
+   "wall_s": 154.74413061141968
+  },
+  "1": {
+   "uncoupled_rise_K": {
+    "bot": 52.579999999999984,
+    "top": 64.44999999999999
+   },
+   "coupled_rise_K": {
+    "bot": 53.55000000000001,
+    "top": 65.98000000000002
+   },
+   "peak_shift_K": 1.5300000000000296,
+   "iters": 3,
+   "leak_ratio": 6.694139559292852,
+   "wall_s": 158.06566786766052
+  },
+  "2": {
+   "uncoupled_rise_K": {
+    "bot": 52.22000000000003,
+    "top": 62.94
+   },
+   "coupled_rise_K": {
+    "bot": 53.14999999999998,
+    "top": 64.37
+   },
+   "peak_shift_K": 1.4300000000000068,
+   "iters": 3,
+   "leak_ratio": 6.517091536865839,
+   "wall_s": 160.1494472026825
+  },
+  "3": {
+   "uncoupled_rise_K": {
+    "bot": 52.879999999999995,
+    "top": 64.33999999999997
+   },
+   "coupled_rise_K": {
+    "bot": 53.860000000000014,
+    "top": 65.87
+   },
+   "peak_shift_K": 1.5300000000000296,
+   "iters": 3,
+   "leak_ratio": 6.7221460373259685,
+   "wall_s": 159.84836411476135
+  }
+ },
+ "verdict": "INCONCLUSIVE"
+}
