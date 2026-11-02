@@ -27,3 +27,13 @@
 - **Shortcut (2) cannot be fully re-run within the current working boundary.** G53's SPICE needs the IHP device models, which are only in the WSL home folder (outside `D:\Work\FYP-search`, the only place this work may touch), and the testbed image has ngspice but no OSDI models, contrary to `plan.md`. The ASAP7 cell decks are also in WSL. Only the library half is re-read from the pinned image. **So (2) is COULD NOT RUN, and it cannot support a PASS.** If everything else holds, the gate's verdict is INCONCLUSIVE, recorded in `failures.md`, and it is not to be re-scored against the old SPICE numbers.
 - **Shortcut (3)** runs on the clean G71 3D stack in PACT, seeds 0 to 3: per-cell leakage shares 0.4% (TPU) and 0.035% (CPU) at 25 °C, G41's curves without the 125 °C row, iterated until the peak moves < 0.02 K (PACT writes 0.01 K). The peak shift is recorded; there is no bar.
 - **Host memory.** cva6 runs alone, last, in a container capped at 10 GB. An out-of-memory kill of a cva6 window makes (1) COULD NOT RUN for cva6, not a fail.
+
+## Amendment 2 (2 Nov 2026, before the formal re-run of (2) and the cva6 re-run)
+- **Image.** The remaining parts run in `opentsense:g75spice`, which adds SPICE device models (see `gates.md`). Tool binaries and Python packages equal `g71dev`, so the finished IHP and stack parts of run `main` stand and are not repeated.
+- **Shortcut (2) is now runnable, reversing Amendment 1's COULD NOT RUN.** `opentsense/power/leak.py ihp` re-solves G53's 8 cell states. The pinned library values are re-read from the ORFS image.
+- **IHP model commit.** G53 did not record its IHP-Open-PDK commit. This run uses the commit in `docker/versions.env`.
+- **"Within 10%" for (2)** means both ends of library ÷ SPICE at 25 °C are within 10% of G53's 0.893 and 4.233, every case solves, and every library value is unchanged.
+- **Temperatures.** IHP ships one 1.2 V library, at 25 °C. The bar is at 25 °C; library(25 °C) ÷ SPICE at 75 and 100 °C is recorded with no bar.
+- **Earlier unregistered check.** `spice_check/` was run before this amendment and already showed a match, so (2) is not blind. It is a reproduction with the same inputs.
+- **cva6.** Other apps stay open, so a host-memory watchdog stops a window if Windows free memory falls below 0.4 GB. A stopped window is COULD NOT RUN for (1) cva6, not a fail (as Amendment 1).
+- **Verdict.** PASS needs IHP, cva6 and (2) all in band. Any out of band is FAIL. Otherwise INCONCLUSIVE.

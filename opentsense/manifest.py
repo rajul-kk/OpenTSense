@@ -13,6 +13,7 @@ TOOLS = {
     "3dice_commit": ["cat", "/opt/3d-ice/COMMIT"],
     "superlu_mt_commit": ["git", "-C", "/opt/3d-ice/superlu_mt-4.0.0", "rev-parse", "HEAD"],
     "pact_commit": ["cat", "/opt/pact/COMMIT"],
+    "spice_models_checksum": ["cat", "/opt/spice/CHECKSUM"],
     "ca_certificates": ["dpkg-query", "-W", "-f", "${Version}", "ca-certificates"],
 }
 PACKAGES = ["numpy", "scipy", "pandas", "PyYAML", "pytest"]
@@ -53,6 +54,8 @@ def collect(extra=None):
             m["packages"][p] = metadata.version(p)
         except metadata.PackageNotFoundError:
             m["packages"][p] = None
+    if os.path.exists("/opt/spice/VERSIONS"):
+        m["spice_models"] = open("/opt/spice/VERSIONS").read().splitlines()
     m.update(extra or {})
     return m
 

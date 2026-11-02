@@ -59,14 +59,21 @@ for name, c in leak.items():
     cell = name.rsplit("_", 1)[0]; i = txt.index(f"cell (sg13g2_{cell})"); j = txt.index("\n  cell (", i + 10); blk = txt[i:j]
     val = [float(v) for v, _ in re.findall(r'value : ([-0-9.eE]+);\s*when : "([^"]+)"', blk)]
     lib[name] = dict(recorded_lib_pW=c["lib25_pW"], present_in_pinned_lib=any(abs(v - c["lib25_pW"]) < 1e-3 for v in val))
-out["shortcut2"] = dict(status="COULD NOT RUN", reason="SPICE models are outside the working folder and not in the image; library half only", library_values_unchanged=all(v["present_in_pinned_lib"] for v in lib.values()), recorded_range=[0.893, 4.233])
+unchanged = all(v["present_in_pinned_lib"] for v in lib.values())
+spath = os.path.join(RUN, "spice_ihp.json")
+if os.path.exists(spath):
+    sp = json.load(open(spath)); solved = all("failed" not in sp[n] for n in leak)
+    r = {n: {t: lib[n]["recorded_lib_pW"] / sp[n][t] for t in ("25", "75", "100")} for n in leak} if solved else {}
+    rng = [min(x["25"] for x in r.values()), max(x["25"] for x in r.values())] if solved else None
+    ok = bool(solved and unchanged and abs(rng[0] / 0.893 - 1) <= 0.1 and abs(rng[1] / 4.233 - 1) <= 0.1)
+    out["shortcut2"] = dict(status="RUN", ok=ok, library_values_unchanged=unchanged, range_25C=rng, recorded_range=[0.893, 4.233], lib25_over_spice=r,
+                            max_rel_diff_from_G53=max(abs(sp[n][t] / leak[n]["spice_pW"][t] - 1) for n in leak for t in sp[n]) if solved else None)
+else:
+    out["shortcut2"] = dict(status="COULD NOT RUN", ok=None, library_values_unchanged=unchanged, recorded_range=[0.893, 4.233])
 out["shortcut3"] = json.load(open(os.path.join(RUN, "stack.json"))) if os.path.exists(os.path.join(RUN, "stack.json")) else None
 
-bars = [out[k]["ok"] for k in ("ihp", "cva6") if k in out]
-if any(b is False for b in bars):
-    out["verdict"] = "FAIL"
-else:
-    out["verdict"] = "INCONCLUSIVE"            # shortcut (2) was not run, so this gate cannot pass (Amendment 1)
+bars = [out["ihp"]["ok"] if "ihp" in out else None, out["cva6"]["ok"], out["shortcut2"]["ok"]]
+out["verdict"] = "FAIL" if any(b is False for b in bars) else "PASS" if all(bars) else "INCONCLUSIVE"     # Amendment 2
 json.dump(out, open(os.path.join(RUN, "result.json"), "w"), indent=1, default=float)
 manifest.write(os.path.join(RUN, "manifest.json"), {"gate": "G75"})
 print(json.dumps({k: v for k, v in out.items() if k in ("verdict", "shortcut2")} | {k: {a: b for a, b in out[k].items() if a in ("ratio", "ratios", "ok", "annotation", "max_tile_rel", "ratio_to_mean_real", "note")} for k in ("ihp", "cva6", "asap7_ibex", "asap7_tpu") if k in out}, indent=1, default=float))

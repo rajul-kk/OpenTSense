@@ -2,6 +2,36 @@
 # OpenROAD/OpenSTA/Yosys run from the pinned ORFS image instead (see versions.env).
 # Build from the repo root:  scripts/build_image.sh
 ARG UBUNTU_IMAGE=ubuntu:26.04
+ARG OSDI_UBUNTU_IMAGE=ubuntu:24.04
+
+# SPICE device models. OpenVAF-Reloaded needs LLVM 18, so it runs in a separate stage and only its output is kept.
+FROM ${OSDI_UBUNTU_IMAGE} AS osdi
+ARG APT_SNAPSHOT
+ARG OPENVAF_VERSION
+ARG OPENVAF_SHA256
+ARG IHP_PDK_COMMIT
+ARG VA_MODELS_COMMIT
+ARG ASAP7_CELLS_COMMIT
+RUN apt-get update -qq && apt-get install -y -qq --no-install-recommends ca-certificates && \
+    apt-get update --snapshot "${APT_SNAPSHOT}" -qq && \
+    apt-get install --snapshot "${APT_SNAPSHOT}" -y -qq --no-install-recommends curl git gcc libc6-dev libllvm18 && \
+    curl -fsSL -o /tmp/ovaf.tgz "https://github.com/OpenVAF/OpenVAF-Reloaded/releases/download/${OPENVAF_VERSION}/openvaf-r-${OPENVAF_VERSION}-linux-x86_64.tar.gz" && \
+    echo "${OPENVAF_SHA256}  /tmp/ovaf.tgz" | sha256sum -c - && mkdir /opt/ovaf && tar -xzf /tmp/ovaf.tgz -C /opt/ovaf --strip-components=1
+RUN mkdir -p /spice/osdi /spice/ihp /spice/asap7/cdl /spice/licenses && \
+    git clone -q --filter=blob:none --sparse --no-checkout https://github.com/IHP-GmbH/IHP-Open-PDK.git /src/ihp && cd /src/ihp && \
+    git sparse-checkout set ihp-sg13g2/libs.tech/verilog-a ihp-sg13g2/libs.tech/ngspice/models ihp-sg13g2/libs.ref/sg13g2_stdcell/spice && \
+    git checkout -q "${IHP_PDK_COMMIT}" && V=/src/ihp/ihp-sg13g2/libs.tech/verilog-a && \
+    for f in psp103/psp103 psp103/psp103_nqs r3_cmc/r3_cmc mosvar/mosvar; do \
+        ( cd "$V/$(dirname $f)" && /opt/ovaf/bin/openvaf-r -o "/spice/osdi/$(basename $f).osdi" "$(basename $f).va" ) || exit 1; done && \
+    cp -r ihp-sg13g2/libs.tech/ngspice/models /spice/ihp/models && cp ihp-sg13g2/libs.ref/sg13g2_stdcell/spice/sg13g2_stdcell.spice /spice/ihp/ && \
+    cp LICENSE /spice/licenses/IHP-Open-PDK.LICENSE && cp $V/r3_cmc/LICENSE.txt /spice/licenses/r3_cmc.LICENSE && sed -n 1,22p $V/psp103/psp103.va > /spice/licenses/psp103.NOTICE
+RUN git clone -q --filter=blob:none --sparse --no-checkout https://github.com/dwarning/VA-Models.git /src/va && cd /src/va && \
+    git sparse-checkout set code/bsimcmg/vacode110 && git checkout -q "${VA_MODELS_COMMIT}" && cd code/bsimcmg/vacode110 && \
+    /opt/ovaf/bin/openvaf-r -o /spice/osdi/bsimcmg.osdi bsimcmg.va && sed -n 1,45p bsimcmg.va > /spice/licenses/bsimcmg.NOTICE
+RUN git clone -q --filter=blob:none --sparse --no-checkout https://github.com/The-OpenROAD-Project/asap7sc7p5t_28.git /src/a7 && cd /src/a7 && \
+    git sparse-checkout set CDL/LVS && git checkout -q "${ASAP7_CELLS_COMMIT}" && cp CDL/LVS/asap7sc7p5t_28_*.cdl /spice/asap7/cdl/ && cp LICENSE /spice/licenses/asap7.LICENSE && \
+    printf 'openvaf-r %s\nIHP-Open-PDK %s\nVA-Models %s\nasap7sc7p5t_28 %s\n' "${OPENVAF_VERSION}" "${IHP_PDK_COMMIT}" "${VA_MODELS_COMMIT}" "${ASAP7_CELLS_COMMIT}" > /spice/VERSIONS
+
 FROM ${UBUNTU_IMAGE}
 
 ARG APT_SNAPSHOT
@@ -48,6 +78,14 @@ ENV PACT_SRC=/opt/pact/src
 COPY docker/requirements.lock /tmp/
 RUN python3 -m venv /opt/venv && /opt/venv/bin/pip install -q --no-cache-dir -r /tmp/requirements.lock
 ENV PATH=/opt/venv/bin:$PATH
+
+# SPICE models from the osdi stage. ngspice loads the .osdi plugins itself; opentsense/power/leak.py writes the decks.
+COPY --from=osdi /spice /opt/spice
+COPY docker/models/7nm_TT.pm docker/asap7_osdi.py /tmp/
+RUN python3 /tmp/asap7_osdi.py /tmp/7nm_TT.pm /opt/spice/asap7/cdl /opt/spice/asap7 && \
+    for f in psp103 psp103_nqs r3_cmc mosvar bsimcmg; do test -s "/opt/spice/osdi/$f.osdi"; done && \
+    sha256sum /opt/spice/osdi/*.osdi /opt/spice/asap7/*.* /opt/spice/ihp/models/cornerMOSlv.lib | sha256sum | cut -d' ' -f1 > /opt/spice/CHECKSUM
+ENV SPICE_ROOT=/opt/spice
 
 RUN git config --system --add safe.directory "*"
 WORKDIR /work

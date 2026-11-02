@@ -3,7 +3,7 @@
 # IHP first, then the PACT stack loop, then cva6 alone in a memory-capped container (host memory).
 set -uo pipefail
 cd "$(dirname "$0")/../.."
-ID=$1; IMG=${2:-opentsense:g71dev}
+ID=$1; IMG=${2:-opentsense:g75spice}
 R=gates/g75/runs/$ID; mkdir -p "$R/power"
 set -a; . docker/versions.env; set +a
 REPO=$(pwd -W 2>/dev/null || pwd); E=$(cd ../../experiments && pwd -W 2>/dev/null || pwd); B=$(cd ../../_build && pwd -W 2>/dev/null || pwd)
