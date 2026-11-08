@@ -8,3 +8,13 @@ gates/*/out/
 *.vcd
 *.odb
 *.flp
+# dry-run simulator builds, compiled programs and per-program outputs (reproducible from the gate scripts)
+gates/*/dry/sim/
+gates/*/dry/runs1/
+gates/*/dry/sw1/
+gates/g81a/dry/plain/
+gates/g81a/dry/public/
+gates/g81a/dry/underscore/
+# external source clones (pinned commit recorded in each gate's registration)
+gates/*/ext/
+docker/*.log
