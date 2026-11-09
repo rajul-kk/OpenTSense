@@ -1,0 +1,27 @@
+OpenTSense (G93a): the steady grid dump prints 6 decimals instead of 2 (0.01 K), for regression checks. Output
+format only; no change to the model.
+Amendment 1 (7 Nov 2026): LINE_SIZE 65536 -> 1048576. The power trace is one line with one value per grid cell
+of every source layer; two 60 x 60 dies need ~115k characters and HotSpot stopped with "line too long".
+Buffer size only; no change to the model.
+--- a/temperature_grid.c
++++ b/temperature_grid.c
+@@ -1284,7 +1284,7 @@
+     fprintf(fp, "Layer %d:\n", n);
+     for(i=0; i < model->rows; i++){
+       for(j=0; j < model->cols; j++){
+-          fprintf(fp, "%d\t%.2f\n", i*model->cols+j,
++          fprintf(fp, "%d\t%.6f\n", i*model->cols+j,
+                   model->last_steady->cuboid[n][i][j]);
+       }
+     }
+--- a/util.h
++++ b/util.h
+@@ -26,7 +26,7 @@
+ #define RAND_SEED		1500450271
+ 
+ #define STR_SIZE		512
+-#define LINE_SIZE		65536
++#define LINE_SIZE		1048576
+ #define MAX_ENTRIES		512
+ 
+ int eq(double x, double y);

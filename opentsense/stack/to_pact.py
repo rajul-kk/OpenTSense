@@ -1,13 +1,16 @@
 """Stack -> PACT input (layer CSV, stack config, model config, per-layer floorplan and ptrace CSVs).
 
-PACT lists layers from the bottom up and attaches its heat sink after the LAST layer, so the order is the
-reverse of ours. It only accepts a fixed set of material labels, so our materials are mapped onto them;
-the label's properties come from our material. Each die becomes a bulk layer plus a source layer.
+PACT attaches its heat sink after the LAST layer it is given. With the sink on top that is the reverse of our
+top-first order; with the sink at the bottom it is our order. PACT (as released) only accepts a fixed set of
+material labels, so our materials are mapped onto them, the label's properties coming from our material. Beyond
+those labels a material keeps its own name, which needs the image's PACT patch (pact-labels.patch: any label with a
+section in the stack config is an isotropic solid). Each die becomes a bulk layer plus a source layer. Layers with
+regions get one label per grid cell.
 Grid rows in PACT's output run opposite to 3D-ICE's (see thermal.run.read_pact).
 """
 import os
 
-LABELS = ["lump0", "lump1", "Diel", "bcb", "Metal"]  # free labels after Si and Cu
+LABELS = ["lump0", "lump1", "Diel", "bcb", "Metal", "Metal7_8"]  # free labels after Si and Cu
 
 MODEL = """[DEFAULT]
 label =
@@ -61,7 +64,7 @@ properties = htc, thickness (m), thermalresistivity ((m-k)/w), specificheatcapac
 def label_map(stack):
     lab, free = {}, iter(LABELS)
     for m in stack.materials:
-        lab[m] = "Si" if m == "silicon" else "Cu" if m == "copper" else next(free)
+        lab[m] = "Si" if m == "silicon" else "Cu" if m == "copper" else next(free, None) or "M_" + "".join(c if c.isalnum() else "_" for c in m)
     return lab
 
 
@@ -75,9 +78,10 @@ def write(stack, power, workdir):
     cx, cy = L / nx, W / ny
     # PACT takes a layer's size as its last row's X + Length and needs every layer to match exactly; one block per
     # solid layer can differ from the grid's sum by a rounding error, so solid layers use the same grid of elements
-    def grid_flp(label):
+    def grid_flp(layer):
+        M = stack.material_map(layer)
         return "UnitName,X,Y,Length (m),Width (m),ConfigFile,Label\n" + "".join(
-            f"U_{i}_{j},{j * cx:.9e},{i * cy:.9e},{cx:.9e},{cy:.9e},,{label}\n" for i in range(ny) for j in range(nx))
+            f"U_{i}_{j},{j * cx:.9e},{i * cy:.9e},{cx:.9e},{cy:.9e},,{lab[M[i, j]]}\n" for i in range(ny) for j in range(nx))
 
     cfg = "[DEFAULT]\nlabel = \n\n"
     for m, v in stack.materials.items():
@@ -88,25 +92,27 @@ def write(stack, power, workdir):
     for m in stack.materials:
         model += f"\n[{lab[m]}]\nlibrary_name = Solid\nlibrary = Solid.py\ntransient = False\nvirtual_node = bottom_center\nmode = single\n"
     model += "\n[Solid]\nproperties = thermalresistivity ((m-k)/w), specificheatcapacity (j/m^3k)\n"
-    # bottom-up: a die with its source on the bottom face is (source, bulk...), one with it on top is (bulk..., source)
+    # PACT order runs away from the sink's far side: bottom-up for a top sink (a die with its source on the bottom
+    # face is then (source, bulk...), one with it on top (bulk..., source)), top-down for a bottom sink
     rows, src_index, li = ["Layer,FloorplanFile,Thickness (m),PtraceFile,LateralHeatFlow"], {}, 0
-    for l in reversed(stack.layers):
+    up = stack.sink_side == "top"
+    for l in (reversed(stack.layers) if up else stack.layers):
         if l.die:
             bulk = [("bulk", l.bulk_um / l.n_sub)] * l.n_sub
-            parts = [("src", l.source_um)] + bulk if l.source_side == "bottom" else bulk + [("src", l.source_um)]
+            parts = [("src", l.source_um)] + bulk if (l.source_side == "bottom") == up else bulk + [("src", l.source_um)]
         else:
             parts = [("", l.thickness_um / l.n_sub)] * l.n_sub
         for kind, th in parts:
             fl = os.path.join(workdir, f"L{li}_flp.csv")
             if kind == "src":
                 P = power[l.name]
-                open(fl, "w", newline="\n").write(grid_flp(lab[l.material]))
+                open(fl, "w", newline="\n").write(grid_flp(l))
                 pt = os.path.join(workdir, f"L{li}_ptrace.csv")
                 open(pt, "w", newline="\n").write("UnitName,Power\n" + "".join(f"U_{i}_{j},{P[i, j]:.9e}\n" for i in range(ny) for j in range(nx)))
                 rows.append(f"{li},{fl},{th * 1e-6},{pt},True")
                 src_index[l.name] = li
             else:
-                open(fl, "w", newline="\n").write(grid_flp(lab[l.material]))
+                open(fl, "w", newline="\n").write(grid_flp(l))
                 rows.append(f"{li},{fl},{th * 1e-6},,True")
             li += 1
     paths = [os.path.join(workdir, f) for f in ("stack_lcf.csv", "stack.config", "model.config")]

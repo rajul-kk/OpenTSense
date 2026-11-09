@@ -1,8 +1,11 @@
-"""Stack -> 3D-ICE 4.0 input (.stk plus one .flp per die).
+"""Stack -> 3D-ICE 4.0 input (.stk, one .flp per die, one .lyt per layer with regions).
 
 3D-ICE works in micrometres, so k is in W/(um K) and cv in J/(um^3 K). Power maps are (ny, nx) arrays in W,
 row i = y index i from the die's lower edge. Each grid cell becomes one floorplan element.
 Stack element names get an S_ prefix because some words (e.g. spreader) are 3D-ICE keywords.
+A layer with regions gets a layout file: the layer's material is the base, and each rectangle of a layout overrides
+it (3D-ICE 4.0 `layout`, cells not covered keep the base material). A die with regions uses pre-declared layer types
+for its bulk and source, because only a declared layer can carry a layout.
 """
 import math
 import os
@@ -18,6 +21,18 @@ def write_flp(path, P, cell_x, cell_y):
     open(path, "w", newline="\n").write("\n".join(out))
 
 
+def write_lyt(path, stack, layer, cx, cy):
+    """Rectangles on the (rounded) 3D-ICE cell grid, grouped by material."""
+    by = {}
+    for r in layer.regions:
+        j0, j1, i0, i1 = stack.cells(r.rect_um)
+        by.setdefault(r.material, []).append(f"   rectangle ( {j0 * cx:.6f}, {i0 * cy:.6f}, {(j1 - j0) * cx:.6f}, {(i1 - i0) * cy:.6f} ) ;")
+    out = []
+    for m, rects in by.items():
+        out += [f"{m} :"] + rects + [""]
+    open(path, "w", newline="\n").write("\n".join(out))
+
+
 def write(stack, power, workdir):
     """power: {die layer name: (ny, nx) array in W}. Returns the .stk path; maps go to tmap_<die>.txt."""
     os.makedirs(workdir, exist_ok=True)
@@ -29,16 +44,27 @@ def write(stack, power, workdir):
     s = []
     for m, v in stack.materials.items():
         s += [f"material {m} :", f"   thermal conductivity {v.k * 1e-6:.6e} ;", f"   volumetric heat capacity {v.cv * 1e-18:.6e} ;"]
-    s += ["top heat sink :", f"   heat transfer coefficient {stack.htc * 1e-12:.6e} ;", f"   temperature {stack.ambient_K:.3f} ;"]
+    s += [f"{stack.sink_side} heat sink :", f"   heat transfer coefficient {stack.htc * 1e-12:.6e} ;", f"   temperature {stack.ambient_K:.3f} ;"]
     s += ["dimensions :", f"  chip length {L:.6f} , width {W:.6f} ;", f"  cell length {cx:.6f} , width {cy:.6f} ;"]
     # 3D-ICE's grammar wants every layer definition before the first die definition
     for l in stack.layers:
+        lyt = []
+        if l.regions:
+            write_lyt(os.path.join(workdir, f"{l.name}.lyt"), stack, l, cx, cy)
+            lyt = [f'   layout "{l.name}.lyt" ;']
         if not l.die:
-            s += [f"layer L_{l.name} :", f"   height {l.thickness_um / l.n_sub:.6f} ;", f"   material {l.material} ;"]
+            s += [f"layer L_{l.name} :", f"   height {l.thickness_um / l.n_sub:.6f} ;", f"   material {l.material} ;"] + lyt
+        elif l.regions:
+            s += [f"layer LB_{l.name} :", f"   height {l.bulk_um / l.n_sub:.6f} ;", f"   material {l.material} ;"] + lyt
+            s += [f"layer LS_{l.name} :", f"   height {l.source_um:.6f} ;", f"   material {l.material} ;"] + lyt
     for l in stack.dies:
         # within a die, 3D-ICE lists layers top first, like the stack
-        bulk = [f"   layer {l.bulk_um / l.n_sub:.6f} {l.material} ;"] * l.n_sub
-        src = [f"   source {l.source_um:.6f} {l.material} ;"]
+        if l.regions:
+            bulk = [f"   layer LB_{l.name} ;"] * l.n_sub
+            src = [f"   source LS_{l.name} ;"]
+        else:
+            bulk = [f"   layer {l.bulk_um / l.n_sub:.6f} {l.material} ;"] * l.n_sub
+            src = [f"   source {l.source_um:.6f} {l.material} ;"]
         s += [f"die D_{l.name} :"] + (bulk + src if l.source_side == "bottom" else src + bulk)
     s += ["stack:"]
     for l in stack.layers:

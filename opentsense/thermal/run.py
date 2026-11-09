@@ -1,6 +1,6 @@
-"""Run 3D-ICE and PACT on a stack and read back per-die temperature maps (K, shape (ny, nx), row i = y index i).
+"""Run 3D-ICE, PACT and HotSpot on a stack and read back per-die temperature maps (K, shape (ny, nx), row i = y index i).
 
-Both tools are expected inside the OpenTSense image: 3D-ICE-Emulator on PATH and PACT in $PACT_SRC.
+All three are expected inside the OpenTSense image: 3D-ICE-Emulator and hotspot on PATH, PACT in $PACT_SRC.
 """
 import os
 import subprocess
@@ -8,10 +8,11 @@ import sys
 
 import numpy as np
 
-from ..stack import to_3dice, to_pact
+from ..stack import to_3dice, to_hotspot, to_pact
 
 ICE_EXE = os.environ.get("ICE_EXE", "3D-ICE-Emulator")
 PACT_SRC = os.environ.get("PACT_SRC", "/opt/pact/src")
+HOTSPOT_EXE = os.environ.get("HOTSPOT_EXE", "hotspot")
 
 
 def run_3dice(stack, power, workdir, timeout=7200):
@@ -45,3 +46,32 @@ def run_pact(stack, power, workdir, timeout=7200, capture=False, return_src=Fals
     nx, ny = stack.grid
     maps = {d: read_pact(f"{grid}.layer{li}", nx, ny) for d, li in src.items()}
     return (maps, src) if return_src else maps
+
+
+def read_hotspot(path, layers, nx, ny):
+    """HotSpot's grid steady file: "Layer n:" then one "index temperature" line per cell, row 0 at the top edge
+    (temperature_grid.c set_bgmap), so rows are flipped to ours. Returns {layer index: (ny, nx)}."""
+    out, cur, vals = {}, None, []
+    for line in open(path):
+        if line.startswith("Layer"):
+            if cur in layers:
+                out[cur] = np.array(vals).reshape(ny, nx)[::-1]
+            cur, vals = int(line.split()[1].rstrip(":")), []
+        elif line.strip():
+            vals.append(float(line.split()[1]))
+    if cur in layers:
+        out[cur] = np.array(vals).reshape(ny, nx)[::-1]
+    return out
+
+
+def run_hotspot(stack, power, workdir, timeout=7200):
+    paths, src = to_hotspot.write(stack, power, workdir)
+    grid = os.path.join(os.path.abspath(workdir), "out.grid.steady")
+    cmd = [HOTSPOT_EXE, "-c", paths["config"], "-p", paths["ptrace"], "-grid_layer_file", paths["lcf"], "-model_type", "grid",
+           "-detailed_3D", "on", "-steady_file", os.path.join(os.path.abspath(workdir), "out.steady"), "-grid_steady_file", grid]
+    r = subprocess.run(cmd, cwd=os.path.abspath(workdir), capture_output=True, text=True, timeout=timeout)
+    if r.returncode or not os.path.exists(grid):
+        raise RuntimeError("HotSpot failed:\n" + r.stdout[-1500:] + r.stderr[-1500:])
+    nx, ny = stack.grid
+    T = read_hotspot(grid, set(src.values()), nx, ny)
+    return {d: T[li] for d, li in src.items()}

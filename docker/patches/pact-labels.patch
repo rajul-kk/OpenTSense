@@ -1,0 +1,14 @@
+OpenTSense (G93a): PACT accepts only a fixed list of material labels. This adds one branch: any other label that has a
+section in the stack config is an isotropic solid (Solid.py), as Si, Cu and lump0/1 already are. No other change.
+--- a/src/GridManager.py	2026-11-06 18:56:55.069703720 +0000
++++ b/src/GridManager.py	2026-11-06 18:56:55.077705076 +0000
+@@ -218,6 +218,9 @@
+                     elif(label == 'HeatSink'):
+                         self.label_config_dict[(label, cfile)] = LibHeatSink.defineGridProperties(
+                             grid_length, grid_width, thickness, self.config._sections['HeatSink'], chip_length, chip_width)
++                    elif label in self.config._sections:   # OpenTSense: any other label with a stack-config section is an isotropic solid
++                        self.label_config_dict[(label, cfile)] = LibSolid.defineGridProperties(
++                            grid_length, grid_width, thickness, self.config._sections[label])
+ 
+                     for key in self.label_config_dict[(label, cfile)].keys():
+                         if key.endswith("_constant"):

@@ -1,4 +1,4 @@
-# OpenTSense tool image: Icarus, Verilator, ngspice, 3D-ICE 4.0, PACT and the Python stack.
+# OpenTSense tool image: Icarus, Verilator, ngspice, 3D-ICE 4.0, PACT, HotSpot 7 and the Python stack.
 # OpenROAD/OpenSTA/Yosys run from the pinned ORFS image instead (see versions.env).
 # Build from the repo root:  scripts/build_image.sh
 ARG UBUNTU_IMAGE=ubuntu:26.04
@@ -73,6 +73,23 @@ COPY docker/patches/pact-bb7f05a.patch /tmp/
 RUN git clone -q https://github.com/peaclab/PACT.git /opt/pact && cd /opt/pact && \
     git checkout -q "${PACT_COMMIT}" && patch -p1 < /tmp/pact-bb7f05a.patch && git rev-parse HEAD > COMMIT
 ENV PACT_SRC=/opt/pact/src
+# G93a: any material label with a stack-config section is an isotropic solid (PACT accepts only a fixed list)
+COPY docker/patches/pact-labels.patch /tmp/
+RUN cd /opt/pact && patch -p1 < /tmp/pact-labels.patch && grep -q "OpenTSense: any other label" src/GridManager.py
+
+# G93a: HotSpot 7 (grid model, SuperLU direct solver) at a fixed commit, as the third thermal solver. Its licence
+# (BSD-style, University of Virginia) requires the notice in every copy, binary included: it is kept in /opt/hotspot.
+# Patch: the steady grid dump prints 6 decimals instead of 2 (output format only).
+ARG HOTSPOT_COMMIT
+COPY docker/patches/hotspot-f18831e.patch /tmp/
+RUN apt-get update --snapshot "${APT_SNAPSHOT}" -qq && \
+    apt-get install --snapshot "${APT_SNAPSHOT}" -y -qq --no-install-recommends libsuperlu-dev libblas-dev && \
+    rm -rf /var/lib/apt/lists/* && \
+    git clone -q https://github.com/uvahotspot/HotSpot.git /opt/hotspot && cd /opt/hotspot && \
+    git checkout -q "${HOTSPOT_COMMIT}" && patch -p1 < /tmp/hotspot-f18831e.patch && \
+    { make SUPERLU=1 hotspot > /tmp/hs.log 2>&1 || { tail -40 /tmp/hs.log; exit 1; }; } && \
+    git rev-parse HEAD > COMMIT && test -x hotspot && test -s LICENSE
+ENV PATH=/opt/hotspot:$PATH
 
 # Python stack, exact pins
 COPY docker/requirements.lock /tmp/

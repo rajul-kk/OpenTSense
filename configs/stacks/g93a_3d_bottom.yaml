@@ -1,0 +1,18 @@
+# G93a (c)2: G71 stack 2 (G38 3D-A) with the heat sink on the bottom face: a solver check of the bottom boundary,
+# not a realistic package.
+name: g93a_3d_bottom
+size_um: [3000, 3000]
+grid: [60, 60]
+ambient_K: 300
+heat_sink: {htc: 5.0e4, side: bottom}
+materials:
+  silicon: {k: 130, cv: 1.63566e6}
+  tim: {k: 4.0, cv: 2.0e6}
+  copper: {k: 400, cv: 3.45e6}
+  bond: {k: 1.5, cv: 2.0e6}
+layers:
+  - {name: spreader, material: copper, thickness_um: 500, n_sub: 10}
+  - {name: tim, material: tim, thickness_um: 25, n_sub: 3}
+  - {name: top, die: true, material: silicon, thickness_um: 50, source_um: 2, n_sub: 6}
+  - {name: bond, material: bond, thickness_um: 20, n_sub: 3}
+  - {name: bot, die: true, material: silicon, thickness_um: 100, source_um: 2, source_side: top, n_sub: 8}

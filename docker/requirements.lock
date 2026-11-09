@@ -1,6 +1,16 @@
 # Python packages for the OpenTSense image (exact pins; update only with a gate note)
+# Every package, direct and transitive, at the versions installed in g75spice (G93a, 7 Nov: the g93a rebuild
+# otherwise pulled python-dateutil 4.0.0 and dropped six).
+iniconfig==2.3.1
 numpy==2.3.4
-scipy==1.16.3
+packaging==26.3
 pandas==2.3.3
-PyYAML==6.0.3
+pluggy==1.7.0
+Pygments==2.21.0
 pytest==8.4.2
+python-dateutil==3.0.0
+pytz==2026.6
+PyYAML==6.0.3
+scipy==1.16.3
+six==1.17.0
+tzdata==2026.6
