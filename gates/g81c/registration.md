@@ -1,0 +1,40 @@
+# G81c registration (written 9 Nov 2026, before any G81c run; bars fixed now)
+
+### G81c: Real program power levels in the recovery testbed: do guard margins calibrated on synthetic workloads hold? (RQ2/RQ3) · REGISTERED (dry run of the validity check first)
+- **Why.**
+  - The guard-margin gates (G62–G69) drive the CPU die with G44's random phase generator (`experiments/code/sens/g44.py`, `seq` and `phase_maps`). Each of the 13 × 13 ibex tiles runs one of four G30 kernels (`matmul`, `crc32`, `sort`, `idle`) or sleeps. Its power map is G34's (`_build/asap7/g34_maps.npz`): 7.00–7.75 mW active, 2.58 mW asleep.
+  - G69 found that margins calibrated on some workload families do not transfer to an unseen one (F3, moving hotspots).
+  - G81b now gives measured power for 19 real programs on the same routed core: 6.72–8.30 mW, sleep 2.56 mW, with the G30 `k_crc` kernel at 8.08 mW in the same run.
+  - G81c asks whether margins calibrated on synthetic workloads still hold when the tiles run real programs, and whether calibration on one set of programs covers a disjoint set.
+- **What changes (family F4).**
+  - F4 is G44's generator (F1) with the same phase structure: phase durations log-uniform 1–200 ms; CPU phases `busy`, `cluster`, `half` and `sleep`; TPU phases as F1.
+  - Only the tile powers change. An active tile runs a benchmark drawn uniformly from a program set instead of one of the four kernels.
+  - **Tile map of program p** = G34's `crc32` map (`TT_k1`) × P_p / P_kcrc. Here P_p is p's mean total window power in G81b and P_kcrc = 8.081 mW is the mean of G81b's idle compute windows (the same `k_crc` kernel).
+  - **Sleep tile** = G34's `TT_k4` × 2.565 / 2.578 (G81b's sleep windows over G34's sleep).
+  - Sub-tile detail is not used: a tile (77 µm) is about 1.5 cells of the 50 µm thermal grid.
+  - Within-program variation below the 0.5 ms step averages out. A phase longer than one program run loops the program, as Embench does.
+  - **Program sets**, fixed now, alternating in alphabetical order:
+    - **S_cal** (10): aha-mont64, depthconv, huffbench, md5sum, nettle-sha256, picojpeg, sglib-combined, statemate, ud, xgboost.
+    - **S_test** (9): crc32, edn, matmult-int, nettle-aes, nsichneu, qrduino, slre, tarfind, wikisort.
+  - F4cal is 20 sequences built from S_cal; F4test is 20 sequences built from S_test. Seeds are 81000 + q (q = 0–39), not used by any earlier family.
+- **Unchanged from G66/G69:**
+  - the plant (reduced 3D-ICE model) and the 2 × 2 design-time sensor grid;
+  - the noise (σ = 0.65 K), the Kalman gain and the DVFS levels and hysteresis;
+  - the limit rule: each family's limit is the 70th percentile of its uncontrolled peaks on its own calibration sequences (F4: F4cal), with violation at limit + 1 K;
+  - the margin grid (0–15 K in 0.25 K steps) and the calibration target (oracle violation + 0.5 pp);
+  - policies R (raw sensor maximum plus margin) and E (estimated die maximum plus margin).
+- **Validity (v), checked first in a dry run:** the G81c code path rerun for F1–F3 reproduces `g69_res.json` (margins exactly; violations and throughputs within 1e-9). If it does not, the gate is INCONCLUSIVE and the cause is recorded before anything is scored.
+- **Pass if all hold:**
+  - **(a) Synthetic calibration transfers to real programs:** policy E with the margin calibrated on F1+F2+F3 (G69(b)'s rule, recomputed) has an excess violation on F4test of at most 0.5 pp over the oracle.
+  - **(b) Calibration on one program set covers another:** margins for R and E calibrated on F4cal and applied to F4test give an E excess violation of at most 0.5 pp, and E's throughput is at least R's.
+- **Reported, not gated:**
+  - F4 against F1: tile power spread, uncontrolled-peak distribution, limits, the margins found for R and E, and their frequency cost (0.064%/K, as G66);
+  - (a) for policy R;
+  - each family's excess violation under the F4cal margin;
+  - **prediction:** (a) and (b) pass. The real programs' power range (6.72–8.30 mW) differs little from the kernels' (7.00–7.75 mW), so F4 should behave like F1. If (a) fails, synthetic workloads understate real variety even at this resolution.
+- **A fail means:** record it in `failures.md`. If (a) fails, margins must be calibrated with real programs in the calibration set (G89). If (b) fails, the program set itself matters, and per-suite calibration is needed.
+- **Not claimed:**
+  - real schedules: which tiles are busy, and for how long, is still F1's synthetic structure (a real trace is what G86r could supply);
+  - TPU workloads (G81d) and memory power (G81e);
+  - leakage separation (G81b: leakage is under 0.2% here).
+- **Code and output:** `gates/g81c/g81c.py`, which builds on `experiments/code/sens/g69.py`'s chain without changing it. Output in `gates/g81c/runs/main/`.

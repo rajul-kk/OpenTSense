@@ -1,0 +1,18 @@
+tile totals (W): CPU {'matmul': np.float64(7.09), 'crc32': np.float64(7.75), 'sort': np.float64(7.56), 'idle': np.float64(7.0), 'sleep': np.float64(2.58)} mW; TPU {'W1': np.float64(84.2), 'W2': np.float64(73.7), 'W3': np.float64(50.4)} mW
+operator (7200, 202)
+truth (160, 7200)
+operator check (binned A p vs full truth, test): CPU-peak MAE 0.11852315928203065 K
+test CPU-peak SD 8.33 K; TPU-peak SD 11.04
+mean predictor {'cpu': 7.596136111111116, 'tpu': 10.347030555555557}
+Traceback (most recent call last):
+  File "D:\Work\FYP-search\fyp\opentsense\gates\g81c\g81c.py", line 38, in <module>
+    exec(src.replace(dump[0], "pass"), ns)
+  File "<string>", line 4, in <module>
+  File "<string>", line 4, in <module>
+  File "<string>", line 5, in <module>
+  File "<string>", line 4, in <module>
+  File "<string>", line 4, in <module>
+  File "<string>", line 9, in <module>
+  File "<string>", line 44, in sensors
+numpy._core._exceptions.MemoryError: Unable to allocate 396. MiB for an array with shape (7200, 7200) and data type float64
+EXIT=1

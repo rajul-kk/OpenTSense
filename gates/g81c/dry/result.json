@@ -1,0 +1,11 @@
+{
+ "v": true,
+ "v_checks": {
+  "limits": true,
+  "oracle_cal": true,
+  "a": true,
+  "b": true,
+  "verdicts": true
+ },
+ "verdict": "DRY"
+}
