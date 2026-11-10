@@ -1,0 +1,33 @@
+84 cells, 645 states, 15 not ok, skipped: []
+not ok: [('sg13g2_antennanp', 0), ('sg13g2_antennanp', 1), ('sg13g2_dllr_1', 6), ('sg13g2_dllr_1', 7), ('sg13g2_dllr_1', 8), ('sg13g2_dllr_1', 9), ('sg13g2_lgcp_1', 1), ('sg13g2_sdfbbp_1', 3), ('sg13g2_sdfrbp_1', 2), ('sg13g2_sdfrbp_2', 2), ('sg13g2_sdfrbpq_1', 2), ('sg13g2_sdfrbpq_2', 2), ('sg13g2_sighold', 0), ('sg13g2_slgcp_1', 1), ('sg13g2_slgcp_1', 4)]
+8 of 8 cases solved
+k0 125 rc=0
+k0 50 rc=0
+k0 100 rc=0
+k0 75 rc=0
+k0 25 rc=0
+k0 ship rc=0
+k1 125 rc=0
+k1 ship rc=0
+k1 100 rc=0
+k1 50 rc=0
+k1 75 rc=0
+k1 25 rc=0
+k2 100 rc=0
+k2 50 rc=0
+k2 75 rc=0
+k2 25 rc=0
+k2 ship rc=0
+k2 125 rc=0
+k3 25 rc=0
+k3 ship rc=0
+k3 125 rc=0
+k3 50 rc=0
+k3 100 rc=0
+k3 75 rc=0
+Traceback (most recent call last):
+  File "/work/gates/g92/evaluate.py", line 52, in <module>
+    ratio25 = np.array([s["lib_pW"] / s["spice_pW"]["25"] for _, s in states if s["spice_pW"]["25"] > 0 and s["lib_pW"] > 0])
+                                                                                ~~~~~~~~~~~~~^^^^^^
+KeyError: '25'
+{"spice_s": 1576, "sta_s": 109, "total_s": 1690}

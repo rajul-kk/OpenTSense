@@ -20,6 +20,19 @@ IHP = {"inv_1_A0": ("Va a 0 0", f"X1 y a {PW} sg13g2_inv_1"), "inv_1_A1": (f"Va 
 ASAP7 = {"INVx1": ("A VDD VSS Y", [("A", 0), ("A", 1)]), "NAND2x1": ("A B VDD VSS Y", [("AB", 0), ("AB", 1)]), "DFFHQNx1": ("CLK D QN VDD VSS", [("D", 0), ("D", 1)])}
 
 
+# An aborted analysis prints zeros for its measurements, which a count of measurements alone accepts (leaklib found this in
+# G92c). Any abort text now fails the case; a transient also fails if it stopped at its first point ("No. of Data Rows : 1",
+# LVT AOI311xp33 in G92c). The op analyses (ASAP7) legitimately print one data row, so that clause applies to IHP only.
+ABORT = re.compile(r"simulation\(s\) aborted|timestep too small|failed!|no convergence|singular matrix", re.I)
+TRAN_STOPPED = re.compile(r"No\. of Data Rows\s*:\s*[01]\s*$", re.M)
+
+
+def _failed(why, out):
+    """A failed case: {'failed': text, 'outcome': why}. `why` is 'aborted' (abort text or a stopped transient) or 'missing'
+    (too few measurements); every consumer tests only for the 'failed' key."""
+    return {"failed": f"{why}: " + out[-600:], "outcome": why}
+
+
 def ngspice(name, deck, osdi):
     with tempfile.TemporaryDirectory() as d:
         init = f"setcs sourcepath = ( $sourcepath {SPICE}/ihp/models {SPICE}/asap7 )\n" + "".join(f"osdi '{SPICE}/osdi/{m}.osdi'\n" for m in osdi)
@@ -35,7 +48,9 @@ def ihp(name):
     deck = f"* {name}\n.lib cornerMOSlv.lib mos_tt\n.include {SPICE}/ihp/sg13g2_stdcell.spice\nVDD VDD 0 {IV}\nVSS VSS 0 0\n{src}\n{dut}\n.control\n{ctl}\n.endc\n.end\n"
     out = ngspice(name, deck, ("psp103", "psp103_nqs", "r3_cmc", "mosvar"))
     v = {int(t): abs(float(x)) * IV for t, x in re.findall(r"^il(\d+)\s*=\s*([-+0-9.eE]+)", out, re.M)}
-    return name, {t: p * 1e12 for t, p in v.items()} if len(v) == len(IHP_T) else {"failed": out[-600:]}
+    if ABORT.search(out) or TRAN_STOPPED.search(out):
+        return name, _failed("aborted", out)
+    return name, {t: p * 1e12 for t, p in v.items()} if len(v) == len(IHP_T) else _failed("missing", out)
 
 
 def asap7(cv):
@@ -48,8 +63,10 @@ def asap7(cv):
     L += [f"Vhi hi 0 {AV}", ".control"] + [f"option temp={t}\nop\nprint i(V0) i(V1)" for t in ASAP7_T] + [".endc", ".end"]
     out = ngspice(f"{cell}_{vt}", "\n".join(L) + "\n", ("bsimcmg",))
     v = [abs(float(x)) * AV for x in re.findall(r"^i\(v[01]\)\s*=\s*([-+0-9.eE]+)", out, re.M)]
+    if ABORT.search(out):
+        return f"{cell}_{vt}", _failed("aborted", out)
     if len(v) != 2 * len(ASAP7_T):
-        return f"{cell}_{vt}", {"failed": out[-600:]}
+        return f"{cell}_{vt}", _failed("missing", out)
     return f"{cell}_{vt}", {t: (v[2 * i] + v[2 * i + 1]) / 2 for i, t in enumerate(ASAP7_T)}
 
 

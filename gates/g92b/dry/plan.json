@@ -1,0 +1,147 @@
+{
+ "ihp": {
+  "unreachable": [
+   [
+    "sg13g2_dllr_1",
+    "RESET_B*!GATE_N*!D*!Q*!Q_N"
+   ],
+   [
+    "sg13g2_dllr_1",
+    "RESET_B*!GATE_N*!D*Q*!Q_N"
+   ],
+   [
+    "sg13g2_dllr_1",
+    "RESET_B*!GATE_N*!D*Q*Q_N"
+   ],
+   [
+    "sg13g2_dllr_1",
+    "RESET_B*!GATE_N*D*!Q*!Q_N"
+   ],
+   [
+    "sg13g2_dllr_1",
+    "RESET_B*!GATE_N*D*!Q*Q_N"
+   ],
+   [
+    "sg13g2_dllr_1",
+    "RESET_B*!GATE_N*D*Q*Q_N"
+   ],
+   [
+    "sg13g2_sdfbbp_1",
+    "!CLK&!D&!RESET_B&!SCD&!SCE&SET_B&Q&!Q_N"
+   ],
+   [
+    "sg13g2_sdfrbp_1",
+    "!CLK&!D&!RESET_B&!SCD&!SCE&Q&!Q_N"
+   ],
+   [
+    "sg13g2_sdfrbp_2",
+    "!CLK&!D&!RESET_B&!SCD&!SCE&Q&!Q_N"
+   ],
+   [
+    "sg13g2_sdfrbpq_1",
+    "!CLK&!D&!RESET_B&!SCD&!SCE&Q"
+   ],
+   [
+    "sg13g2_sdfrbpq_2",
+    "!CLK&!D&!RESET_B&!SCD&!SCE&Q"
+   ]
+  ],
+  "free": [],
+  "states": 645,
+  "solves": 650,
+  "seq": 196
+ },
+ "asap7": {
+  "unreachable": [
+   [
+    "TIEHIx1_ASAP7_75t_R",
+    "!H"
+   ],
+   [
+    "TIELOx1_ASAP7_75t_R",
+    "L"
+   ]
+  ],
+  "free": [
+   [
+    "DFFHQNx1_ASAP7_75t_R",
+    null
+   ],
+   [
+    "DFFHQNx2_ASAP7_75t_R",
+    null
+   ],
+   [
+    "DFFHQNx3_ASAP7_75t_R",
+    null
+   ],
+   [
+    "DFFHQx4_ASAP7_75t_R",
+    null
+   ],
+   [
+    "DFFLQNx1_ASAP7_75t_R",
+    null
+   ],
+   [
+    "DFFLQNx2_ASAP7_75t_R",
+    null
+   ],
+   [
+    "DFFLQNx3_ASAP7_75t_R",
+    null
+   ],
+   [
+    "DFFLQx4_ASAP7_75t_R",
+    null
+   ],
+   [
+    "DHLx1_ASAP7_75t_R",
+    null
+   ],
+   [
+    "DHLx2_ASAP7_75t_R",
+    null
+   ],
+   [
+    "DHLx3_ASAP7_75t_R",
+    null
+   ],
+   [
+    "SDFHx1_ASAP7_75t_R",
+    null
+   ],
+   [
+    "SDFHx2_ASAP7_75t_R",
+    null
+   ],
+   [
+    "SDFHx3_ASAP7_75t_R",
+    null
+   ],
+   [
+    "SDFHx4_ASAP7_75t_R",
+    null
+   ],
+   [
+    "SDFLx1_ASAP7_75t_R",
+    null
+   ],
+   [
+    "SDFLx2_ASAP7_75t_R",
+    null
+   ],
+   [
+    "SDFLx3_ASAP7_75t_R",
+    null
+   ],
+   [
+    "SDFLx4_ASAP7_75t_R",
+    null
+   ]
+  ],
+  "states": 8576,
+  "solves": 8595,
+  "seq": 529
+ }
+}

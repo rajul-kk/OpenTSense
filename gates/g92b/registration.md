@@ -1,0 +1,82 @@
+# G92b registration (written 4 Nov 2026, before the gated run)
+
+### G92b: Gate-level leakage library and electro-thermal loop, every state, IHP SG13G2 and ASAP7 (RQ1, O1) · REGISTERED
+- **Why:**
+  - G92 failed bar (a): 630 of 645 IHP states were solved and verified.
+    - 9 of the other 15 are states the library lists that the circuit cannot hold, such as Q = 1 with reset active. G92's bar said nothing about such states.
+    - The other 6 states came from 4 cells the generator could not drive: an antenna diode, a bus holder (an in/out pin), and two clock gates that Liberty describes with a statetable rather than a latch group.
+    - G92's bars (b) and (c) passed.
+  - IHP 130 nm leakage is about 0.02% of power, so G92's loop barely moved. ASAP7 (7 nm FinFET, BSIM-CMG) is added as a second design. The user asked for it on 4 Nov.
+- **What changes from G92:** only the library generator (`opentsense/power/leaklib.py`). G92's version is kept as `gates/g92/leaklib_g92.py`. The OpenSTA step, the loop, and bars (b) and (c) are G92's, applied to each kit.
+- **Generator: every state is planned from the cell's Liberty logic before any SPICE run.**
+  - **Expressions.** A small evaluator for Liberty boolean expressions (`! ' & * space | + ^ ( )`).
+  - **Inputs.** The state's input levels are the pins it names; unnamed inputs are held low, as in G92.
+  - **Stored value.**
+    - A cell with an `ff` or `latch` group, or a clock-gate `statetable`, has one stored value s.
+    - A clock gate is a latch that is open while CLK is low, with data = enable | test. The pins come from Liberty's `clock_gate_*_pin` attributes.
+    - The `test_cell` group of a scan cell, which holds its non-scan model, is ignored.
+  - **Forced value.** An active clear or preset, or an open latch, forces s. With both clear and preset active, s comes from `clear_preset_var1/2`.
+  - **Required value.** Each named output, through its `function` or `state_function`, says which s the state needs.
+  - **Unreachable states (the rule G92 lacked).** A state is unreachable if no s gives its named outputs (e.g. Q = Q_N), or if the s it needs contradicts a forced s.
+    - It is classed by logic alone, before SPICE.
+    - It takes the leakage of the state the circuit does hold at the same inputs, and is flagged `unreachable`.
+    - With no forced s, it takes s from the first named output that depends on s, as G92 Amendment 2 did for Q = Q_N.
+    - OpenSTA weights `when` terms with independent pin probabilities, so these states do receive weight in its sum.
+  - **Free states.** If the named outputs do not depend on s and nothing forces it (e.g. a state with no `when`), the state is solved at s = 0 and s = 1 and averaged, and flagged `free`.
+  - **Sums of products.** These are expanded into minterms over the pins they name. The value is the mean over reachable minterms (G92 Amendment 2, generalised).
+  - **Setting s.**
+    - Capture sequence: clock inactive with data at the closest input assignment that gives data = s (async pins held inactive), a clock pulse, then inputs to their final levels, then the clock.
+    - A flip-flop whose final clock is active keeps the clock active after the edge, so no second edge occurs.
+    - A forced or combinational state uses constant inputs.
+  - **Check (stronger than G92's).** Every output pin with a function is measured over the window at every temperature, and must be within 10% of VDD of its planned level. G92 checked only the named state pin.
+  - **Bus holder (in/out pin, no function).** The named level is set by `.ic`, then released and checked.
+  - **Antenna diode (a cell with no output).** Its leakage is the power all sources deliver (VDD plus the driven input). The input pin carries the diode current, which VDD alone misses.
+  - **IHP models** add `cornerDIO.lib dio_tt` for the antenna diodes.
+  - **ASAP7.** RVT TT libraries at 0.7 V, the five files G34's OpenSTA reads. Models: `asap7_tt_osdi.lib` with BSIM-CMG (OSDI) and `cells_R.sp`. Only the VDD `leakage_power` groups are re-solved. The VSS groups (value 0) are left as shipped.
+  - **Solver settings.**
+    - ASAP7 decks set `.options cshunt=1e-15` (1 fF from each node to ground). Without it, every ASAP7 transient stops at the first clock edge ("timestep too small"). A capacitor carries no DC current; an inverter at 25–125 °C gave identical leakage to every printed digit with and without it.
+    - Constant-input decks set `.nodeset` at the planned output levels. Without it, BSIM-CMG lands on a spurious operating point for `INVx1` at exactly 125 °C (Y = 0.75 V > VDD, current 3.5e6 A); at 124.99 °C it solves normally. The hint does not change a unique solution, and the output check still applies.
+  - Times (8 ns combinational, 150 ns sequential), temperatures (25, 50, 75, 100, 125 °C) and `num_threads=1` are G92's.
+- **Dry run before registration (plumbing, not scored).**
+  - Planning only, without SPICE, for both kits:
+    - **IHP:** 84 cells, 645 states. 11 are classed unreachable, including all 9 that G92's SPICE check refused for a stored-value mismatch. The 6 states of the 4 cells G92 could not drive are classed reachable.
+    - **ASAP7:** 202 cells, 8,576 states, 8,595 solves. 2 states are unreachable (`TIEHI` !H, `TIELO` L), and 19 are free.
+    - The library writer was checked to keep every group and line count.
+  - **Probe solves** of 19 cells (IHP: antennanp, sighold, lgcp_1, slgcp_1, dllr_1, sdfrbpq_1, dfrbp_1, inv_1; ASAP7: INVx1, NAND2x1, FAx1, TIEHIx1, DFFHQNx1, DHLx1, DLLx1, ICGx1, DFFASRHQNx1, SDFHx1, SDFLx1).
+    - They found and fixed four bugs: ngspice's lower-case vector names, the `test_cell` flop being read as the scan flop, the ASAP7 clock-edge stop, and the 125 °C spurious point.
+    - After the fixes, all 205 probe solves passed.
+    - These 19 cells are therefore not blind in (a); the others are.
+- **Cases, steps, windows and thermal set-up:** as G92, for each kit.
+  - **IHP:** G53's routed ibex, windows k0–k3 (`w0`–`w3.vcd`), stack `configs/stacks/g92_ihp.yaml`.
+  - **ASAP7:** G34's routed ibex (76.726 µm die, about 49.7k placed instances), windows k0–k3 (`w0`–`w3.vcd`), scope `tb/dut`, stack `configs/stacks/g92b_asap7.yaml`. That is G92's stack at the ASAP7 die size. OpenSTA runs 2 at a time for memory, as G34.
+- **Pass if all hold, for both kits:**
+  - **(a) Library equals SPICE.**
+    - Every state of every cell is planned and solves at all five temperatures, and every checked pin is within 10% of VDD of its planned level at every temperature. Unreachable states count as passing only through the rule above: classed by logic before SPICE, and solved and checked at the held state.
+    - **IHP cross-check:** G53's 8 states, re-solved by `leak.py ihp`, match the generator within 1% at 25, 50, 75 and 100 °C (G92's bar).
+    - **ASAP7 cross-check:** `leak.py asap7` (G41's DC decks) for `INVx1_R` and `NAND2x1_R` match the generator within 1% at 25, 50, 75 and 100 °C. Each is the mean of two states (A = 0, 1; AB = 00, 11), against the mean of the matching library states. `leak.py`'s DFFHQNx1 case is excluded, because a DC solve leaves its stored value to the solver.
+  - **(b) OpenSTA plumbing.**
+    - With the shipped libraries, OpenSTA's design leakage for each window equals the reference run to 6 significant figures. The reference is G75 run `main` for IHP and G34's `pw_k*_TT.txt` for ASAP7.
+    - Across the five generated library sets, every instance's dynamic power is identical, and design leakage rises strictly with temperature.
+  - **(c) Loop.** G92's bar (c), unchanged:
+    - every nominal and hot case converges to 1e-10 K;
+    - 1 × 1 grid against `brentq` within 1e-9 K;
+    - full PACT solve (k0, nominal) against the operator's peak within 0.02 K;
+    - for every case including stress, the measured amplification is within 25% of 1/(1 − ρ).
+- **Reported, not gated:**
+  - per kit: library ÷ SPICE over reachable states at 25 °C, the unreachable and free counts, leakage share and peak shift per case, design leakage at the fixed point against the shipped library, the stress factor s, and wall time;
+  - G92 against G92b IHP state values, to show the generator change did not move the states G92 verified.
+- **A fail means:**
+  - (a): the logic plan or a sequence is wrong for some cell, so record which.
+  - (b) or (c): as G92.
+  - Record any fail in `failures.md`.
+- **Not claimed:** as G92 (silicon accuracy rests on the PSP103 and BSIM-CMG models; internal power stays at the 25 °C library values; ρ near 1 is not tested). Also:
+  - ASAP7 is a predictive kit, not a foundry process;
+  - only RVT is generated;
+  - the ASAP7 SPICE cells carry no parasitics.
+- **Output:** `gates/g92b/runs/main/{ihp,asap7}/`
+
+## Amendment 1 (4 Nov 2026, after the run; scoring code only)
+- **What happened.** The ASAP7 scorer stopped in the 1 × 1 check. `brentq` needs a sign change over its bracket, and the fixed [300, 600] K had none for ASAP7: leakage extrapolated log-linearly to 600 K makes T_amb + R·P(T) − T positive at both ends.
+- **Fix.** The bracket is [T_amb, T_amb + 100 K] for both kits. The roots are 302.03 K (IHP) and 333.61 K (ASAP7). Only `evaluate.py` was re-run, on the run's outputs. Nothing was re-solved.
+- **Effect.** None on the verdict: both kits had already failed (a), which the crashed run printed before (c).
+- **The bars are unchanged.**

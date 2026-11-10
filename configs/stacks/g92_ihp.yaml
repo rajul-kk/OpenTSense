@@ -1,0 +1,14 @@
+# G92: the single_die geometry (copper spreader, TIM, 50 um die) at the IHP SG13G2 ibex die size, split as G71's single stack.
+name: g92_ihp
+size_um: [617.505, 617.505]
+grid: [32, 32]
+ambient_K: 300
+heat_sink: {htc: 5.0e4}
+materials:
+  silicon: {k: 130, cv: 1.63566e6}
+  tim: {k: 4.0, cv: 2.0e6}
+  copper: {k: 400, cv: 3.45e6}
+layers:
+  - {name: spreader, material: copper, thickness_um: 500, n_sub: 10}
+  - {name: tim, material: tim, thickness_um: 25, n_sub: 3}
+  - {name: die0, die: true, material: silicon, thickness_um: 50, source_um: 2, n_sub: 6}

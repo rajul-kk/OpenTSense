@@ -1,0 +1,128 @@
+ihp: 84 cells, 645 states, 650 solves, 11 unreachable, 0 free, 0 not ok, skipped: []
+8 of 8 cases solved
+ihp k0 75 rc=0
+ihp k0 25 rc=0
+ihp k0 125 rc=0
+ihp k0 100 rc=0
+ihp k0 50 rc=0
+ihp k0 ship rc=0
+ihp k1 75 rc=0
+ihp k1 100 rc=0
+ihp k1 125 rc=0
+ihp k1 ship rc=0
+ihp k1 25 rc=0
+ihp k1 50 rc=0
+ihp k2 125 rc=0
+ihp k2 ship rc=0
+ihp k2 75 rc=0
+ihp k2 25 rc=0
+ihp k2 50 rc=0
+ihp k2 100 rc=0
+ihp k3 100 rc=0
+ihp k3 ship rc=0
+ihp k3 75 rc=0
+ihp k3 25 rc=0
+ihp k3 50 rc=0
+ihp k3 125 rc=0
+a False 645 0.18675327428820365
+b True
+k0 nominal {'converged': True, 'iters': 4, 'rho': 9.375354351344692e-06, 'amp_measured': 1.0000093652253528, 'amp_predicted': 1.0000093754422494, 'ok': True, 'peak_K': 302.14082382722455, 'peak_shift_vs_fixed25_K': 3.473679709031785e-05, 'leak_W': 5.604178303250803e-06, 'leak25_W': 5.1363644811989484e-06, 'leak_share': 0.00020187059438451997, 'ship_lib_leak_W': 5.92875103497566e-06}
+k0 hot {'converged': True, 'iters': 4, 'rho': 7.906661099852488e-05, 'amp_measured': 1.000079307366807, 'amp_predicted': 1.0000790728630218, 'ok': True, 'peak_K': 360.29273972361193, 'peak_shift_vs_fixed25_K': 0.0019506331844922897, 'leak_W': 3.126467053775217e-05, 'leak25_W': 5.1363644811989484e-06, 'leak_share': 0.0011251585604447583, 'ship_lib_leak_W': 5.92875103497566e-06}
+k0 stress {'scale': 27384.196342643612, 'converged': True, 'iters': 33, 'rho': 0.45081217921317446, 'amp_measured': 1.6679401798652658, 'amp_predicted': 1.820870678754843, 'ok': True, 'peak_K': 319.4932565735807, 'peak_shift_vs_fixed25_K': 6.650966913854461}
+k1 nominal {'converged': True, 'iters': 4, 'rho': 9.425107736109525e-06, 'amp_measured': 1.0000094180155916, 'amp_predicted': 1.0000094251965697, 'ok': True, 'peak_K': 302.2302332385393, 'peak_shift_vs_fixed25_K': 3.5658688204875943e-05, 'leak_W': 5.622377649191334e-06, 'leak25_W': 5.142157780694768e-06, 'leak_share': 0.00019420301136714987, 'ship_lib_leak_W': 5.93101558805906e-06}
+k1 hot {'converged': True, 'iters': 4, 'rho': 7.951343968178972e-05, 'amp_measured': 1.0000797589836221, 'amp_predicted': 1.0000795197625716, 'ok': True, 'peak_K': 360.3821602804264, 'peak_shift_vs_fixed25_K': 0.00196270057529091, 'leak_W': 3.142452731275535e-05, 'leak25_W': 5.142157780694768e-06, 'leak_share': 0.001084470679463958, 'ship_lib_leak_W': 5.93101558805906e-06}
+k1 stress {'scale': 27384.196342643612, 'converged': True, 'iters': 33, 'rho': 0.4549240353642545, 'amp_measured': 1.6762464278157327, 'amp_predicted': 1.8346066693075778, 'ok': True, 'peak_K': 319.6895603484239, 'peak_shift_vs_fixed25_K': 6.7567095277422595}
+k2 nominal {'converged': True, 'iters': 4, 'rho': 9.414903588410006e-06, 'amp_measured': 1.0000094060876168, 'amp_predicted': 1.0000094149922296, 'ok': True, 'peak_K': 302.23203365878084, 'peak_shift_vs_fixed25_K': 3.558908400691507e-05, 'leak_W': 5.624311227697377e-06, 'leak25_W': 5.145124694021008e-06, 'leak_share': 0.00019471862355510696, 'ship_lib_leak_W': 5.92596827826749e-06}
+k2 hot {'converged': True, 'iters': 4, 'rho': 7.940758285515086e-05, 'amp_measured': 1.0000796532786096, 'amp_predicted': 1.0000794138889202, 'ok': True, 'peak_K': 360.38395808837373, 'peak_shift_vs_fixed25_K': 0.0019600186769253014, 'leak_W': 3.139423940671187e-05, 'leak25_W': 5.145124694021008e-06, 'leak_share': 0.0010859274635598532, 'ship_lib_leak_W': 5.92596827826749e-06}
+k2 stress {'scale': 27384.196342643612, 'converged': True, 'iters': 33, 'rho': 0.4542730583696526, 'amp_measured': 1.6748933688445922, 'amp_predicted': 1.8324182365131574, 'ok': True, 'peak_K': 319.6799881429872, 'peak_shift_vs_fixed25_K': 6.74703502640341}
+k3 nominal {'converged': True, 'iters': 4, 'rho': 9.359598652085482e-06, 'amp_measured': 1.0000093485025443, 'amp_predicted': 1.000009359686255, 'ok': True, 'peak_K': 302.12115746791346, 'peak_shift_vs_fixed25_K': 3.447666580314035e-05, 'leak_W': 5.6152115683070305e-06, 'leak25_W': 5.1504249442215784e-06, 'leak_share': 0.0002043668202080886, 'ship_lib_leak_W': 5.91365043874066e-06}
+k3 hot {'converged': True, 'iters': 4, 'rho': 7.881268150039526e-05, 'amp_measured': 1.000079041699991, 'amp_predicted': 1.0000788188934286, 'ok': True, 'peak_K': 360.2730643251027, 'peak_shift_vs_fixed25_K': 0.0019413338550862136, 'leak_W': 3.119488272904968e-05, 'leak25_W': 5.1504249442215784e-06, 'leak_share': 0.0011342883995880489, 'ship_lib_leak_W': 5.91365043874066e-06}
+k3 stress {'scale': 29427.27176209282, 'converged': True, 'iters': 40, 'rho': 0.5266947546939937, 'amp_measured': 1.8337280426479452, 'amp_predicted': 2.112801431882441, 'ok': True, 'peak_K': 322.0555687922941, 'peak_shift_vs_fixed25_K': 8.390831775350648}
+{"kit": "ihp", "a": false, "b": true, "c": true, "verdict": "FAIL", "wall_s": 61.54652261734009}
+{"spice_s": 1025, "sta_s": 70, "total_s": 1162}
+asap7: 202 cells, 8576 states, 8595 solves, 2 unreachable, 19 free, 7 not ok, skipped: []
+not ok: [('DFFASRHQNx1_ASAP7_75t_R', '(!CLK * !D * RESETN * SETN * QN)'), ('DFFASRHQNx1_ASAP7_75t_R', '(!CLK * !D * RESETN * SETN * !QN)'), ('DFFLQNx1_ASAP7_75t_R', '(!CLK * !D * QN)'), ('DFFLQNx1_ASAP7_75t_R', None), ('SDFHx1_ASAP7_75t_R', '(CLK * D * SE * !SI * !QN)'), ('SDFHx1_ASAP7_75t_R', '(CLK * !D * SE * !SI * QN)'), ('SDFLx1_ASAP7_75t_R', '(!CLK * D * SE * !SI * QN)')]
+9 of 9 cases solved
+asap7 k0 25 rc=0
+asap7 k0 ship rc=0
+asap7 k0 50 rc=0
+asap7 k0 75 rc=0
+asap7 k0 100 rc=0
+asap7 k0 125 rc=0
+asap7 k1 25 rc=0
+asap7 k1 ship rc=0
+asap7 k1 50 rc=0
+asap7 k1 75 rc=0
+asap7 k1 100 rc=0
+asap7 k1 125 rc=0
+asap7 k2 25 rc=0
+asap7 k2 ship rc=0
+asap7 k2 50 rc=0
+asap7 k2 75 rc=0
+asap7 k2 100 rc=0
+asap7 k2 125 rc=0
+asap7 k3 ship rc=0
+asap7 k3 25 rc=0
+asap7 k3 50 rc=0
+asap7 k3 75 rc=0
+asap7 k3 100 rc=0
+asap7 k3 125 rc=0
+a False 8576 0.0022798687054333966
+b True
+k0 nominal {'converged': True, 'iters': 6, 'rho': 0.0016061827635715027, 'amp_measured': 1.0016075963831044, 'amp_predicted': 1.001608766736975, 'ok': True, 'peak_K': 333.75738883718515, 'peak_shift_vs_fixed25_K': 0.02963531406498987, 'leak_W': 8.369544908076115e-06, 'leak25_W': 2.1201489313781875e-06, 'leak_share': 0.0011797373826932802, 'ship_lib_leak_W': 2.649584560344548e-06}
+k0 hot {'converged': True, 'iters': 7, 'rho': 0.012231183191056042, 'amp_measured': 1.0123071917175002, 'amp_predicted': 1.012382637498691, 'ok': True, 'peak_K': 392.2238600677614, 'peak_shift_vs_fixed25_K': 0.346106544641259, 'leak_W': 7.510780389355292e-05, 'leak25_W': 2.1201489313781875e-06, 'leak_share': 0.010488229489763945, 'ship_lib_leak_W': 2.649584560344548e-06}
+k0 stress {'scale': 177.82794100389228, 'converged': True, 'iters': 34, 'rho': 0.46031614016050953, 'amp_measured': 1.610329789259212, 'amp_predicted': 1.852936643866678, 'ok': True, 'peak_K': 344.8263088531452, 'peak_shift_vs_fixed25_K': 9.321422098646394}
+k1 nominal {'converged': True, 'iters': 6, 'rho': 0.0018251760260057654, 'amp_measured': 1.001826985523475, 'amp_predicted': 1.0018285133847988, 'ok': True, 'peak_K': 336.86683944623053, 'peak_shift_vs_fixed25_K': 0.03477746920964364, 'leak_W': 9.44076419095655e-06, 'leak25_W': 2.1079526432936877e-06, 'leak_share': 0.0012177541234695765, 'ship_lib_leak_W': 2.631221667813548e-06}
+k1 hot {'converged': True, 'iters': 8, 'rho': 0.013543055610488701, 'amp_measured': 1.0136361989093587, 'amp_predicted': 1.0137289880592508, 'ok': True, 'peak_K': 395.3662897268648, 'peak_shift_vs_fixed25_K': 0.38422774984394437, 'leak_W': 8.312363759706508e-05, 'leak25_W': 2.1079526432936877e-06, 'leak_share': 0.010621083824261761, 'ship_lib_leak_W': 2.631221667813548e-06}
+k1 stress {'scale': 177.82794100389228, 'converged': True, 'iters': 41, 'rho': 0.5274614333400675, 'amp_measured': 1.8126102252306049, 'amp_predicted': 2.11622938434073, 'ok': True, 'peak_K': 350.86751159259734, 'peak_shift_vs_fixed25_K': 12.268382265862954}
+k2 nominal {'converged': True, 'iters': 6, 'rho': 0.0017696515244638913, 'amp_measured': 1.0017713570171953, 'amp_predicted': 1.001772788742765, 'ok': True, 'peak_K': 335.986752558721, 'peak_shift_vs_fixed25_K': 0.03342496518803273, 'leak_W': 9.168241857770676e-06, 'leak25_W': 2.1202585219080875e-06, 'leak_share': 0.0012117692087306774, 'ship_lib_leak_W': 2.650218383638748e-06}
+k2 hot {'converged': True, 'iters': 8, 'rho': 0.013236078282131568, 'amp_measured': 1.0133250605340482, 'amp_predicted': 1.0134136220334127, 'ok': True, 'peak_K': 394.4784850807071, 'peak_shift_vs_fixed25_K': 0.3751574871741923, 'leak_W': 8.122757960659182e-05, 'leak25_W': 2.1202585219080875e-06, 'leak_share': 0.010634588041800543, 'ship_lib_leak_W': 2.650218383638748e-06}
+k2 stress {'scale': 177.82794100389228, 'converged': True, 'iters': 38, 'rho': 0.49913081573863627, 'amp_measured': 1.7688466449957456, 'amp_predicted': 1.99652929631658, 'ok': True, 'peak_K': 349.252903768245, 'peak_shift_vs_fixed25_K': 11.522255673626546}
+k3 nominal {'converged': True, 'iters': 6, 'rho': 0.001634085644741773, 'amp_measured': 1.0016355589465769, 'amp_predicted': 1.001636760251172, 'ok': True, 'peak_K': 333.33301545342886, 'peak_shift_vs_fixed25_K': 0.03000614324741946, 'leak_W': 8.510007886252632e-06, 'leak25_W': 2.181968974372657e-06, 'leak_share': 0.0012152658501530455, 'ship_lib_leak_W': 2.732335495279848e-06}
+k3 hot {'converged': True, 'iters': 7, 'rho': 0.012483623708740592, 'amp_measured': 1.012562883866135, 'amp_predicted': 1.0126414346216965, 'ok': True, 'peak_K': 391.80622279268823, 'peak_shift_vs_fixed25_K': 0.35321348250681694, 'leak_W': 7.66731344010058e-05, 'leak25_W': 2.181968974372657e-06, 'leak_share': 0.010843701995096709, 'ship_lib_leak_W': 2.732335495279848e-06}
+k3 stress {'scale': 177.82794100389228, 'converged': True, 'iters': 35, 'rho': 0.47546076463631837, 'amp_measured': 1.6369833030345782, 'amp_predicted': 1.9064350816515463, 'ok': True, 'peak_K': 344.7565999151218, 'peak_shift_vs_fixed25_K': 9.624751748367771}
+{"kit": "asap7", "a": false, "b": true, "c": true, "verdict": "FAIL", "wall_s": 46.771379232406616}
+{"spice_s": 2353, "sta_s": 202, "total_s": 2608}
+asap7_lvt: 202 cells, 8576 states, 8595 solves, 2 unreachable, 19 free, 2 not ok, skipped: []
+not ok: [('AOI311xp33_ASAP7_75t_L', '(!A1 * !A2 * !A3 * !B * !C * Y)'), ('AOI311xp33_ASAP7_75t_L', None)]
+9 of 9 cases solved
+asap7_lvt k0 25 rc=0
+asap7_lvt k0 ship rc=0
+asap7_lvt k0 50 rc=0
+asap7_lvt k0 75 rc=0
+asap7_lvt k0 100 rc=0
+asap7_lvt k0 125 rc=0
+asap7_lvt k1 25 rc=0
+asap7_lvt k1 ship rc=0
+asap7_lvt k1 50 rc=0
+asap7_lvt k1 75 rc=0
+asap7_lvt k1 100 rc=0
+asap7_lvt k1 125 rc=0
+asap7_lvt k2 25 rc=0
+asap7_lvt k2 ship rc=0
+asap7_lvt k2 50 rc=0
+asap7_lvt k2 75 rc=0
+asap7_lvt k2 100 rc=0
+asap7_lvt k2 125 rc=0
+asap7_lvt k3 ship rc=0
+asap7_lvt k3 25 rc=0
+asap7_lvt k3 50 rc=0
+asap7_lvt k3 75 rc=0
+asap7_lvt k3 100 rc=0
+asap7_lvt k3 125 rc=0
+a False 8576 0.00015449447656978865
+b True
+k0 nominal {'converged': True, 'iters': 8, 'rho': 0.01539626219638999, 'amp_measured': 1.015538861071255, 'amp_predicted': 1.0156370137602109, 'ok': True, 'peak_K': 336.52989045279645, 'peak_shift_vs_fixed25_K': 0.32121990121999033, 'leak_W': 8.506042506799627e-05, 'leak25_W': 1.7303917712375202e-05, 'leak_share': 0.011079475638144444, 'ship_lib_leak_W': 2.529693976552127e-05}
+k0 hot {'converged': True, 'iters': 12, 'rho': 0.08929448861584931, 'amp_measured': 1.0935183791143106, 'amp_predicted': 1.098049794911347, 'ok': True, 'peak_K': 397.271677130171, 'peak_shift_vs_fixed25_K': 2.9130065785945476, 'leak_W': 0.0006317685778819074, 'leak25_W': 1.7303917712375202e-05, 'leak_share': 0.07682006105470156, 'ship_lib_leak_W': 2.529693976552127e-05}
+k0 stress {'scale': 20.53525026457146, 'converged': True, 'iters': 34, 'rho': 0.45843748749518953, 'amp_measured': 1.704006324002099, 'amp_predicted': 1.8465089013913558, 'ok': True, 'peak_K': 349.758864811347, 'peak_shift_vs_fixed25_K': 11.947643895899432}
+k1 nominal {'converged': True, 'iters': 8, 'rho': 0.017433607674232875, 'amp_measured': 1.0176130035151265, 'amp_predicted': 1.017742930971786, 'ok': True, 'peak_K': 339.91240829615975, 'peak_shift_vs_fixed25_K': 0.3750848413464496, 'leak_W': 9.633464396980862e-05, 'leak25_W': 1.72237072725282e-05, 'leak_share': 0.011477745301973728, 'ship_lib_leak_W': 2.515950049313327e-05}
+k1 hot {'converged': True, 'iters': 13, 'rho': 0.09901659843424149, 'amp_measured': 1.1042138531843937, 'amp_predicted': 1.109898360238565, 'ok': True, 'peak_K': 400.92790339660985, 'peak_shift_vs_fixed25_K': 3.240579941796568, 'leak_W': 0.000700716297342251, 'leak25_W': 1.72237072725282e-05, 'leak_share': 0.07787857010874698, 'ship_lib_leak_W': 2.515950049313327e-05}
+k1 stress {'scale': 19.109529749704404, 'converged': True, 'iters': 37, 'rho': 0.4899670076965515, 'amp_measured': 1.7252296154911628, 'amp_predicted': 1.9606574772422591, 'ok': True, 'peak_K': 354.03000947648064, 'peak_shift_vs_fixed25_K': 13.01384489629612}
+k2 nominal {'converged': True, 'iters': 8, 'rho': 0.01689770849685874, 'amp_measured': 1.0170671019474566, 'amp_predicted': 1.0171881488253094, 'ok': True, 'peak_K': 338.96430568571395, 'peak_shift_vs_fixed25_K': 0.36053735940566867, 'leak_W': 9.334253383166591e-05, 'leak25_W': 1.72972289368292e-05, 'leak_share': 0.011394043665102991, 'ship_lib_leak_W': 2.529517244075427e-05}
+k2 hot {'converged': True, 'iters': 13, 'rho': 0.09661915254300521, 'amp_measured': 1.1015672236058898, 'amp_predicted': 1.106952845873351, 'ok': True, 'peak_K': 399.91235717321814, 'peak_shift_vs_fixed25_K': 3.158588846909879, 'leak_W': 0.0006835216758098243, 'leak25_W': 1.72972289368292e-05, 'leak_share': 0.07782856578571092, 'ship_lib_leak_W': 2.529517244075427e-05}
+k2 stress {'scale': 20.53525026457146, 'converged': True, 'iters': 42, 'rho': 0.5381466241842523, 'amp_measured': 1.8249407335047931, 'amp_predicted': 2.1651893270970506, 'ok': True, 'peak_K': 354.52223228118805, 'peak_shift_vs_fixed25_K': 14.316439101323908}
+k3 nominal {'converged': True, 'iters': 8, 'rho': 0.015581133259051626, 'amp_measured': 1.0157276679682825, 'amp_predicted': 1.015827747502072, 'ok': True, 'peak_K': 336.10521403202705, 'peak_shift_vs_fixed25_K': 0.3237584445677726, 'leak_W': 8.61263706792868e-05, 'leak25_W': 1.78307367171616e-05, 'leak_share': 0.011354531310768011, 'ship_lib_leak_W': 2.610453009339827e-05}
+k3 hot {'converged': True, 'iters': 12, 'rho': 0.09073910609628531, 'amp_measured': 1.0951049088393086, 'amp_predicted': 1.0997943568283428, 'ok': True, 'peak_K': 396.8916179338845, 'peak_shift_vs_fixed25_K': 2.96016234642525, 'leak_W': 0.0006422724385396848, 'leak25_W': 1.78307367171616e-05, 'leak_share': 0.07889021958616274, 'ship_lib_leak_W': 2.610453009339827e-05}
+k3 stress {'scale': 20.53525026457146, 'converged': True, 'iters': 35, 'rho': 0.4703644323383804, 'amp_measured': 1.7302558056768047, 'amp_predicted': 1.888090719464092, 'ok': True, 'peak_K': 349.69005756422183, 'peak_shift_vs_fixed25_K': 12.257370612038414}
+{"kit": "asap7_lvt", "a": false, "b": true, "c": true, "verdict": "FAIL", "wall_s": 59.81335997581482}
+{"spice_s": 2246, "sta_s": 190, "total_s": 2499}

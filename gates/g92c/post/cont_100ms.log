@@ -1,0 +1,19 @@
+DFFASRHQNx1_ASAP7_75t_R (CLK * D * RESETN * SETN * QN) ok tran 1505.7 cont 213.91 dc 213.91 agree -0.0 v {'QN': {25: 0.6999999}}
+DFFASRHQNx1_ASAP7_75t_R (CLK * D * RESETN * SETN * !QN) ok tran 269.28 cont 231.74 dc 231.74 agree -0.0 v {'QN': {25: 1.206371e-07}}
+DFFASRHQNx1_ASAP7_75t_R (CLK * !D * RESETN * SETN * QN) FAIL tran 1491.16 cont 199.91 dc 261.74 agree 0.30932 v {'QN': {25: 1.206371e-07}}
+DFFASRHQNx1_ASAP7_75t_R (CLK * !D * RESETN * SETN * !QN) ok tran 272.06 cont 263.57 dc 262.3 agree -0.00483 v {'QN': {25: 1.206371e-07}}
+DFFASRHQNx1_ASAP7_75t_R (!CLK * D * RESETN * SETN * QN) ok tran 243.78 cont 262.3 dc 261.03 agree -0.00485 v {'QN': {25: 0.6999999}}
+DFFASRHQNx1_ASAP7_75t_R (!CLK * D * RESETN * SETN * !QN) ok tran 1530.47 cont 238.11 dc 236.83 agree -0.00535 v {'QN': {25: 1.206365e-07}}
+DFFASRHQNx1_ASAP7_75t_R (!CLK * !D * RESETN * SETN * QN) ok tran 237.93 cont 239.38 dc 238.11 agree -0.00532 v {'QN': {25: 0.6999999}}
+DFFASRHQNx1_ASAP7_75t_R (!CLK * !D * RESETN * SETN * !QN) ok tran 2801.51 cont 259.75 dc 258.48 agree -0.0049 v {'QN': {25: 1.20638e-07}}
+DFFLQNx1_ASAP7_75t_R (CLK * D * !QN) ok tran 1475.83 cont 190.36 dc 191.63 agree 0.00669 v {'QN': {25: 1.206361e-07}}
+DFFLQNx1_ASAP7_75t_R (CLK * D * QN) ok tran 192.84 cont 198.63 dc 200.54 agree 0.00962 v {'QN': {25: 0.6999999}}
+DFFLQNx1_ASAP7_75t_R (CLK * !D * !QN) ok tran 2759.42 cont 204.36 dc 204.36 agree 0.0 v {'QN': {25: 1.206381e-07}}
+DFFLQNx1_ASAP7_75t_R (CLK * !D * QN) ok tran 168.11 cont 168.71 dc 169.98 agree 0.00755 v {'QN': {25: 0.6999999}}
+DFFLQNx1_ASAP7_75t_R (!CLK * D * !QN) ok tran 193.17 cont 159.16 dc 159.8 agree 0.004 v {'QN': {25: 1.206358e-07}}
+DFFLQNx1_ASAP7_75t_R (!CLK * D * QN) ok tran 1439.23 cont 166.16 dc 166.8 agree 0.00383 v {'QN': {25: 0.6999999}}
+DFFLQNx1_ASAP7_75t_R (!CLK * !D * !QN) ok tran 195.01 cont 189.08 dc 189.72 agree 0.00337 v {'QN': {25: 1.206358e-07}}
+DFFLQNx1_ASAP7_75t_R (!CLK * !D * QN) ok tran 1424.25 cont 154.07 dc 154.07 agree 0.0 v {'QN': {25: 0.6999999}}
+DFFLQNx1_ASAP7_75t_R None ok tran 195.01 cont 189.08 dc 189.72 agree 0.00337 v {'QN': {25: 1.206358e-07}}
+DFFLQNx1_ASAP7_75t_R None ok tran 1424.25 cont 154.07 dc 154.07 agree 0.0 v {'QN': {25: 0.6999999}}
+wall 21.4 s, 18 plans, CONT (0.1, 0.001)
