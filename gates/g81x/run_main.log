@@ -1,0 +1,29 @@
+169 cells kept, 7 behavioural ['DFFASRHQNx1_ASAP7_75t_R', 'DFFHQNx1_ASAP7_75t_R', 'DFFHQNx2_ASAP7_75t_R', 'DFFHQNx3_ASAP7_75t_R', 'DHLx1_ASAP7_75t_R', 'DLLx1_ASAP7_75t_R', 'ICGx1_ASAP7_75t_R'], 26 UDP cells dropped, of which used: []; netlist uses 77 cell types
+3615 escaped identifiers in the netlist; 9 VCD names restored
+3615 escaped identifiers in the netlist; 9 VCD names restored
+3615 escaped identifiers in the netlist; 9 VCD names restored
+3615 escaped identifiers in the netlist; 9 VCD names restored
+3615 escaped identifiers in the netlist; 9 VCD names restored
+ivh k0: Annotated 70206 pin activities. Total                4.89159627e-03 2.18226830e-03 2.54775659e-06 7.07641197e-03 100.0%
+ivh k1: Annotated 70206 pin activities. Total                5.18425647e-03 2.55896337e-03 2.53295752e-06 7.74575258e-03 100.0%
+ivh k2: Annotated 70206 pin activities. Total                5.08108875e-03 2.43716990e-03 2.54565680e-06 7.52080465e-03 100.0%
+ivh k3: Annotated 70206 pin activities. Total                4.81430767e-03 2.07754574e-03 2.63362040e-06 6.89448696e-03 100.0%
+ivh k4: Annotated 70206 pin activities. Total                2.07522535e-03 4.99941176e-04 2.99969361e-06 2.57816631e-03 100.0%
+ivx k0: Annotated 70206 pin activities. Total                4.89584450e-03 2.19026045e-03 2.54570023e-06 7.08865048e-03 100.0%
+ivx k1: Annotated 70206 pin activities. Total                5.18425647e-03 2.55896337e-03 2.53295752e-06 7.74575258e-03 100.0%
+ivx k2: Annotated 70206 pin activities. Total                5.09500457e-03 2.46188371e-03 2.54477573e-06 7.55943311e-03 100.0%
+ivx k3: Annotated 70206 pin activities. Total                4.85108048e-03 2.14308128e-03 2.62538106e-06 6.99678715e-03 100.0%
+ivx k4: Annotated 70206 pin activities. Total                2.07522535e-03 4.99941176e-04 2.99969361e-06 2.57816631e-03 100.0%
+vl k0: Annotated 70206 pin activities. Total                4.89373272e-03 2.17768783e-03 2.54918200e-06 7.07396958e-03 100.0%
+vl k1: Annotated 70206 pin activities. Total                5.18629188e-03 2.55444041e-03 2.53435564e-06 7.74326641e-03 100.0%
+vl k2: Annotated 70206 pin activities. Total                5.08327922e-03 2.43275636e-03 2.54706470e-06 7.51858298e-03 100.0%
+vl k3: Annotated 70206 pin activities. Total                4.81645111e-03 2.07306864e-03 2.63504126e-06 6.89215492e-03 100.0%
+vl k4: Annotated 70206 pin activities. Total                2.07006326e-03 4.93541127e-04 3.00116494e-06 2.56660557e-03 100.0%
+k0 {"v": true, "a": true, "b": true, "c": true, "vl_vs_ivh": {"rel_total": -0.000345145253039858, "tile_rel_l2": 0.005058959505812649, "inst_rel_median": 0.0015550099013558194, "inst_rel_p99": 0.010739873073529123}, "x_component": {"rel_total": -0.001726493644245819, "tile_rel_l2": 0.004436906639084555, "inst_rel_median": 0.0, "inst_rel_p99": 0.08075391003426419}, "gap_closed": {"total": 0.8246113108132149, "tile_l2": 0.26509264385503395}, "x_changes": [124817, 113551]}
+k1 {"v": true, "a": true, "b": true, "c": true, "vl_vs_ivh": {"rel_total": -0.00032097203910441685, "tile_rel_l2": 0.004788936336881595, "inst_rel_median": 0.001296833260317154, "inst_rel_p99": 0.005517710011121061}, "x_component": {"rel_total": 0.0, "tile_rel_l2": 0.0, "inst_rel_median": 0.0, "inst_rel_p99": 0.0}, "gap_closed": {"total": -0.0, "tile_l2": 0.0}, "x_changes": [98977, 98977]}
+k2 {"v": true, "a": true, "b": true, "c": true, "vl_vs_ivh": {"rel_total": -0.00029540323188692597, "tile_rel_l2": 0.004858729615468206, "inst_rel_median": 0.0012546359556294129, "inst_rel_p99": 0.00689066389103455}, "x_component": {"rel_total": -0.005109967829320494, "tile_rel_l2": 0.015083827381078479, "inst_rel_median": 0.0, "inst_rel_p99": 0.28799722487739055}, "gap_closed": {"total": 0.8511506636397423, "tile_l2": 0.569062318371738}, "x_changes": [144849, 98223]}
+k3 {"v": true, "a": true, "b": true, "c": true, "vl_vs_ivh": {"rel_total": -0.00033824706806029337, "tile_rel_l2": 0.005080825802847052, "inst_rel_median": 0.001874743581304461, "inst_rel_p99": 0.0041020802324381635}, "x_component": {"rel_total": -0.014621023593664795, "tile_rel_l2": 0.036425626992636094, "inst_rel_median": 0.0, "inst_rel_p99": 0.9974585968580612}, "gap_closed": {"total": 0.9777120300312849, "tile_l2": 0.8640253036267582}, "x_changes": [233274, 114053]}
+k4 {"v": true, "a": true, "b": true, "c": true, "vl_vs_ivh": {"rel_total": -0.004484093968321168, "tile_rel_l2": 0.002164937005411612, "inst_rel_median": 0.0007497904606354466, "inst_rel_p99": 0.0010004809223026212}, "x_component": {"rel_total": 0.0, "tile_rel_l2": 0.0, "inst_rel_median": 0.0, "inst_rel_p99": 0.0}, "gap_closed": {"total": -0.0, "tile_l2": 0.0}, "x_changes": [80642, 80642]}
+G81x: PASS {'v': True, 'a': True, 'b': True, 'c': True}
+{"icarus_s": 321, "verilator_s": 461, "power_s": 495, "total_s": 1478}
+EXIT=0
