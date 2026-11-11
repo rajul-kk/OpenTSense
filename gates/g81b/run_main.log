@@ -1,0 +1,64 @@
+crc32 exit=0 wall_s=670 RESULT result=00000000 done=1 done_cycle=983651 start=76 stop=983624 cycles=983657 WINDOWS written=20 requested=20 truncated=0
+aha-mont64 exit=0 wall_s=675 RESULT result=00000000 done=1 done_cycle=980005 start=202 stop=979980 cycles=980011 WINDOWS written=20 requested=20 truncated=0
+depthconv exit=0 wall_s=701 RESULT result=00000000 done=1 done_cycle=991301 start=283 stop=990917 cycles=991307 WINDOWS written=20 requested=20 truncated=0
+edn exit=0 wall_s=727 RESULT result=00000000 done=1 done_cycle=1040797 start=2466 stop=1029231 cycles=1040803 WINDOWS written=20 requested=20 truncated=0
+idle exit=0 wall_s=348 RESULT result=9c2704d8 done=1 done_cycle=370959 start=-1 stop=-1 cycles=370965 WINDOWS written=39 requested=39 truncated=0
+huffbench exit=0 wall_s=660 RESULT result=00000000 done=1 done_cycle=828843 start=13133 stop=822301 cycles=828849 WINDOWS written=20 requested=20 truncated=0
+matmult-int exit=0 wall_s=889 RESULT result=00000000 done=1 done_cycle=1095376 start=51391 stop=1072432 cycles=1095382 WINDOWS written=20 requested=20 truncated=0
+md5sum exit=0 wall_s=877 RESULT result=00000000 done=1 done_cycle=1029266 start=4728 stop=1029239 cycles=1029272 WINDOWS written=20 requested=20 truncated=0
+nettle-aes exit=0 wall_s=969 RESULT result=00000000 done=1 done_cycle=969929 start=1556 stop=964010 cycles=969935 WINDOWS written=20 requested=20 truncated=0
+nettle-sha256 exit=0 wall_s=1096 RESULT result=00000000 done=1 done_cycle=986212 start=104 stop=986074 cycles=986218 WINDOWS written=20 requested=20 truncated=0
+nsichneu exit=0 wall_s=969 RESULT result=00000000 done=1 done_cycle=1001158 start=138 stop=1000994 cycles=1001164 WINDOWS written=20 requested=20 truncated=0
+picojpeg exit=0 wall_s=815 RESULT result=00000000 done=1 done_cycle=986195 start=3670 stop=983617 cycles=986201 WINDOWS written=20 requested=20 truncated=0
+qrduino exit=0 wall_s=668 RESULT result=00000000 done=1 done_cycle=836950 start=12412 stop=836576 cycles=836956 WINDOWS written=20 requested=20 truncated=0
+sglib-combined exit=0 wall_s=826 RESULT result=00000000 done=1 done_cycle=1100137 start=13093 stop=1087064 cycles=1100143 WINDOWS written=20 requested=20 truncated=0
+slre exit=0 wall_s=752 RESULT result=00000000 done=1 done_cycle=1008858 start=55 stop=1008832 cycles=1008864 WINDOWS written=20 requested=20 truncated=0
+statemate exit=0 wall_s=731 RESULT result=00000000 done=1 done_cycle=1016301 start=396 stop=1015447 cycles=1016307 WINDOWS written=20 requested=20 truncated=0
+tarfind exit=0 wall_s=734 RESULT result=00000000 done=1 done_cycle=1022915 start=13588 stop=1022890 cycles=1022921 WINDOWS written=20 requested=20 truncated=0
+ud exit=0 wall_s=705 RESULT result=00000000 done=1 done_cycle=984900 start=2704 stop=983708 cycles=984906 WINDOWS written=20 requested=20 truncated=0
+wikisort exit=0 wall_s=1005 RESULT result=00000000 done=1 done_cycle=1501078 start=4936 stop=1455024 cycles=1501084 WINDOWS written=20 requested=20 truncated=0
+xgboost exit=0 wall_s=3646 RESULT result=00000000 done=1 done_cycle=4980663 start=78 stop=4980638 cycles=4980669 WINDOWS written=20 requested=20 truncated=0
+aha-mont64 power: 20 windows;      20 Annotated 70206 pin activities. 
+crc32 power: 20 windows;      20 Annotated 70206 pin activities. 
+depthconv power: 20 windows;      20 Annotated 70206 pin activities. 
+edn power: 20 windows;      20 Annotated 70206 pin activities. 
+huffbench power: 20 windows;      20 Annotated 70206 pin activities. 
+idle power: 39 windows;      39 Annotated 70206 pin activities. 
+matmult-int power: 20 windows;      20 Annotated 70206 pin activities. 
+md5sum power: 20 windows;      20 Annotated 70206 pin activities. 
+nettle-aes power: 20 windows;      20 Annotated 70206 pin activities. 
+nettle-sha256 power: 20 windows;      20 Annotated 70206 pin activities. 
+nsichneu power: 20 windows;      20 Annotated 70206 pin activities. 
+picojpeg power: 20 windows;      20 Annotated 70206 pin activities. 
+qrduino power: 20 windows;      20 Annotated 70206 pin activities. 
+sglib-combined power: 20 windows;      20 Annotated 70206 pin activities. 
+slre power: 20 windows;      20 Annotated 70206 pin activities. 
+statemate power: 20 windows;      20 Annotated 70206 pin activities. 
+tarfind power: 20 windows;      20 Annotated 70206 pin activities. 
+ud power: 20 windows;      20 Annotated 70206 pin activities. 
+wikisort power: 20 windows;      20 Annotated 70206 pin activities. 
+xgboost power: 20 windows;      20 Annotated 70206 pin activities. 
+aha-mont64 {"a": true, "b": true, "c": true, "pearson_test": 0.9929824924271228, "rel_rms_test": 0.0022556536279154443, "min_annotated": 1.0, "dyn_W": {"mean": 0.0083044958415, "min": 0.00803203741, "max": 0.00848187902}, "windows_outside_loop": []}
+crc32 {"a": true, "b": true, "c": true, "pearson_test": 0.9771586364391041, "rel_rms_test": 0.00036640705466544195, "min_annotated": 1.0, "dyn_W": {"mean": 0.007838172803, "min": 0.00781067321, "max": 0.00786141888}, "windows_outside_loop": []}
+depthconv {"a": true, "b": true, "c": true, "pearson_test": 0.9969373080248178, "rel_rms_test": 0.00031922329757156975, "min_annotated": 1.0, "dyn_W": {"mean": 0.007326523843, "min": 0.00727778883, "max": 0.0073622805}, "windows_outside_loop": []}
+edn {"a": true, "b": true, "c": true, "pearson_test": 0.9993819282085095, "rel_rms_test": 0.0014977069975219087, "min_annotated": 1.0, "dyn_W": {"mean": 0.0073876142620000005, "min": 0.006626954070000001, "max": 0.00752698234}, "windows_outside_loop": []}
+huffbench {"a": true, "b": true, "c": true, "pearson_test": 0.9924329847586723, "rel_rms_test": 0.0022421643839219303, "min_annotated": 1.0, "dyn_W": {"mean": 0.007501782255500002, "min": 0.00720276194, "max": 0.007693958}, "windows_outside_loop": []}
+idle {"a": true, "b": true, "c": true, "pearson_test": 0.9999835285154077, "rel_rms_test": 0.003488264632139486, "min_annotated": 1.0, "dyn_W": {"mean": 0.005518724867333334, "min": 0.002561651637, "max": 0.00811344874}, "windows_outside_loop": []}
+matmult-int {"a": true, "b": true, "c": true, "pearson_test": 0.9779273805817521, "rel_rms_test": 0.0003230630970324135, "min_annotated": 1.0, "dyn_W": {"mean": 0.0071500084584999995, "min": 0.00651798584, "max": 0.00720951706}, "windows_outside_loop": []}
+md5sum {"a": true, "b": true, "c": true, "pearson_test": 0.9999024389861136, "rel_rms_test": 0.0007998475362340101, "min_annotated": 1.0, "dyn_W": {"mean": 0.0076879268859999985, "min": 0.00710566179, "max": 0.00805962155}, "windows_outside_loop": []}
+nettle-aes {"a": true, "b": true, "c": true, "pearson_test": 0.996762799014016, "rel_rms_test": 0.0008788039626989359, "min_annotated": 1.0, "dyn_W": {"mean": 0.0076152872994999996, "min": 0.0063656228600000005, "max": 0.00786001864}, "windows_outside_loop": []}
+nettle-sha256 {"a": true, "b": true, "c": true, "pearson_test": 0.9999409236122978, "rel_rms_test": 0.0005864267496404557, "min_annotated": 1.0, "dyn_W": {"mean": 0.008242525162, "min": 0.00734138325, "max": 0.00858630403}, "windows_outside_loop": []}
+nsichneu {"a": true, "b": true, "c": true, "pearson_test": 0.9969811795370459, "rel_rms_test": 0.00033029328474951737, "min_annotated": 1.0, "dyn_W": {"mean": 0.0069380947155, "min": 0.00689492421, "max": 0.0070003667}, "windows_outside_loop": []}
+picojpeg {"a": true, "b": true, "c": true, "pearson_test": 0.9992012494288609, "rel_rms_test": 0.001825667734564049, "min_annotated": 1.0, "dyn_W": {"mean": 0.007260297355500001, "min": 0.00693249144, "max": 0.00772613194}, "windows_outside_loop": []}
+qrduino {"a": true, "b": true, "c": true, "pearson_test": 0.9950924405688327, "rel_rms_test": 0.0023799381304023853, "min_annotated": 1.0, "dyn_W": {"mean": 0.007336723259, "min": 0.0071315632599999994, "max": 0.00755994162}, "windows_outside_loop": []}
+sglib-combined {"a": true, "b": true, "c": true, "pearson_test": 0.9999571441413754, "rel_rms_test": 0.00038234275703369927, "min_annotated": 1.0, "dyn_W": {"mean": 0.007188354584500001, "min": 0.00691732741, "max": 0.00746497069}, "windows_outside_loop": []}
+slre {"a": true, "b": true, "c": true, "pearson_test": 0.9990980167992995, "rel_rms_test": 0.0005459952865410398, "min_annotated": 1.0, "dyn_W": {"mean": 0.007214422269000001, "min": 0.00712119858, "max": 0.007288060380000001}, "windows_outside_loop": []}
+statemate {"a": true, "b": true, "c": true, "pearson_test": 0.9998104561049821, "rel_rms_test": 0.00031427230972436306, "min_annotated": 1.0, "dyn_W": {"mean": 0.006845989683999999, "min": 0.00669010613, "max": 0.00696747401}, "windows_outside_loop": []}
+tarfind {"a": true, "b": true, "c": true, "pearson_test": 0.9998829667204223, "rel_rms_test": 0.0005983249769508644, "min_annotated": 1.0, "dyn_W": {"mean": 0.0069416704225, "min": 0.0063212278700000004, "max": 0.00727943005}, "windows_outside_loop": []}
+ud {"a": true, "b": true, "c": true, "pearson_test": 0.9999444270649402, "rel_rms_test": 0.0004591292078499501, "min_annotated": 1.0, "dyn_W": {"mean": 0.0067158848965, "min": 0.00644096569, "max": 0.00699232961}, "windows_outside_loop": []}
+wikisort {"a": true, "b": true, "c": true, "pearson_test": 0.996174209309038, "rel_rms_test": 0.0016502201918283208, "min_annotated": 1.0, "dyn_W": {"mean": 0.0072595818205, "min": 0.00707179215, "max": 0.00760651426}, "windows_outside_loop": []}
+xgboost {"a": true, "b": true, "c": true, "pearson_test": 0.9976132565461326, "rel_rms_test": 0.0003504503337811876, "min_annotated": 1.0, "dyn_W": {"mean": 0.0074291199584999995, "min": 0.00733906334, "max": 0.00748599158}, "windows_outside_loop": []}
+reported {"suite_spread_program_means": 1.2365452906776155, "suite_spread_windows": 1.3583285093628494, "g30_spread": 1.11, "prediction_wider_than_g30": true}
+G81b: PASS {'a': True, 'b': True, 'c': True}
+{"build_s": 1129, "idle_pass1_s": 153, "sims_s": 10729, "power_s": 8983, "total_s": 21229}
+EXIT=0

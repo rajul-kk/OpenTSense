@@ -1,0 +1,5 @@
+169 cells kept, 7 behavioural ['DFFASRHQNx1_ASAP7_75t_R', 'DFFHQNx1_ASAP7_75t_R', 'DFFHQNx2_ASAP7_75t_R', 'DFFHQNx3_ASAP7_75t_R', 'DHLx1_ASAP7_75t_R', 'DLLx1_ASAP7_75t_R', 'ICGx1_ASAP7_75t_R'], 26 UDP cells dropped, of which used: []; netlist uses 77 cell types
+20334 nets counted in 16 regions (sizes [271, 1356, 1509, 1000, 1457, 1759, 1820, 1546, 1383, 1736, 1674, 703, 568, 1509, 1981, 62]); 2 hierarchical blocks, 0 unplaced cells skipped
+-rwxr-xr-x 1 root root 21996848 Nov  8 10:01 gates/g81b/dry/sim/obj/simv
+build_s 334
+EXIT=0

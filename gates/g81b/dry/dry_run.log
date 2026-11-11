@@ -1,0 +1,44 @@
+3615 escaped identifiers in the netlist; 9 VCD names restored
+harness k0: Annotated 70206 pin activities. Total                4.89278324e-03 2.17647129e-03 2.54936162e-06 7.07180379e-03 100.0%
+G81x vl k0: Total                4.89373272e-03 2.17768783e-03 2.54918200e-06 7.07396958e-03 100.0%
+bash: line 1:     8 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/crc32.hex +max=6000000 > run.log 2>&1
+bash: line 1:     7 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/aha-mont64.hex +max=6000000 > run.log 2>&1
+crc32 wall_s=1 
+aha-mont64 wall_s=2 
+bash: line 1:     7 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/depthconv.hex +max=6000000 > run.log 2>&1
+bash: line 1:     8 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/edn.hex +max=6000000 > run.log 2>&1
+depthconv wall_s=1 
+edn wall_s=2 
+bash: line 1:     8 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/huffbench.hex +max=6000000 > run.log 2>&1
+bash: line 1:     8 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/idle.hex +max=6000000 > run.log 2>&1
+huffbench wall_s=2 
+idle wall_s=3 
+bash: line 1:     8 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/matmult-int.hex +max=6000000 > run.log 2>&1
+matmult-int wall_s=3 
+bash: line 1:     9 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/md5sum.hex +max=6000000 > run.log 2>&1
+md5sum wall_s=3 
+bash: line 1:     8 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/nettle-aes.hex +max=6000000 > run.log 2>&1
+nettle-aes wall_s=2 
+bash: line 1:     8 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/nettle-sha256.hex +max=6000000 > run.log 2>&1
+nettle-sha256 wall_s=2 
+bash: line 1:     7 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/nsichneu.hex +max=6000000 > run.log 2>&1
+nsichneu wall_s=2 
+bash: line 1:     8 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/picojpeg.hex +max=6000000 > run.log 2>&1
+picojpeg wall_s=2 
+bash: line 1:     8 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/qrduino.hex +max=6000000 > run.log 2>&1
+qrduino wall_s=2 
+bash: line 1:     8 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/sglib-combined.hex +max=6000000 > run.log 2>&1
+sglib-combined wall_s=2 
+bash: line 1:     8 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/slre.hex +max=6000000 > run.log 2>&1
+slre wall_s=3 
+bash: line 1:     7 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/statemate.hex +max=6000000 > run.log 2>&1
+statemate wall_s=3 
+bash: line 1:     8 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/tarfind.hex +max=6000000 > run.log 2>&1
+tarfind wall_s=3 
+bash: line 1:     8 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/ud.hex +max=6000000 > run.log 2>&1
+ud wall_s=2 
+bash: line 1:     8 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/wikisort.hex +max=6000000 > run.log 2>&1
+wikisort wall_s=1 
+bash: line 1:     8 Aborted                    /work/gates/g81b/dry/sim/obj/simv +hex=/work/gates/g81b/dry/sw1/xgboost.hex +max=6000000 > run.log 2>&1
+xgboost wall_s=1 
+EXIT=0

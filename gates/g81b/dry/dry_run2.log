@@ -1,0 +1,25 @@
+169 cells kept, 7 behavioural ['DFFASRHQNx1_ASAP7_75t_R', 'DFFHQNx1_ASAP7_75t_R', 'DFFHQNx2_ASAP7_75t_R', 'DFFHQNx3_ASAP7_75t_R', 'DHLx1_ASAP7_75t_R', 'DLLx1_ASAP7_75t_R', 'ICGx1_ASAP7_75t_R'], 26 UDP cells dropped, of which used: []; netlist uses 77 cell types
+20334 nets counted in 16 regions (sizes [271, 1356, 1509, 1000, 1457, 1759, 1820, 1546, 1383, 1736, 1674, 703, 568, 1509, 1981, 62]); 2 hierarchical blocks, 0 unplaced cells skipped
+-rwxr-xr-x 1 root root 21996848 Nov  8 10:44 gates/g81b/dry/sim/obj/simv
+build_s 1292
+aha-mont64 wall_s=15 RESULT result=00000000 done=1 done_cycle=13310 start=107 stop=13285 cycles=13316 13 rows
+depthconv wall_s=5 RESULT result=00000000 done=1 done_cycle=3970 start=283 stop=3618 cycles=3976 3 rows
+crc32 wall_s=34 RESULT result=00000000 done=1 done_cycle=32931 start=76 stop=32904 cycles=32937 32 rows
+edn wall_s=69 RESULT result=00000000 done=1 done_cycle=87311 start=2520 stop=75745 cycles=87317 87 rows
+idle wall_s=197 RESULT result=d7d593e1 done=1 done_cycle=286539 start=-1 stop=-1 cycles=286545 286 rows
+huffbench wall_s=314 RESULT result=00000000 done=1 done_cycle=424267 start=13119 stop=417725 cycles=424273 424 rows
+md5sum wall_s=73 RESULT result=00000000 done=1 done_cycle=73127 start=4746 stop=73100 cycles=73133 73 rows
+matmult-int wall_s=171 RESULT result=00000000 done=1 done_cycle=201321 start=50583 stop=178280 cycles=201327 201 rows
+nettle-sha256 wall_s=11 RESULT result=00000000 done=1 done_cycle=10969 start=150 stop=10838 cycles=10975 10 rows
+nsichneu wall_s=6 RESULT result=00000000 done=1 done_cycle=3763 start=137 stop=3599 cycles=3769 3 rows
+nettle-aes wall_s=71 RESULT result=00000000 done=1 done_cycle=81882 start=1602 stop=75708 cycles=81888 81 rows
+qrduino wall_s=676 RESULT result=00000000 done=1 done_cycle=836950 start=12412 stop=836576 cycles=836956 836 rows
+picojpeg wall_s=818 RESULT result=00000000 done=1 done_cycle=986195 start=3670 stop=983617 cycles=986201 986 rows
+slre wall_s=32 RESULT result=00000000 done=1 done_cycle=34947 start=81 stop=34921 cycles=34953 34 rows
+statemate wall_s=6 RESULT result=00000000 done=1 done_cycle=2974 start=394 stop=2185 cycles=2980 2 rows
+sglib-combined wall_s=178 RESULT result=00000000 done=1 done_cycle=179852 start=13093 stop=166779 cycles=179858 179 rows
+ud wall_s=9 RESULT result=00000000 done=1 done_cycle=6984 start=2726 stop=5792 cycles=6990 6 rows
+tarfind wall_s=118 RESULT result=00000000 done=1 done_cycle=139436 start=13619 stop=139411 cycles=139442 139 rows
+wikisort wall_s=1123 RESULT result=00000000 done=1 done_cycle=1501078 start=4936 stop=1455024 cycles=1501084 1501 rows
+xgboost wall_s=3939 RESULT result=00000000 done=1 done_cycle=4980663 start=78 stop=4980638 cycles=4980669 4980 rows
+EXIT=0
