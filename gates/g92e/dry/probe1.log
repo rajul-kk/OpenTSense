@@ -1,0 +1,29 @@
+Traceback (most recent call last):
+  File "/work/gates/g92e/dry/probe.py", line 59, in <module>
+    pick = [j for j in jobs if j[0] == cell and (whens is None or any(w in cells[cell]["states"][j[1][0]]["when"] for w in whens))]
+                                                                  ^^^
+  File "/work/gates/g92e/dry/probe.py", line 59, in <genexpr>
+    pick = [j for j in jobs if j[0] == cell and (whens is None or any(w in cells[cell]["states"][j[1][0]]["when"] for w in whens))]
+                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: argument of type 'NoneType' is not a container or iterable
+Traceback (most recent call last):
+  File "/work/gates/g92e/dry/probe.py", line 59, in <module>
+    pick = [j for j in jobs if j[0] == cell and (whens is None or any(w in (cells[cell]["states"][j[1][0]]["when"] or "") for w in whens))]
+                                                                  ^^^
+  File "/work/gates/g92e/dry/probe.py", line 59, in <genexpr>
+    pick = [j for j in jobs if j[0] == cell and (whens is None or any(w in (cells[cell]["states"][j[1][0]]["when"] or "") for w in whens))]
+                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: argument of type 'NoneType' is not a container or iterable
+variant {'CONT_OPTS': 'reltol=1e-6', 'TAIL': 0.0, 'FLAT': 0.005, 'FLOOR_A': 2e-12, 'STAGES': (0.0001, 0.001, 0.01, 0.1, 1.0), 'TEMPS': (25,)}
+SDFHx3_ASAP7_75t_R (CLK * D * SE * SI * QN) ok settled {25: 252.11} t {25: 0.01}
+   trace 25 [('0.0001', 258.48), ('0.001', 251.47), ('0.01', 252.11)]
+SDFHx3_ASAP7_75t_R (CLK * !D * SE * !SI * QN) ok settled {25: 240.65} t {25: 0.01}
+   trace 25 [('0.0001', 239.38), ('0.001', 241.29), ('0.01', 240.65)]
+wall 579.9 s, 2 plans
+variant {'CONT_OPTS': 'reltol=1e-6', 'TAIL': 0.1, 'FLAT': 0.005, 'FLOOR_A': 2e-12, 'STAGES': (0.0001, 0.001, 0.01, 0.1, 1.0), 'TEMPS': (25,)}
+SDFHx3_ASAP7_75t_R (CLK * D * SE * SI * QN) ok settled {25: 252.44} t {25: 0.01}
+   trace 25 [('0.0001', 258.17), ('0.001', 251.32), ('0.01', 252.44)]
+SDFHx3_ASAP7_75t_R (CLK * !D * SE * !SI * QN) ok settled {25: 241.06} t {25: 0.01}
+   trace 25 [('0.0001', 237.62), ('0.001', 240.94), ('0.01', 241.06)]
+wall 546.0 s, 2 plans
+EXIT=0

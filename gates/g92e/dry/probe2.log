@@ -1,0 +1,25 @@
+variant {'CONT_OPTS': '', 'TAIL': 0.0, 'FLAT': 0.0, 'FLOOR_A': 0.0, 'STAGES': (0.0001, 0.001, 0.01, 0.1, 1.0), 'TEMPS': (25,)}
+SDFHx3_ASAP7_75t_R (CLK * D * SE * SI * QN) FAIL settled {} t {}
+   trace 25 [('0.0001', 257.84), ('0.001', 252.75), ('0.01', 250.84), ('0.1', 253.39), ('1', 251.48)]
+SDFHx3_ASAP7_75t_R (CLK * !D * SE * !SI * QN) FAIL settled {} t {}
+   trace 25 [('0.0001', 238.11), ('0.001', 242.56), ('0.01', 240.65), ('0.1', 242.56), ('1', 240.65)]
+wall 2.5 s, 2 plans
+variant {'CONT_OPTS': '', 'TAIL': 0.1, 'FLAT': 0.0, 'FLOOR_A': 0.0, 'STAGES': (0.0001, 0.001, 0.01, 0.1, 1.0), 'TEMPS': (25,)}
+SDFHx3_ASAP7_75t_R (CLK * D * SE * SI * QN) FAIL settled {} t {}
+   trace 25 [('0.0001', 257.47), ('0.001', 252.73), ('0.01', 253.24), ('0.1', 252.02), ('1', 252.45)]
+SDFHx3_ASAP7_75t_R (CLK * !D * SE * !SI * QN) FAIL settled {} t {}
+   trace 25 [('0.0001', 237.07), ('0.001', 241.77), ('0.01', 242.04), ('0.1', 240.99), ('1', 241.96)]
+wall 2.7 s, 2 plans
+variant {'CONT_OPTS': 'reltol=1e-6', 'TAIL': 0.0, 'FLAT': 0.0, 'FLOOR_A': 0.0, 'STAGES': (0.0001, 0.001, 0.01, 0.1, 1.0), 'TEMPS': (25,)}
+SDFHx3_ASAP7_75t_R (CLK * D * SE * SI * QN) FAIL settled {} t {}
+   trace 25 [('0.0001', 258.48), ('0.001', 251.47), ('0.01', 252.11), ('0.1', 252.75)]
+SDFHx3_ASAP7_75t_R (CLK * !D * SE * !SI * QN) FAIL settled {} t {}
+   trace 25 [('0.0001', 239.38), ('0.001', 241.29), ('0.01', 240.65), ('0.1', 240.65)]
+wall 4551.4 s, 2 plans
+variant {'CONT_OPTS': 'reltol=1e-6', 'TAIL': 0.1, 'FLAT': 0.0, 'FLOOR_A': 0.0, 'STAGES': (0.0001, 0.001, 0.01, 0.1, 1.0), 'TEMPS': (25,)}
+SDFHx3_ASAP7_75t_R (CLK * D * SE * SI * QN) FAIL settled {} t {}
+   trace 25 [('0.0001', 258.17), ('0.001', 251.32), ('0.01', 252.44), ('0.1', 252.3)]
+SDFHx3_ASAP7_75t_R (CLK * !D * SE * !SI * QN) FAIL settled {} t {}
+   trace 25 [('0.0001', 237.62), ('0.001', 240.94), ('0.01', 241.06), ('0.1', 241.36)]
+wall 22525.8 s, 2 plans
+EXIT=0
