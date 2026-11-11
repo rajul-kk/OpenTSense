@@ -1,0 +1,19 @@
+{
+  "design": "sky130hd/gcd",
+  "activity": "default",
+  "die_um": [
+    80.025,
+    80.025
+  ],
+  "grid": [
+    16,
+    16
+  ],
+  "n_instances": 814,
+  "n_hierarchical_skipped": 1,
+  "total_power_W": 0.00808,
+  "map_power_W": 0.008080702513835565,
+  "peak_rise_ice_K": 35.50999999999999,
+  "peak_rise_pact_K": 35.30000000000001,
+  "thermal_s": 2.1
+}

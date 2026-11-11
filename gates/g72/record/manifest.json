@@ -1,0 +1,53 @@
+{
+  "time_utc": "2026-11-01T09:29:36+00:00",
+  "host": "e2ce92e51ea2",
+  "python": "3.14.4",
+  "repo": {
+    "commit": "0f40329919d830b3e22e81c02dcbf8e686c78f76",
+    "dirty": false
+  },
+  "image": "sha256:73335acfb98bac0cb41b60dfc4e1da347281b505f6ec793e601d90cfef534f9b",
+  "orfs_image": "openroad/orfs@sha256:55266bc72fd67238407fa0c60da5a7f83c25ea14123829df769437d0dd0649ed",
+  "tools": {
+    "iverilog": "Icarus Verilog version 12.0 (stable) ()",
+    "verilator": "Verilator 5.032 2025-01-01 rev (Debian 5.032-1)",
+    "ngspice": "ngspice-45.2 : Circuit level simulation program",
+    "3dice_commit": "4953952a1ef6d38807ff307212a6f15e5b2ef935",
+    "superlu_mt_commit": "e60ed2c1dd491e1832d783f519c1851288f9d422",
+    "pact_commit": "bb7f05a0a893eac4826b1bc55b3e1f2415ba057d",
+    "ca_certificates": "20260816ubuntu0.26.04.1"
+  },
+  "packages": {
+    "numpy": "2.3.4",
+    "scipy": "1.16.3",
+    "pandas": "2.3.3",
+    "PyYAML": "6.0.3",
+    "pytest": "8.4.2"
+  },
+  "gate": "G72",
+  "inputs_sha256": {
+    "asap7-ibex/results/asap7/ibex/base/6_final.odb": "89e03b7a4f53cc79da5245d7252b4234d13f06f850913100c074fc2dee20278c",
+    "asap7-ibex/results/asap7/ibex/base/6_final.sdc": "2b7ce762efba2098036967251041c05fe20335091c00ea4cde6effd8d207f583",
+    "asap7-ibex/results/asap7/ibex/base/6_final.spef": "a7713a08c808242d67a7528199fedb19302413cf06b6b97f6e1cff5660239858",
+    "asap7-ibex/results/asap7/ibex/base/6_final.v": "4f9e9b2eca5605a42d65db3d765ffca24a540442a21bd313615c5df987eb038f",
+    "asap7-tpu/results/asap7/tpu/base/6_final.odb": "ec8b0f7781f3107a9807793063fd81c999c59aac1260a0d4a61a77bc24d7492e",
+    "asap7-tpu/results/asap7/tpu/base/6_final.sdc": "0f500120a0ac47d4683bc89261b06b927f5fc45e8479c7c99a43b4a4b2690720",
+    "asap7-tpu/results/asap7/tpu/base/6_final.spef": "4c9ce7d4b9d41c6903c36d16d370531db81e574fee4cb714545c363bb1196337",
+    "asap7-tpu/results/asap7/tpu/base/6_final.v": "49af6862cea3e64d6b8f14f8503ae7e9e7b998465274df076a72c50119420c60",
+    "ibex_hex/k0.hex": "e5434ce28228f3d19d69698a71b46fcb1607680cb04498dc68d84b24a144aff6",
+    "ibex_hex/k1.hex": "17d99b0b1a86bcee92211533cab58d482bbacd758420b1f11eb9caa87ab5d6f9",
+    "ibex_hex/k2.hex": "eb74c6234b75b1404bd4612aed28a5b2f8e2caa8089a6e7d4c17da5dda68fa68",
+    "ibex_hex/k3.hex": "6fd94260a40dffed0f36b7d4d61c79841ad6232c6d6f5bf86394ac64142f4b2d",
+    "ibex_hex/k4.hex": "aaaac3a5e95ebfeff06c75b05d9eabd6273cf27b221d704f852ecbc7b6cf4925",
+    "tpu/stim_W1.hex": "a6b9b189a2ff4ecc0dabb857b7140e96603afe776d8ef0b7766a316b68d6e8d0",
+    "tpu/stim_W2.hex": "180b66e2f378f327148a02cf913da19b9fb99f3a711c81f1029723506f241483",
+    "tpu/stim_W3.hex": "842266a8708ab0c750c48a738e502e953f4cae06dd182f9f8a19822cbabdc392",
+    "stdcell/asap7sc7p5t_AO_RVT_TT_201020.v": "7d60ca80e150189367085daffcca59e2eb768ac4739c50ad04c318d8a3bb9d48",
+    "stdcell/asap7sc7p5t_INVBUF_RVT_TT_201020.v": "8804a647af1e2161c13fffcaef9ec50786494534872ec50adaae593967a3b459",
+    "stdcell/asap7sc7p5t_OA_RVT_TT_201020.v": "d98d028cdc47061912c4dffe12af420b65d3ce3f89f728c5a03d9819967b77b4",
+    "stdcell/asap7sc7p5t_SEQ_RVT_TT_220101.v": "6e63ff4b5587097a76bf395c6f2383035368d5c8d95dbf551ba324d3a9537fde",
+    "stdcell/asap7sc7p5t_SIMPLE_RVT_TT_201020.v": "849946d9b648ef58f39a97027de5e7f24051f6ef4fded598dec861e3257ea4b6",
+    "stdcell/dff.v": "1141a9ddb579a4eaf131bb0fe4a4b44f22c11af54c970a829e9357d9ddfb9313",
+    "stdcell/empty.v": "acfd1cabb6307c064a51767ec8d37b3c90c422cdd323cfa73541b9d2ec71f240"
+  }
+}
