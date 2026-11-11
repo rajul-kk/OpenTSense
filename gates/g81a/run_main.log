@@ -1,0 +1,19 @@
+169 cells kept, 7 behavioural ['DFFASRHQNx1_ASAP7_75t_R', 'DFFHQNx1_ASAP7_75t_R', 'DFFHQNx2_ASAP7_75t_R', 'DFFHQNx3_ASAP7_75t_R', 'DHLx1_ASAP7_75t_R', 'DLLx1_ASAP7_75t_R', 'ICGx1_ASAP7_75t_R'], 26 UDP cells dropped, of which used: []; netlist uses 77 cell types
+3615 escaped identifiers in the netlist; 9 VCD names restored
+k0 done: Annotated 70206 pin activities. Total                4.89383750e-03 2.17742193e-03 2.54946303e-06 7.07380893e-03 100.0%
+3615 escaped identifiers in the netlist; 9 VCD names restored
+k1 done: Annotated 70206 pin activities. Total                5.18629188e-03 2.55444041e-03 2.53435564e-06 7.74326641e-03 100.0%
+3615 escaped identifiers in the netlist; 9 VCD names restored
+k2 done: Annotated 70206 pin activities. Total                5.08305477e-03 2.42844527e-03 2.54900715e-06 7.51404930e-03 100.0%
+3615 escaped identifiers in the netlist; 9 VCD names restored
+k3 done: Annotated 70206 pin activities. Total                4.81645111e-03 2.07306864e-03 2.63504126e-06 6.89215492e-03 100.0%
+3615 escaped identifiers in the netlist; 9 VCD names restored
+k4 done: Annotated 70206 pin activities. Total                2.07006326e-03 4.93541127e-04 3.00116494e-06 2.56660557e-03 100.0%
+k0 {"annotated_frac": 1.0, "rel_total": -0.0020937059940921987, "tile_rel_l2": 0.006936364943365404, "checksum": "00031a38", "c": true, "speedup_function_run": 35.784615384615385}
+k1 {"annotated_frac": 1.0, "rel_total": -0.00032097203910441685, "tile_rel_l2": 0.004788936336881595, "checksum": "e89a564e", "c": true, "speedup_function_run": 38.72592592592592}
+k2 {"annotated_frac": 1.0, "rel_total": -0.006003599653519598, "tile_rel_l2": 0.01689526399907933, "checksum": "0230e831", "c": true, "speedup_function_run": 36.0551724137931}
+k3 {"annotated_frac": 1.0, "rel_total": -0.014954325143362479, "tile_rel_l2": 0.037064179716159086, "checksum": "00001d1e", "c": true, "speedup_function_run": 38.72222222222222}
+k4 {"annotated_frac": 1.0, "rel_total": -0.004484093968321168, "tile_rel_l2": 0.002164937005411612, "checksum": "00000000", "c": true, "speedup_function_run": 348.5333333333333}
+G81a: FAIL {'a': True, 'b': False, 'c': True}
+{"build_s": 259, "sim_power_s": 236, "total_s": 506}
+EXIT=0

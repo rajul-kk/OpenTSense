@@ -1,0 +1,24 @@
+169 cells kept, 7 behavioural ['DFFASRHQNx1_ASAP7_75t_R', 'DFFHQNx1_ASAP7_75t_R', 'DFFHQNx2_ASAP7_75t_R', 'DFFHQNx3_ASAP7_75t_R', 'DHLx1_ASAP7_75t_R', 'DLLx1_ASAP7_75t_R', 'ICGx1_ASAP7_75t_R'], 26 UDP cells dropped, of which used: []; netlist uses 77 cell types
+variant plain build_s 188 sim_s 18
+- Verilator: $finish at 27us; walltime 18.857 s; speed 1.674 us/s
+- Verilator: cpu 16.130 s on 1 threads; alloced 94 MB
+-rw-r--r-- 1 root root 24193091 Nov  7 18:38 gates/g81a/dry/plain/k0.vcd
+variant plain: Annotated 14917 pin activities. unannotated 55289 | Total                5.20777190e-03 2.38581072e-03 2.54127417e-06 7.59612350e-03 100.0%
+169 cells kept, 7 behavioural ['DFFASRHQNx1_ASAP7_75t_R', 'DFFHQNx1_ASAP7_75t_R', 'DFFHQNx2_ASAP7_75t_R', 'DFFHQNx3_ASAP7_75t_R', 'DHLx1_ASAP7_75t_R', 'DLLx1_ASAP7_75t_R', 'ICGx1_ASAP7_75t_R'], 26 UDP cells dropped, of which used: []; netlist uses 77 cell types
+variant public build_s 597 sim_s 187
+- Verilator: $finish at 27us; walltime 185.170 s; speed 232.009 ns/s
+- Verilator: cpu 116.379 s on 1 threads; alloced 130 MB
+-rw-r--r-- 1 root root 720122738 Nov  7 18:51 gates/g81a/dry/public/k0.vcd
+variant public: Annotated 14917 pin activities. unannotated 55289 | Total                5.20777190e-03 2.38581072e-03 2.54127417e-06 7.59612350e-03 100.0%
+G72 Icarus k0: Total                4.89584450e-03 2.19026045e-03 2.54570023e-06 7.08865048e-03 100.0%
+EXIT=0
+169 cells kept, 7 behavioural ['DFFASRHQNx1_ASAP7_75t_R', 'DFFHQNx1_ASAP7_75t_R', 'DFFHQNx2_ASAP7_75t_R', 'DFFHQNx3_ASAP7_75t_R', 'DHLx1_ASAP7_75t_R', 'DLLx1_ASAP7_75t_R', 'ICGx1_ASAP7_75t_R'], 26 UDP cells dropped, of which used: []; netlist uses 77 cell types
+variant underscore build_s 1089 sim_s 132
+- Verilator: $finish at 27us; walltime 131.553 s; speed 368.197 ns/s
+- Verilator: cpu 73.333 s on 1 threads; alloced 107 MB
+-rw-r--r-- 1 root root 242380531 Nov  7 19:19 gates/g81a/dry/underscore/k0.vcd
+variant underscore: Annotated 68954 pin activities. unannotated  1252 | Total                4.65328759e-03 1.90572441e-03 2.60474030e-06 6.56161690e-03 100.0%
+G72 Icarus k0: Total                4.89584450e-03 2.19026045e-03 2.54570023e-06 7.08865048e-03 100.0%
+EXIT=0
+underscore, sim ends at window end: Annotated 68954 pin activities. unannotated  1252 | Total                4.92683891e-03 2.22621812e-03 2.54868723e-06 7.15560559e-03 100.0%
+EXIT=0
