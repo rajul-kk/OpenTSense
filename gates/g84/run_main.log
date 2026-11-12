@@ -1,0 +1,128 @@
+plumbing vs G71 PACT (max |dT| K): {'top': 0.004996597333082775, 'bot': 0.004998536709450718}
+400 cases from 20 programs; solving
+{
+ "sha256": "f5941ad74a0d62f256c052607607be24985eaaa3c43fffe3fa10514a677f6e7c",
+ "cases": 400,
+ "split": {
+  "train": 240,
+  "cal": 80,
+  "test": 80
+ },
+ "programs_by_split": {
+  "train": [
+   "aha-mont64",
+   "crc32",
+   "edn",
+   "huffbench",
+   "idle",
+   "nettle-aes",
+   "nettle-sha256",
+   "picojpeg",
+   "sglib-combined",
+   "statemate",
+   "tarfind",
+   "ud"
+  ],
+  "cal": [
+   "depthconv",
+   "slre",
+   "wikisort",
+   "xgboost"
+  ],
+  "test": [
+   "matmult-int",
+   "md5sum",
+   "nsichneu",
+   "qrduino"
+  ]
+ },
+ "plumbing_max_dT_K": {
+  "top": 0.004996597333082775,
+  "bot": 0.004998536709450718
+ },
+ "seed": 84,
+ "noise_K": 0.1,
+ "sensors_per_die": 8,
+ "bins_per_die": 100,
+ "peak_rise_K": {
+  "top": [
+   39.64314464222393,
+   67.43685495544203
+  ],
+  "bot": [
+   26.3732328725569,
+   58.82140163691069
+  ]
+ }
+}
+average      top: peak 6.275 K  bot: peak 5.148 K
+field_model  top: peak 0.252 K  bot: peak 0.102 K
+bayes_power  top: peak 2.290 K  bot: peak 0.448 K
+inverted     top: peak 16.059 K  bot: peak 12.030 K
+{
+ "v": {
+  "ok": true,
+  "plumbing_max_dT_K": {
+   "top": 0.004996597333082775,
+   "bot": 0.004998536709450718
+  },
+  "bar_K": 0.005
+ },
+ "a": {
+  "ok": true
+ },
+ "b": {
+  "ok": true,
+  "case_T_max_abs_diff_K": 0.0,
+  "per_case_max_abs_diff": {
+   "average/peak_err_K": 0.0,
+   "average/rmse_K": 0.0,
+   "average/hotspot_um": 0.0,
+   "average/pow_rel": 0.0,
+   "average/total_rel": 0.0,
+   "field_model/peak_err_K": 2.5778490453376435e-11,
+   "field_model/rmse_K": 3.899700007359286e-12,
+   "field_model/hotspot_um": 0.0,
+   "field_model/pow_rel": 0.0,
+   "field_model/total_rel": 0.0,
+   "bayes_power/peak_err_K": 1.9468870959826745e-12,
+   "bayes_power/rmse_K": 3.0320190802513025e-13,
+   "bayes_power/hotspot_um": 0.0,
+   "bayes_power/pow_rel": 1.450506381672767e-13,
+   "bayes_power/total_rel": 1.2292077078424057e-13,
+   "inverted/peak_err_K": 2.0605739337042905e-12,
+   "inverted/rmse_K": 3.836930773104541e-13,
+   "inverted/hotspot_um": 0.0,
+   "inverted/pow_rel": 3.665956427312267e-13,
+   "inverted/total_rel": 1.230682222796986e-13
+  },
+  "margin": 1e-06
+ },
+ "c": {
+  "ok": true,
+  "inverted_minus_average_rmse": {
+   "top": {
+    "diff": 3.7552378339379295,
+    "ci95": [
+     3.269361682522133,
+     4.015793185373673
+    ],
+    "groups": 4,
+    "n_boot": 10000,
+    "seed": 0
+   },
+   "bot": {
+    "diff": 3.1012147413371505,
+    "ci95": [
+     2.627114953515281,
+     3.469372505523519
+    ],
+    "groups": 4,
+    "n_boot": 10000,
+    "seed": 0
+   }
+  }
+ },
+ "verdict": "PASS"
+}
+EXIT=0
