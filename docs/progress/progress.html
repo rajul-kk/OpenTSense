@@ -68,6 +68,9 @@ dd b { color: var(--ink); font-weight: 600 }
 .box .where { font: 500 12px/1 var(--f-data); color: var(--muted); text-transform: uppercase; letter-spacing: .05em }
 footer { padding-block: 28px; color: var(--muted); font-size: 13px; display: grid; gap: 6px }
 code { font-family: var(--f-data); font-size: .88em }
+.eq { font-family: var(--f-data); font-size: 13px; color: var(--ink); white-space: normal; overflow-wrap: anywhere }
+.eq sub, .eq sup { font-size: .75em }
+td.ck { color: var(--ink-2); font-size: 13.5px }
 </style>
 
 <div class="wrap">
@@ -167,6 +170,83 @@ code { font-family: var(--f-data); font-size: .88em }
   </div>
 </section>
 
+<section aria-labelledby="h-math">
+  <h2 id="h-math">Mathematical basis</h2>
+  <p class="sub">The model behind each stage, as the code computes it. T is temperature, P is power, R is the thermal response matrix (kelvin per watt), H is R restricted to the sensor cells, λ is the regularisation weight. Each formula was checked on 11 Nov by recomputing it a second, independent way, or against the external tool.</p>
+  <h3>1 Cells</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Quantity</th><th>Formula</th><th>How it was checked</th></tr></thead>
+    <tbody>
+      <tr><td>Utilisation</td><td class="eq">u = Σ cell area / core area</td><td class="ck">ORFS input; reported by OpenROAD</td></tr>
+      <tr><td>Cell power and delay</td><td class="eq">Liberty look-up tables indexed by input slew and output load, interpolated</td><td class="ck">Foundry or PDK libraries (ASAP7, IHP, SKY130)</td></tr>
+    </tbody>
+  </table></div>
+  <h3>2 Activity</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Quantity</th><th>Formula</th><th>How it was checked</th></tr></thead>
+    <tbody>
+      <tr><td>Toggle rate of net n</td><td class="eq">α<sub>n</sub> = N<sub>transitions</sub>(n) / N<sub>cycles</sub>, per window of W cycles</td><td class="ck">OpenSTA reports how many pins the VCD annotated (G72)</td></tr>
+    </tbody>
+  </table></div>
+  <h3>3 Power maps</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Quantity</th><th>Formula</th><th>How it was checked</th></tr></thead>
+    <tbody>
+      <tr><td>Instance power</td><td class="eq">P<sub>i</sub> = P<sub>internal</sub> + P<sub>switching</sub> + P<sub>leakage</sub></td><td class="ck">OpenSTA report_power</td></tr>
+      <tr><td>Switching power (textbook form)</td><td class="eq">P<sub>sw</sub> = ½ · C<sub>load</sub> · V<sup>2</sup> · α · f</td><td class="ck">OpenSTA computes it from the annotated activity</td></tr>
+      <tr><td>Tile map</td><td class="eq">P(x, y) = Σ P<sub>i</sub> over instances placed in tile (x, y)</td><td class="ck">Tile sum equals instance sum (recomputed)</td></tr>
+      <tr><td>Memory die, bank k (G81e)</td><td class="eq">E<sub>k</sub> = e<sub>ACT</sub>N<sub>ACT,k</sub> + e<sub>PRE</sub>N<sub>PRE,k</sub> + e<sub>RD</sub>N<sub>RD,k</sub> + e<sub>WR</sub>N<sub>WR,k</sub> + e<sub>REF</sub>N<sub>REF</sub> + e<sub>closed</sub>t<sub>closed</sub> + s<sub>k</sub>e<sub>open</sub>t<sub>open</sub></td><td class="ck">Fitted to DRAMPower 6.3.1; 5 held-out traces: total within 0.022%, per-bank exact</td></tr>
+      <tr><td>Memory interface</td><td class="eq">E<sub>io</sub> = e<sub>cyc</sub>L + e<sub>cmd</sub>N<sub>cmd</sub> + e<sub>io,RD</sub>N<sub>RD</sub> + e<sub>io,WR</sub>N<sub>WR</sub></td><td class="ck">Same fit</td></tr>
+      <tr><td>Memory active time</td><td class="eq">t<sub>open</sub> = time any bank is open, plus [t, t + tRFC<sub>ab</sub>) after each refresh; s<sub>k</sub> = bank k's share of open time</td><td class="ck">Found by fitting: without the refresh term the fit was off by 3.8%</td></tr>
+      <tr><td>Memory power map</td><td class="eq">P = E / Δt over each bank's area; E<sub>io</sub> over the TSV/IO strip</td><td class="ck">Energy per window kept to 10<sup>−12</sup> (unit test)</td></tr>
+    </tbody>
+  </table></div>
+  <h3>4 Stack</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Quantity</th><th>Formula</th><th>How it was checked</th></tr></thead>
+    <tbody>
+      <tr><td>Vertical conductance (in the solvers)</td><td class="eq">G = k · A / t: conductivity, cell area, layer thickness</td><td class="ck">Converters checked by matching stored fields exactly (G93a a)</td></tr>
+      <tr><td>Lateral conductance (in the solvers)</td><td class="eq">G = k · t · w / d: contact width w, centre distance d</td><td class="ck">Same</td></tr>
+      <tr><td>Heat sink boundary</td><td class="eq">−k ∂T/∂n = h (T − T<sub>amb</sub>)</td><td class="ck">HotSpot's sink resistance matched to the same h (unit test)</td></tr>
+    </tbody>
+  </table></div>
+  <h3>5 Temperature</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Quantity</th><th>Formula</th><th>How it was checked</th></tr></thead>
+    <tbody>
+      <tr><td>Steady state</td><td class="eq">∇·(k∇T) + q = 0, discretised as G·T = P + boundary terms</td><td class="ck">Three solvers</td></tr>
+      <tr><td>Linear response</td><td class="eq">T = T<sub>amb</sub> + R·P, R = G<sup>−1</sup></td><td class="ck">Used by the leakage loop and estimators</td></tr>
+      <tr><td>Transient (goal U6)</td><td class="eq">C · dT/dt = −G (T − T<sub>amb</sub>) + P(t)</td><td class="ck">Not yet gated</td></tr>
+      <tr><td>Solver agreement (G93a, measured)</td><td class="eq">max |T<sub>a</sub> − T<sub>b</sub>| ≤ 0.41 K over all solver pairs</td><td class="ck">HotSpot–3D-ICE ≤ 0.009 K; PACT's gap comes from its node placement</td></tr>
+    </tbody>
+  </table></div>
+  <h3>6 Leakage loop</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Quantity</th><th>Formula</th><th>How it was checked</th></tr></thead>
+    <tbody>
+      <tr><td>Leakage at temperature T</td><td class="eq">ln L(T) = ln L<sub>j</sub> + w (ln L<sub>j+1</sub> − ln L<sub>j</sub>), w = (T − t<sub>j</sub>)/(t<sub>j+1</sub> − t<sub>j</sub>); last segment extended</td><td class="ck">Exact at table points, and for exponential leakage inside and beyond the table</td></tr>
+      <tr><td>Steady loop</td><td class="eq">T<sub>n+1</sub> = T<sub>amb</sub> + R (P<sub>dyn</sub> + P<sub>leak</sub>(T<sub>n</sub>)), until max |ΔT| < 10<sup>−10</sup> K</td><td class="ck">Converges on test cases with ρ < 1</td></tr>
+      <tr><td>Loop gain</td><td class="eq">ρ = spectral radius of R · diag(dP<sub>leak</sub>/dT) at the solution; ρ ≥ 1 allows runaway</td><td class="ck">Central difference, h = 0.5 K</td></tr>
+      <tr><td>Amplification (G74)</td><td class="eq">A = (T* − T<sub>u</sub>) / (T<sub>1</sub> − T<sub>u</sub>) on the hottest tile; A ≈ 1/(1 − ρ) only for small ρ</td><td class="ck">Toy check: equal at ρ ≤ 0.07; at ρ = 0.52, A = 1.78 against 2.09</td></tr>
+    </tbody>
+  </table></div>
+  <h3>7 Estimation</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Quantity</th><th>Formula</th><th>How it was checked</th></tr></thead>
+    <tbody>
+      <tr><td>Sensor model</td><td class="eq">y = H p + e, e ~ N(0, σ<sup>2</sup>I)</td><td class="ck">Definition</td></tr>
+      <tr><td>Bayesian power</td><td class="eq">p̂ = μ + Σ Hᵀ (H Σ Hᵀ + σ<sup>2</sup>I)<sup>−1</sup> (y − H μ), Σ = training covariance + 10<sup>−3</sup>·(tr Σ / n)·I</td><td class="ck">Matches the precision form (Σ<sup>−1</sup> + HᵀH/σ<sup>2</sup>)<sup>−1</sup> to 10<sup>−13</sup></td></tr>
+      <tr><td>Gaussian field</td><td class="eq">Same conditioning on the temperature field, C = Φ diag(λ) Φᵀ + diag(residual)</td><td class="ck">Unit tests</td></tr>
+      <tr><td>Tikhonov (G77)</td><td class="eq">p̂ = μ + argmin<sub>z</sub> ‖H z − (y − H μ)‖<sup>2</sup> + λ ‖z‖<sup>2</sup></td><td class="ck">SVD form equals normal equations to 10<sup>−14</sup></td></tr>
+      <tr><td>Filter factors, degrees of freedom</td><td class="eq">f<sub>i</sub> = s<sub>i</sub><sup>2</sup> / (s<sub>i</sub><sup>2</sup> + λ); dof = Σ f<sub>i</sub></td><td class="ck">Equals the trace of the hat matrix</td></tr>
+      <tr><td>Parameter rules</td><td class="eq">GCV: min ‖r‖<sup>2</sup>/(m − dof)<sup>2</sup> · UPRE: min ‖r‖<sup>2</sup> + 2σ<sup>2</sup>dof − mσ<sup>2</sup> · Discrepancy: largest λ with ‖r‖<sup>2</sup> ≤ τmσ<sup>2</sup> · L-curve: largest curvature of (log ‖r‖, log ‖p − μ‖)</td><td class="ck">Residual from filter factors equals the direct residual</td></tr>
+      <tr><td>Recoverable directions (G73)</td><td class="eq">rank H ≤ min(m sensors, D dies × n<sub>b</sub> bins)</td><td class="ck">Linear algebra</td></tr>
+      <tr><td>Scores (G84)</td><td class="eq">peak error |max T̂ − max T| · RMSE · hotspot distance · ‖p̂ − p‖/‖p‖ · |Σp̂ − Σp|/Σp; summary = mean over groups of the group median and 90th percentile</td><td class="ck">Re-scoring is byte-identical</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout"><p><b>Found by the check:</b> 1/(1 − ρ) is only a small-ρ estimate of the measured amplification A, because ρ is taken at the hottest point, where leakage rises fastest. In a toy case it overstates A by 17% at ρ = 0.52. The runaway-boundary work (U4) should report the measured A, not 1/(1 − ρ).</p></div>
+</section>
+
 <section aria-labelledby="h-real">
   <h2 id="h-real">How close is this to consumer 3D stacks?</h2>
   <p class="sub">Representative, not a replica. The densities and temperatures sit in consumer ranges; the dies are smaller and the CPU is an embedded core. Consumer figures below are approximate public numbers.</p>
@@ -178,7 +258,7 @@ code { font-family: var(--f-data); font-size: .88em }
       <tr><td>Peak temperature rise</td><td class="num">54 K mean, 67 K max</td><td>About 50 to 70 K above ambient</td><td><span class="chip done">Realistic</span></td></tr>
       <tr><td>Activity</td><td>Real programs on real gates</td><td>Same principle</td><td><span class="chip done">Strong</span></td></tr>
       <tr><td>Die size, total power</td><td class="num">9 mm², 6 to 8 W</td><td>70 to 800 mm², 30 to 700 W</td><td><span class="chip gap">Much smaller</span></td></tr>
-      <tr><td>Memory power</td><td>Random DRAM traffic</td><td>Follows the program</td><td><span class="chip gap">Not yet</span></td></tr>
+      <tr><td>Memory power</td><td>Random DRAM traffic; energy model fitted to DRAMPower, program traffic next</td><td>Follows the program</td><td><span class="chip run">In progress</span></td></tr>
       <tr><td>Leakage share</td><td>Small (ρ ≈ 0.002 nominal)</td><td>Large on hot, fast chips</td><td><span class="chip gap">Understated</span></td></tr>
       <tr><td>Power management</td><td>None</td><td>Voltage and frequency scaling, power gating</td><td><span class="chip gap">Missing</span></td></tr>
     </tbody>
