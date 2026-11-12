@@ -1,0 +1,204 @@
+<title>Ibex Stage Explorer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a sticky selector bar (program, window), then three linked instrument panels in stage order. */
+:root {
+  --bg: #f6f6f3; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #8a8984; --rule: #e4e3df;
+  --accent: #2a78d6; --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --div-mid: #f0efec; --mode: light;
+  --f-display: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121211; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #8f8e86; --rule: #2e2e2b;
+  --accent: #3987e5; --s1: #3987e5; --s2: #d95926; --s3: #199e70; --div-mid: #383835; --mode: dark; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #121211; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #8f8e86; --rule: #2e2e2b;
+  --accent: #3987e5; --s1: #3987e5; --s2: #d95926; --s3: #199e70; --div-mid: #383835; --mode: dark; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-display); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 56px }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg) }
+.wrap { max-width: 1240px; margin: 0 auto }
+header { padding-block: 32px 18px; display: grid; gap: 10px }
+.eyebrow { font: 500 12px/1 var(--f-data); letter-spacing: .08em; text-transform: uppercase; color: var(--muted) }
+h1 { font: 700 clamp(28px, 4.4vw, 40px)/1.05 var(--f-display); letter-spacing: -.02em; margin: 0; text-wrap: balance }
+.lede { color: var(--ink-2); margin: 0; max-width: 72ch }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-block: 1px solid var(--rule); padding-block: 12px; display: grid; gap: 10px }
+.chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin }
+.chips button { flex: none; font: 500 12.5px/1 var(--f-data); padding: 8px 10px; border: 1px solid var(--rule); border-radius: 999px; background: var(--surface); color: var(--ink-2); cursor: pointer }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink) }
+.winrow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font: 12.5px/1.2 var(--f-data); color: var(--ink-2) }
+.btn { font: 500 13px/1 var(--f-data); padding: 8px 11px; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); color: var(--ink); cursor: pointer }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+.winrow input[type=range] { flex: 1; min-width: 160px }
+.winrow b { color: var(--ink); font-weight: 500 }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-block: 18px }
+@media (max-width: 1000px) { .grid { grid-template-columns: minmax(0, 1fr) } }
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0 }
+.num { font: 500 12px/1 var(--f-data); color: var(--accent); letter-spacing: .04em }
+h2 { font: 650 19px/1.2 var(--f-display); margin: 0 }
+.panel p { margin: 0; color: var(--ink-2); font-size: 13.5px }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; flex-wrap: wrap }
+.seg button { font: 500 12px/1 var(--f-data); padding: 7px 9px; border: 0; background: transparent; color: var(--ink-2); cursor: pointer }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--surface) }
+canvas { display: block; max-width: 100% }
+.legend { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font: 11.5px/1.2 var(--f-data); color: var(--ink-2) }
+.legend .lb { height: 9px; width: 130px; border-radius: 3px }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; font: 11.5px/1.3 var(--f-data); color: var(--muted) }
+.stats b { display: block; font: 600 18px/1.2 var(--f-display); color: var(--ink); font-variant-numeric: tabular-nums }
+.sub { font: 500 12px/1.3 var(--f-data); color: var(--ink-2) }
+#tip { position: fixed; pointer-events: none; z-index: 20; background: var(--ink); color: var(--surface); font: 12px/1.45 var(--f-data); padding: 7px 9px; border-radius: 6px; white-space: pre; opacity: 0 }
+footer { color: var(--muted); font-size: 13px; padding-block: 8px }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important } }
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">OpenTSense · stages 1–3 · routed ASAP7 ibex · G72 + G81b data</div>
+  <h1>One program, followed from cells to power</h1>
+  <p class="lede">Pick a program and a power window. The placed cells, the switching activity and the per-tile power all follow that choice. Every number comes from the gate outputs: 19 Embench programs and the idle program, each with 20 or more OpenSTA power windows of 1,000 cycles, on the same 76.7 µm core.</p>
+</header>
+<div class="bar">
+  <div class="chips" id="progs" role="group" aria-label="Program"></div>
+  <div class="winrow"><button class="btn" id="prev" type="button" aria-label="Previous window">◀</button><button class="btn" id="play" type="button">Play</button><button class="btn" id="next" type="button" aria-label="Next window">▶</button>
+    <input id="win" type="range" min="0" max="19" value="0" aria-label="Power window"><span>window <b id="wlab"></b></span></div>
+</div>
+<div class="grid">
+  <section class="panel" aria-labelledby="h1s">
+    <span class="num">STAGE 1 · PLACED CELLS</span><h2 id="h1s">Which cells this program uses</h2>
+    <p>Each dot is a placed cell, coloured by its mean power over the program's power windows. "Against the suite" shows where this program draws more (red) or less (blue) than the average Embench program.</p>
+    <div class="seg" id="cmode" role="group" aria-label="Cell colouring"><button type="button" data-v="abs" aria-pressed="true">Program power</button><button type="button" data-v="rel" aria-pressed="false">Against the suite</button><button type="button" data-v="def" aria-pressed="false">No-VCD default</button></div>
+    <canvas id="c-cells" aria-label="Placed cells coloured by power"></canvas>
+    <div class="legend" id="lg-cells"></div>
+  </section>
+  <section class="panel" aria-labelledby="h2s">
+    <span class="num">STAGE 2 · ACTIVITY</span><h2 id="h2s">When and where it switches</h2>
+    <p>Toggles per 1,000 cycles over the whole run (Verilator, gate level; the axis is zoomed to the program's range). Ticks mark the power windows; click one. The grid shows the 4 × 4 regions at the selected window.</p>
+    <canvas id="c-line" aria-label="Toggle timeline with power windows"></canvas>
+    <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap"><canvas id="c-reg" aria-label="Region toggles at the selected window"></canvas>
+      <div class="sub" id="act-note" style="flex:1;min-width:140px"></div></div>
+  </section>
+  <section class="panel" aria-labelledby="h3s">
+    <span class="num">STAGE 3 · POWER</span><h2 id="h3s">What that costs, tile by tile</h2>
+    <p>OpenSTA per-instance power for the selected window, summed into 16 × 16 tiles. The scale is shared by every program and window, so maps compare directly; default-activity tiles run off this scale (up to about 20× higher).</p>
+    <div class="stats"><span><b id="st-tot"></b>window total</span><span><b id="st-def"></b>no-VCD default</span><span><b id="st-ratio"></b>default ÷ real</span></div>
+    <canvas id="c-tiles" aria-label="Per-tile power map"></canvas>
+    <div class="legend" id="lg-tiles"></div>
+    <canvas id="c-groups" aria-label="Power by group"></canvas>
+    <canvas id="c-wins" aria-label="Total power per window"></canvas>
+  </section>
+</div>
+<footer>Sources: <code>gates/g81b/runs/main/&lt;program&gt;/{power/w*.txt,timeline.csv}</code>, <code>gates/g81b/runs/main/windows/</code>, <code>gates/g72/runs/main/power/{ibex_loc.csv,ibex_def.txt}</code>. Built by <code>docs/stage_demo/extract.py</code>.</footer>
+</div>
+<div id="tip" role="tooltip"></div>
+
+<script id="data" type="application/json">__DATA__</script>
+<script>
+(function () {
+const D = JSON.parse(document.getElementById("data").textContent);
+const $ = s => document.querySelector(s);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const dark = () => css("--mode") === "dark";
+const BLUE = ["#cde2fb","#b7d3f6","#9ec5f4","#86b6ef","#6da7ec","#5598e7","#3987e5","#2a78d6","#256abf","#1c5cab","#184f95","#104281","#0d366b"];
+const hex = h => [1,3,5].map(i => parseInt(h.slice(i, i + 2), 16));
+const ramp = stops => { const c = stops.map(hex); return t => { t = Math.max(0, Math.min(1, t)); const x = t * (c.length - 1), i = Math.min(c.length - 2, Math.floor(x)), f = x - i; return c[i].map((v, k) => Math.round(v + (c[i + 1][k] - v) * f)); }; };
+const seq = () => ramp(dark() ? BLUE.slice().reverse() : BLUE);
+const div = () => { const m = hex(css("--div-mid")), b = hex(dark() ? "#3987e5" : "#2a78d6"), r = hex(dark() ? "#e66767" : "#e34948"); return t => { t = Math.max(-1, Math.min(1, t)); const e = t < 0 ? b : r, f = Math.abs(t); return m.map((v, k) => Math.round(v + (e[k] - v) * f)); }; };
+const rgb = a => `rgb(${a[0]},${a[1]},${a[2]})`;
+const tip = $("#tip");
+const show = (e, t) => { tip.textContent = t; tip.style.opacity = 1; const w = tip.offsetWidth, h = tip.offsetHeight; let x = e.clientX + 14, y = e.clientY + 14; if (x + w > innerWidth - 8) x = e.clientX - w - 14; if (y + h > innerHeight - 8) y = e.clientY - h - 14; tip.style.left = x + "px"; tip.style.top = y + "px"; };
+const hide = () => tip.style.opacity = 0;
+const hover = (cv, fn) => { cv.onmousemove = e => { const t = fn(e); t ? show(e, t) : hide(); }; cv.onmouseleave = hide; };
+function setup(cv, w, h) { const r = devicePixelRatio || 1; cv.width = Math.round(w * r); cv.height = Math.round(h * r); cv.style.width = w + "px"; cv.style.height = h + "px"; const g = cv.getContext("2d"); g.setTransform(r, 0, 0, r, 0, 0); g.font = "11px " + css("--f-data"); return g; }
+const W = cv => Math.max(220, cv.parentElement.clientWidth - 0);
+const fmtW = w => w >= 1e-3 ? (w * 1e3).toFixed(2) + " mW" : w >= 1e-6 ? (w * 1e6).toFixed(2) + " µW" : w >= 1e-9 ? (w * 1e9).toFixed(2) + " nW" : (w * 1e12).toFixed(1) + " pW";
+function legend(el, f, a, b, unit, mid) { const s = []; for (let i = 0; i <= 10; i++) s.push(rgb(f(mid ? (i / 5 - 1) : i / 10)) + " " + i * 10 + "%"); el.innerHTML = `<span>${a}</span><span class="lb" style="background:linear-gradient(90deg,${s.join(",")})"></span><span>${b}</span><span>${unit}</span>`; }
+const dec = b64 => { const s = atob(b64), a = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); return a; };
+const LQ = D.logq, toLog = q => LQ.lo + q / 255 * (LQ.hi - LQ.lo);
+const cache = {}; const cellsOf = k => cache[k] || (cache[k] = dec(k === "__suite" ? D.suite_mean : k === "__def" ? D.default.cells : D.programs[k].cells));
+const progs = Object.keys(D.programs).sort((a, b) => a === "idle" ? 1 : b === "idle" ? -1 : a.localeCompare(b));
+let P = progs.includes("crc32") ? "crc32" : progs[0], wi = 0, mode = "abs", timer = null;
+let TMAX = 0; progs.forEach(p => D.programs[p].windows.forEach(w => w.tiles_uW.forEach(r => r.forEach(v => TMAX = Math.max(TMAX, v)))));
+$("#progs").innerHTML = progs.map(p => `<button type="button" data-v="${p}" aria-pressed="${p === P}">${p}</button>`).join("");
+$("#progs").onclick = e => { const b = e.target.closest("button"); if (!b) return; P = b.dataset.v; wi = Math.min(wi, D.programs[P].windows.length - 1); $("#progs").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); all(); };
+$("#cmode").onclick = e => { const b = e.target.closest("button"); if (!b) return; mode = b.dataset.v; $("#cmode").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); drawCells(); };
+const setW = i => { const n = D.programs[P].windows.length; wi = (i + n) % n; $("#win").value = wi; drawWin(); };
+$("#win").oninput = e => setW(+e.target.value); $("#prev").onclick = () => setW(wi - 1); $("#next").onclick = () => setW(wi + 1);
+$("#play").onclick = () => { if (timer) { clearInterval(timer); timer = null; $("#play").textContent = "Play"; return; } $("#play").textContent = "Pause"; timer = setInterval(() => setW(wi + 1), 700); };
+
+/* Stage 1: cells */
+let grid = null;
+function drawCells() { const cv = $("#c-cells"), w = Math.min(W(cv), 460), g = setup(cv, w, w), s = w / D.box[2], n = D.x10.length;
+  g.fillStyle = css("--surface"); g.fillRect(0, 0, w, w);
+  const q = cellsOf(mode === "def" ? "__def" : P), base = cellsOf("__suite");
+  const val = i => mode === "rel" ? toLog(q[i]) - toLog(base[i]) : toLog(q[i]);
+  const f = mode === "rel" ? div() : seq(), lo = -12, hi = -4.4;
+  const col = v => mode === "rel" ? f(v / 1) : f((v - lo) / (hi - lo));
+  const order = [...Array(n).keys()].filter(i => q[i] > 0 || base[i] > 0).sort((a, b) => Math.abs(val(a)) - Math.abs(val(b)) || q[a] - q[b]);
+  const sz = Math.max(1.6, w / 300);
+  for (const i of (mode === "rel" ? order : order.sort((a, b) => q[a] - q[b]))) { g.fillStyle = rgb(col(val(i))); g.fillRect(D.x10[i] / 10 * s - sz / 2, w - D.y10[i] / 10 * s - sz / 2, sz, sz); }
+  g.strokeStyle = css("--rule"); g.strokeRect(.5, .5, w - 1, w - 1);
+  if (mode === "rel") legend($("#lg-cells"), f, "÷10", "×10", "cell power against the suite mean", true);
+  else legend($("#lg-cells"), f, "1e−12", "1e−4.4", "W per cell (log)", false);
+  if (!grid) { grid = {}; for (let i = 0; i < n; i++) { const k = Math.floor(D.x10[i] / 20) + "," + Math.floor(D.y10[i] / 20); (grid[k] = grid[k] || []).push(i); } }
+  hover(cv, e => { const r = cv.getBoundingClientRect(), X = (e.clientX - r.left) / r.width * D.box[2], Y = (1 - (e.clientY - r.top) / r.height) * D.box[3]; let b = -1, bd = 1.2;
+    for (let a = -1; a <= 1; a++) for (let c = -1; c <= 1; c++) for (const i of grid[(Math.floor(X / 2) + a) + "," + (Math.floor(Y / 2) + c)] || []) { const d = Math.hypot(D.x10[i] / 10 - X, D.y10[i] / 10 - Y); if (d < bd) { bd = d; b = i; } }
+    if (b < 0) return null; const pw = Math.pow(10, toLog(cellsOf(P)[b])), sm = Math.pow(10, toLog(base[b])), df = Math.pow(10, toLog(cellsOf("__def")[b]));
+    return `cell at (${(D.x10[b] / 10).toFixed(1)}, ${(D.y10[b] / 10).toFixed(1)}) µm\n${P}: ${fmtW(pw)}\nsuite mean: ${fmtW(sm)}\nno-VCD default: ${fmtW(df)}`; }); }
+
+/* Stage 2: activity */
+function drawAct() { const pr = D.programs[P], T = pr.timeline, n = T.cycle.length, cv = $("#c-line"), w = W(cv), h = 170, g = setup(cv, w, h), x0 = 50, x1 = w - 8, y0 = 8, y1 = h - 30;
+  const tot = T.regions.map(r => r.reduce((a, b) => a + b, 0)), last = pr.cycles, tmin = Math.min(...tot), tmx = Math.max(...tot, 1), pad = (tmx - tmin) * 0.1 || tmx * 0.05, mn = Math.max(0, tmin - pad), mx = tmx + pad;
+  const X = c => x0 + (x1 - x0) * c / last, Y = v => y1 - (y1 - y0) * (v - mn) / (mx - mn);
+  g.strokeStyle = css("--rule"); g.fillStyle = css("--ink-2"); g.textAlign = "right"; g.textBaseline = "middle";
+  [0, .5, 1].forEach(q => { const v = mn + q * (mx - mn); g.beginPath(); g.moveTo(x0, Y(v)); g.lineTo(x1, Y(v)); g.stroke(); g.fillText((v / 1e6).toFixed(2) + "M", x0 - 5, Y(v)); });
+  g.textAlign = "left"; g.textBaseline = "top"; g.fillText("0", x0, y1 + 6); g.textAlign = "right"; g.fillText((last / 1e6).toFixed(2) + "M cycles", x1, y1 + 6);
+  g.beginPath(); tot.forEach((v, i) => { const p = [X(T.cycle[i]), Y(v)]; i ? g.lineTo(...p) : g.moveTo(...p); }); g.strokeStyle = "transparent";
+  g.beginPath(); tot.forEach((v, i) => { const p = [X(T.cycle[i]), Y(v)]; i ? g.lineTo(...p) : g.moveTo(...p); }); g.strokeStyle = css("--s1"); g.lineWidth = 1.6; g.stroke();
+  pr.windows.forEach((wd, k) => { if (wd.start == null) return; const x = X(wd.start); g.strokeStyle = k === wi ? css("--s2") : css("--muted"); g.lineWidth = k === wi ? 2.5 : 1; g.beginPath(); g.moveTo(x, y1); g.lineTo(x, y1 - (k === wi ? y1 - y0 : 10)); g.stroke(); });
+  const pick = e => { const r = cv.getBoundingClientRect(), c = ((e.clientX - r.left) / r.width * w - x0) / (x1 - x0) * last; let b = 0, bd = Infinity; pr.windows.forEach((wd, k) => { const d = Math.abs((wd.start || 0) - c); if (d < bd) { bd = d; b = k; } }); return b; };
+  hover(cv, e => { const k = pick(e), wd = pr.windows[k]; return `window ${k + 1} at cycle ${(wd.start || 0).toLocaleString()}\n${wd.total_mW.toFixed(3)} mW (click to select)`; });
+  cv.onclick = e => setW(pick(e));
+  // regions at the selected window
+  const ws = pr.windows[wi].start || 0; let bi = T.cycle.findIndex(c => c >= ws); if (bi < 0) bi = n - 1;
+  let rmax = 0; T.regions.forEach(r => r.forEach(v => rmax = Math.max(rmax, v)));
+  const rc = $("#c-reg"), rs = 150, rg = setup(rc, rs, rs), f = seq(), cell = rs / 4;
+  T.regions[bi].forEach((v, k) => { const i = Math.floor(k / 4), j = k % 4; rg.fillStyle = rgb(f(v / (rmax || 1))); rg.fillRect(j * cell + 1, (3 - i) * cell + 1, cell - 2, cell - 2); });
+  hover(rc, e => { const r = rc.getBoundingClientRect(), j = Math.floor((e.clientX - r.left) / r.width * 4), i = 3 - Math.floor((e.clientY - r.top) / r.height * 4), v = T.regions[bi][i * 4 + j]; return v === undefined ? null : `region row ${i}, col ${j}\n${v.toLocaleString()} toggles / 1k cycles`; });
+  const busiest = T.regions[bi].indexOf(Math.max(...T.regions[bi]));
+  $("#act-note").innerHTML = `Near cycle <b>${ws.toLocaleString()}</b>: ${(tot[bi] / 1e3).toFixed(0)}k toggles per 1,000 cycles; busiest region row ${Math.floor(busiest / 4)}, col ${busiest % 4}. Same 4 × 4 regions as the cell map, lower edge at the bottom.`; }
+
+/* Stage 3: power */
+function heat(cv, M, w, f, hi) { const ny = M.length, nx = M[0].length, g = setup(cv, w, w); const c = w / nx;
+  for (let i = 0; i < ny; i++) for (let j = 0; j < nx; j++) { g.fillStyle = rgb(f(M[i][j] / hi)); g.fillRect(j * c, (ny - 1 - i) * c, c + .5, c + .5); }
+  return e => { const r = cv.getBoundingClientRect(), j = Math.floor((e.clientX - r.left) / r.width * nx), i = ny - 1 - Math.floor((e.clientY - r.top) / r.height * ny); return M[i] && M[i][j] !== undefined ? { i, j, v: M[i][j] } : null; }; }
+function drawPower() { const pr = D.programs[P], wd = pr.windows[wi], f = seq();
+  $("#st-tot").textContent = wd.total_mW.toFixed(2) + " mW"; $("#st-def").textContent = D.default.total_mW.toFixed(1) + " mW"; $("#st-ratio").textContent = (D.default.total_mW / wd.total_mW).toFixed(2) + "×";
+  const cv = $("#c-tiles"), m = heat(cv, wd.tiles_uW, Math.min(W(cv), 360), f, TMAX);
+  hover(cv, e => { const h = m(e); return h && `tile (${h.j}, ${h.i}) of 16 × 16\n${h.v.toFixed(1)} µW this window\n${D.default.tiles_uW[h.i][h.j].toFixed(1)} µW no-VCD default`; });
+  legend($("#lg-tiles"), f, "0", TMAX.toFixed(0), "µW per tile (shared scale)", false);
+  // groups
+  const gc = $("#c-groups"), gw = W(gc), gh = 64, g = setup(gc, gw, gh), names = ["Sequential", "Combinational", "Clock"], cols = ["--s1", "--s2", "--s3"];
+  const vals = names.map(k => wd.groups_mW[k] || 0), tot = vals.reduce((a, b) => a + b, 0) || 1; let x = 0;
+  g.fillStyle = css("--ink-2"); g.textBaseline = "top"; g.textAlign = "left"; g.fillText("power by group, this window", 0, 0);
+  vals.forEach((v, k) => { const ww = (gw) * v / tot; g.fillStyle = css(cols[k]); g.beginPath(); g.roundRect(x + (k ? 1 : 0), 18, Math.max(0, ww - 2), 16, 3); g.fill(); x += ww; });
+  x = 0; g.textBaseline = "top"; vals.forEach((v, k) => { const ww = gw * v / tot; g.fillStyle = css("--ink-2"); g.textAlign = "left"; if (ww > 70) g.fillText(`${names[k].slice(0, 4)}. ${v.toFixed(2)} mW`, x + 2, 40); x += ww; });
+  hover(gc, e => { const r = gc.getBoundingClientRect(), px = (e.clientX - r.left) / r.width * gw; let acc = 0; for (let k = 0; k < 3; k++) { acc += gw * vals[k] / tot; if (px <= acc) return `${names[k]}: ${vals[k].toFixed(3)} mW (${(vals[k] / tot * 100).toFixed(1)}%)`; } return null; });
+  // window totals
+  const wc = $("#c-wins"), ww = W(wc), wh = 120, h = setup(wc, ww, wh), n = pr.windows.length, x0 = 40, x1 = ww - 4, y0 = 26, y1 = wh - 8;
+  const ts = pr.windows.map(q => q.total_mW), lo = Math.min(...ts) * 0.98, hi = Math.max(...ts) * 1.01, bw = (x1 - x0) / n, Y = v => y1 - (y1 - y0) * (v - lo) / (hi - lo || 1);
+  h.fillStyle = css("--ink-2"); h.textAlign = "left"; h.textBaseline = "top"; h.fillText("total per window (mW; axis starts at " + lo.toFixed(2) + ")", 0, 0);
+  h.textAlign = "right"; h.textBaseline = "middle"; [lo, hi].forEach(v => h.fillText(v.toFixed(2), x0 - 4, Y(v)));
+  ts.forEach((v, k) => { h.fillStyle = k === wi ? css("--s2") : css("--s1"); h.beginPath(); h.roundRect(x0 + k * bw + 1, Y(v), bw - 2, y1 - Y(v), [3, 3, 0, 0]); h.fill(); });
+  hover(wc, e => { const r = wc.getBoundingClientRect(), k = Math.floor(((e.clientX - r.left) / r.width * ww - x0) / bw); return pr.windows[k] ? `window ${k + 1}: ${ts[k].toFixed(3)} mW` : null; });
+  wc.onclick = e => { const r = wc.getBoundingClientRect(), k = Math.floor(((e.clientX - r.left) / r.width * ww - x0) / bw); if (pr.windows[k]) setW(k); }; }
+
+function drawWin() { $("#wlab").textContent = `${wi + 1} of ${D.programs[P].windows.length}, cycle ${(D.programs[P].windows[wi].start || 0).toLocaleString()}`; drawAct(); drawPower(); }
+function all() { $("#win").max = D.programs[P].windows.length - 1; $("#win").value = wi; drawCells(); drawWin(); }
+all();
+let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(all, 150); });
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", all);
+new MutationObserver(all).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+})();
+</script>
