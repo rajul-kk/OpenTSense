@@ -15,17 +15,21 @@ PACT_SRC = os.environ.get("PACT_SRC", "/opt/pact/src")
 HOTSPOT_EXE = os.environ.get("HOTSPOT_EXE", "hotspot")
 
 
-def run_3dice(stack, power, workdir, timeout=7200):
-    stk = to_3dice.write(stack, power, workdir)
+def run_3dice(stack, power, workdir, timeout=7200, transient=None):
+    """Steady: {die: (ny, nx)}. With transient = (step_s, slot_s) and (n_slots, ny, nx) power: {die: (n_slots, ny,
+    nx)}, the map at the end of each slot (the Tmap file format is checked against the image in G94's dry run)."""
+    stk = to_3dice.write(stack, power, workdir, transient=transient)
     r = subprocess.run([ICE_EXE, os.path.basename(stk)], cwd=workdir, capture_output=True, text=True, timeout=timeout)
     if r.returncode:
         raise RuntimeError("3D-ICE failed:\n" + r.stdout[-1500:] + r.stderr[-1500:])
     nx, ny = stack.grid
     out = {}
     for d in stack.dies:
-        T = np.loadtxt(os.path.join(workdir, f"tmap_{d.name}.txt"), comments="%")
-        assert T.shape == (ny, nx), f"3D-ICE map for {d.name} has shape {T.shape}, expected {(ny, nx)}"
-        out[d.name] = T
+        T = to_3dice.read_tmaps(os.path.join(workdir, f"tmap_{d.name}.txt"), ny, nx)
+        want = 1 if transient is None else len(power[d.name])
+        if len(T) != want:
+            raise RuntimeError(f"3D-ICE wrote {len(T)} maps for {d.name}, expected {want}")
+        out[d.name] = T[0] if transient is None else T
     return out
 
 

@@ -134,3 +134,26 @@ def test_dram_window_maps_keep_energy_per_window():
     assert np.allclose(P[1][lab == 5].sum() * 1e-6, bank_J[1, 5]) and (P[:, lab == -1] == 0).all()
     with pytest.raises(ValueError):
         dram.window_maps((20, 16), bank_J[:, :4], io_J, 1e-6)
+
+
+def test_3dice_transient_files(tmp_path):
+    s = model.load(CFG)
+    nx, ny = s.grid
+    P = {d.name: np.stack([np.full((ny, nx), 1e-3), np.full((ny, nx), 2e-3), np.zeros((ny, nx))]) for d in s.dies}
+    stk = open(to_3dice.write(s, P, tmp_path, transient=(1e-3, 1e-2))).read()
+    assert "transient step 1.000000e-03, slot 1.000000e-02 ;" in stk and ", slot ) ;" in stk and "steady" not in stk
+    flp = open(tmp_path / f"{s.dies[0].name}.flp").read()
+    assert "power values 1.000000000e-03, 2.000000000e-03, 0.000000000e+00 ;" in flp
+    with pytest.raises(ValueError):
+        to_3dice.write(s, {d.name: np.zeros((ny, nx)) for d in s.dies}, tmp_path, transient=(1e-3, 1e-2))
+    with pytest.raises(ValueError):
+        to_3dice.write(s, P, tmp_path, transient=(1e-2, 1e-3))
+
+
+def test_read_tmaps_splits_slots(tmp_path):
+    f = tmp_path / "t.txt"
+    f.write_text("% slot 1\n1 2 3\n4 5 6\n\n% slot 2\n7 8 9\n10 11 12\n")
+    T = to_3dice.read_tmaps(f, 2, 3)
+    assert T.shape == (2, 2, 3) and T[1, 1, 2] == 12
+    with pytest.raises(ValueError):
+        to_3dice.read_tmaps(f, 3, 3)

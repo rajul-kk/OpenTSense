@@ -6,19 +6,34 @@ Stack element names get an S_ prefix because some words (e.g. spreader) are 3D-I
 A layer with regions gets a layout file: the layer's material is the base, and each rectangle of a layout overrides
 it (3D-ICE 4.0 `layout`, cells not covered keep the base material). A die with regions uses pre-declared layer types
 for its bulk and source, because only a declared layer can carry a layout.
+Transient (G94): power maps are (n_slots, ny, nx); each element gets one power value per slot, the solver runs
+`transient step S, slot T`, and each die's Tmap is written at the end of every slot (`read_tmaps` splits the file).
 """
 import math
 import os
 
+import numpy as np
+
 
 def write_flp(path, P, cell_x, cell_y):
-    ny, nx = P.shape
+    """P: (ny, nx) steady, or (n_slots, ny, nx) with one power value per slot."""
+    P3 = P[None] if np.ndim(P) == 2 else P
+    _, ny, nx = P3.shape
     out = []
     for i in range(ny):
         for j in range(nx):
+            vals = ", ".join(f"{v:.9e}" for v in P3[:, i, j])
             out += [f"E{i}_{j}:", f"  position {j * cell_x:.6f}, {i * cell_y:.6f} ;",
-                    f"  dimension {cell_x:.6f}, {cell_y:.6f} ;", f"  power values {P[i, j]:.9e} ;", ""]
+                    f"  dimension {cell_x:.6f}, {cell_y:.6f} ;", f"  power values {vals} ;", ""]
     open(path, "w", newline="\n").write("\n".join(out))
+
+
+def read_tmaps(path, ny, nx):
+    """All maps in a Tmap file as (n, ny, nx): numeric rows of nx values, comment lines (%) skipped, ny rows per map."""
+    rows = [list(map(float, l.split())) for l in open(path) if l.strip() and not l.lstrip().startswith("%")]
+    if any(len(r) != nx for r in rows) or len(rows) % ny:
+        raise ValueError(f"{path}: {len(rows)} rows, not a whole number of {ny} x {nx} maps")
+    return np.array(rows).reshape(-1, ny, nx)
 
 
 def write_lyt(path, stack, layer, cx, cy):
@@ -33,8 +48,15 @@ def write_lyt(path, stack, layer, cx, cy):
     open(path, "w", newline="\n").write("\n".join(out))
 
 
-def write(stack, power, workdir):
-    """power: {die layer name: (ny, nx) array in W}. Returns the .stk path; maps go to tmap_<die>.txt."""
+def write(stack, power, workdir, transient=None):
+    """power: {die layer name: (ny, nx) array in W}, or (n_slots, ny, nx) with transient = (step_s, slot_s).
+    Returns the .stk path; maps go to tmap_<die>.txt (the final map, or one per slot)."""
+    if transient is not None:
+        step, slot = transient
+        if not 0 < step <= slot:
+            raise ValueError("transient needs 0 < step <= slot")
+        if any(np.ndim(power[d.name]) != 3 for d in stack.dies):
+            raise ValueError("transient power maps must be (n_slots, ny, nx)")
     os.makedirs(workdir, exist_ok=True)
     L, W = stack.size_um
     nx, ny = stack.grid
@@ -73,8 +95,10 @@ def write(stack, power, workdir):
             s += [f'   die S_{l.name} D_{l.name} floorplan "{l.name}.flp" ;']
         else:
             s += [f"   layer S_{l.name}_{k} L_{l.name} ;" for k in range(l.n_sub)]
-    s += ["solver:", "  steady ;", f"  initial temperature {stack.ambient_K:.3f} ;", "output:"]
-    s += [f'  Tmap ( S_{d.name}, "tmap_{d.name}.txt", final ) ;' for d in stack.dies]
+    mode = "  steady ;" if transient is None else f"  transient step {transient[0]:.6e}, slot {transient[1]:.6e} ;"
+    when = "final" if transient is None else "slot"
+    s += ["solver:", mode, f"  initial temperature {stack.ambient_K:.3f} ;", "output:"]
+    s += [f'  Tmap ( S_{d.name}, "tmap_{d.name}.txt", {when} ) ;' for d in stack.dies]
     path = os.path.join(workdir, "stack.stk")
     open(path, "w", newline="\n").write("\n".join(s) + "\n")
     return path
