@@ -15,6 +15,8 @@
   - One tile, exponential leakage, f = leakage ÷ critical leakage: ρ at the fixed point solves
     **ρ − ln ρ = 1 − ln f** exactly (unit test), so **1 − ρ ≈ √(2 (1 − f))** near the boundary (a saddle-node).
     ρ = 0.86 is 1% of leakage from runaway.
+    **Not new:** this is Semenov's thermal-explosion condition (1928; Frank-Kamenetskii for fields) and the generic
+    square-root law at a saddle-node; cite them. The contribution is its use as a leakage margin for buried dies.
   - 1/(1 − ρ) at the fixed point is not a predictor of amplification near the boundary: f = 0.99 gives 7.4 against a
     measured 2.5; f = 0.999 gives 22.7 against 2.8. G74's 1/(1 − ρ) agreed only because A ≤ 1.05 there.
   - Newton classifies f = 0.5 to 0.999 in 5 to 10 steps; a 40-iteration Picard (G74's cap) calls f ≥ 0.9
