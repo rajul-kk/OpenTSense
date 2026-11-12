@@ -1,0 +1,243 @@
+<title>OpenTSense Testbed Progress</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column; a stage strip, a status table, one block per stage, then realism and tools. Same tokens as the Pipeline Atlas. */
+:root {
+  --bg: #f6f6f3; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #8a8984; --rule: #e4e3df;
+  --accent: #2a78d6; --done: #1b8f64; --done-bg: #e3f3ec; --run: #a86a00; --run-bg: #fbf0d9; --part: #8a4fbf; --part-bg: #f1e8f9;
+  --gap: #b4442a; --gap-bg: #f9e6e0;
+  --f-display: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121211; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #8f8e86; --rule: #2e2e2b;
+  --accent: #3987e5; --done: #4cc896; --done-bg: #16302a; --run: #e3a63a; --run-bg: #33270f; --part: #b98be6; --part-bg: #2b2036;
+  --gap: #ec7b5f; --gap-bg: #3a1f18; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #121211; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #8f8e86; --rule: #2e2e2b;
+  --accent: #3987e5; --done: #4cc896; --done-bg: #16302a; --run: #e3a63a; --run-bg: #33270f; --part: #b98be6; --part-bg: #2b2036;
+  --gap: #ec7b5f; --gap-bg: #3a1f18; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15.5px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 72px }
+.wrap { max-width: 980px; margin: 0 auto }
+header { padding-block: 44px 26px; display: grid; gap: 14px; border-bottom: 1px solid var(--rule) }
+.eyebrow { font: 500 12px/1 var(--f-data); letter-spacing: .08em; text-transform: uppercase; color: var(--muted) }
+h1 { font: 700 clamp(30px, 5vw, 44px)/1.08 var(--f-display); letter-spacing: -.02em; margin: 0; text-wrap: balance }
+.lede { max-width: 66ch; color: var(--ink-2); margin: 0; font-size: 17px }
+h2 { font: 650 24px/1.2 var(--f-display); margin: 0; text-wrap: balance }
+h3 { font: 650 19px/1.25 var(--f-display); margin: 0 }
+section { padding-block: 40px; border-bottom: 1px solid var(--rule); display: grid; gap: 18px }
+p { margin: 0; max-width: 70ch }
+.sub { color: var(--ink-2) }
+.flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center }
+.flow span.st { font: 500 13px/1 var(--f-data); padding: 8px 11px; border-radius: 999px; border: 1px solid var(--rule); background: var(--surface) }
+.flow span.ar { color: var(--muted); font: 13px var(--f-data) }
+.st.done { border-color: var(--done); color: var(--done) }
+.st.part { border-color: var(--part); color: var(--part) }
+.chip { display: inline-block; font: 500 12px/1 var(--f-data); padding: 5px 8px; border-radius: 6px; white-space: nowrap }
+.chip.done { background: var(--done-bg); color: var(--done) }
+.chip.run { background: var(--run-bg); color: var(--run) }
+.chip.part { background: var(--part-bg); color: var(--part) }
+.chip.gap { background: var(--gap-bg); color: var(--gap) }
+.tbl { overflow-x: auto; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface) }
+table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 620px }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--rule); vertical-align: top }
+th { font: 500 12px/1.3 var(--f-data); color: var(--muted); text-transform: uppercase; letter-spacing: .05em }
+tr:last-child td { border-bottom: 0 }
+td.num, .mono { font-family: var(--f-data); font-variant-numeric: tabular-nums; font-size: 13px }
+.stage { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 18px; padding-block: 26px; border-top: 1px solid var(--rule) }
+.stage:first-of-type { border-top: 0 }
+.sn { font: 600 34px/1 var(--f-display); color: var(--accent) }
+.sbody { display: grid; gap: 10px; min-width: 0 }
+.shead { display: flex; flex-wrap: wrap; gap: 10px; align-items: center }
+dl { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 6px 16px; margin: 0; font-size: 14.5px }
+dt { font: 500 12px/1.7 var(--f-data); color: var(--muted); text-transform: uppercase; letter-spacing: .04em }
+dd { margin: 0; color: var(--ink-2); min-width: 0 }
+dd b { color: var(--ink); font-weight: 600 }
+@media (max-width: 620px) { .stage { grid-template-columns: minmax(0, 1fr); gap: 6px } dl { grid-template-columns: minmax(0, 1fr); gap: 2px } dt { margin-top: 8px } }
+.callout { background: var(--surface); border: 1px solid var(--rule); border-left: 3px solid var(--accent); border-radius: 8px; padding: 16px 18px; display: grid; gap: 8px }
+.callout p { color: var(--ink-2) }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px }
+.box { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 16px; display: grid; gap: 8px; align-content: start; min-width: 0 }
+.box h3 { font-size: 16px }
+.box ul { margin: 0; padding-left: 18px; color: var(--ink-2); font-size: 14.5px; display: grid; gap: 4px }
+.box .where { font: 500 12px/1 var(--f-data); color: var(--muted); text-transform: uppercase; letter-spacing: .05em }
+footer { padding-block: 28px; color: var(--muted); font-size: 13px; display: grid; gap: 6px }
+code { font-family: var(--f-data); font-size: .88em }
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">OpenTSense · Final year project · status at 11 Nov 2026</div>
+  <h1>Seven stages from a real CPU to a hidden die's temperature</h1>
+  <p class="lede">An open testbed that takes a real routed chip, runs real programs on it, turns the switching into power and heat across a 3D stack, and asks how well a few sensors can recover a die buried inside. Six stages are built and checked; estimation is the next phase.</p>
+</header>
+
+<section aria-labelledby="h-flow">
+  <h2 id="h-flow">The pipeline</h2>
+  <div class="flow" aria-label="Pipeline stages">
+    <span class="st done">1 Cells</span><span class="ar">→</span><span class="st done">2 Activity</span><span class="ar">→</span><span class="st done">3 Power maps</span><span class="ar">→</span><span class="st done">4 Stack</span><span class="ar">→</span><span class="st done">5 Temperature</span><span class="ar">→</span><span class="st done">6 Leakage loop</span><span class="ar">→</span><span class="st part">7 Estimation</span>
+  </div>
+  <p class="sub">Every stage was built twice. An exploratory pass (gates G30 to G69, before 1 November) showed the idea works. The project pass (G70 onwards) rebuilt it in one repository with pinned tools, and each stage counts as done only after it passed a <b>gate</b>: a test whose pass bar is written down before the run.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Stage</th><th>Exploratory proof</th><th>Project gates</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>1 Cells</td><td class="num">G52, G53</td><td class="num">G70</td><td><span class="chip done">Done</span></td></tr>
+      <tr><td>2 Activity</td><td class="num">G30, G49</td><td class="num">G72, G81x, G81b, G81d2</td><td><span class="chip done">Done</span> memory traffic next</td></tr>
+      <tr><td>3 Power maps</td><td class="num">G34, G36, G53</td><td class="num">G72, G75</td><td><span class="chip done">Done</span></td></tr>
+      <tr><td>4 Stack</td><td class="num">n/a</td><td class="num">G71, G93a</td><td><span class="chip done">Done</span> larger stacks next</td></tr>
+      <tr><td>5 Temperature</td><td class="num">G47, G55</td><td class="num">G71, G93a</td><td><span class="chip done">Done</span> steady state</td></tr>
+      <tr><td>6 Leakage loop</td><td class="num">G31, G37, G41</td><td class="num">G74, G75, G92 to G92e</td><td><span class="chip done">Loop done</span> <span class="chip run">Library: final check running</span></td></tr>
+      <tr><td>7 Estimation</td><td class="num">G39 to G69</td><td class="num">G73, G84</td><td><span class="chip part">Partly done</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section aria-labelledby="h-stages">
+  <h2 id="h-stages">How each stage was developed</h2>
+
+  <div class="stage"><div class="sn">1</div><div class="sbody">
+    <div class="shead"><h3>Cells: physical design</h3><span class="chip done">Done</span></div>
+    <dl>
+      <dt>What</dt><dd>Turns the chip's source code into a real layout: every logic cell gets a position on the silicon.</dd>
+      <dt>Tools</dt><dd>OpenROAD flow (Yosys synthesis, placement, routing); ASAP7 7 nm, IHP SG13G2 and SKY130 open process kits.</dd>
+      <dt>Developed</dt><dd>The ibex RISC-V CPU routed on three kits, plus a TPU accelerator and the larger cva6 core (G52: zero layout errors). In the project pass the tool image is pinned by digest, so layouts rebuild identically. <b>G70 passed</b>: clean builds in about 3.5 minutes, end-to-end smoke test.</dd>
+      <dt>Result</dt><dd>About 70,000 placed cells on ASAP7 ibex, with locations exported for the power maps.</dd>
+    </dl></div></div>
+
+  <div class="stage"><div class="sn">2</div><div class="sbody">
+    <div class="shead"><h3>Activity: which wires switch, and when</h3><span class="chip done">Done</span></div>
+    <dl>
+      <dt>What</dt><dd>Runs real programs on the gate-level chip and records every wire flip, because switching is what costs power.</dd>
+      <dt>Tools</dt><dd>RISC-V compiler, Embench-IoT benchmarks, testbenches, Icarus Verilog (accurate) and Verilator (fast).</dd>
+      <dt>Developed</dt><dd><b>G72 passed</b> with 4 kernels on ibex and 3 TPU workloads, all answers correct. Then <b>G81a failed</b>: Verilator's power disagreed with Icarus. The cause was the testbench feeding unknown (X) values on a memory bus, which the two simulators treat differently. After a one-line fix, <b>G81x passed</b>: within 0.45 %, 37 times faster. <b>G81b passed</b> with whole Embench programs (19 plus an idle program), and <b>G81d2 passed</b> with a real CPU plus accelerator system (Rocket + Gemmini).</dd>
+      <dt>Result</dt><dd>Whole-program switching, plus a per-region activity timeline that tracks power at correlation 0.977 to 1.000.</dd>
+    </dl></div></div>
+
+  <div class="stage"><div class="sn">3</div><div class="sbody">
+    <div class="shead"><h3>Power maps: switching into heat sources</h3><span class="chip done">Done</span></div>
+    <dl>
+      <dt>What</dt><dd>Turns wire flips into watts per cell, then sums them into a grid of tiles per die.</dd>
+      <dt>Tools</dt><dd>OpenSTA (power per cell from switching, cell energy data and wire loads); the project's tiling code.</dd>
+      <dt>Developed</dt><dd><b>G72 passed</b> (32 × 32 tile maps, every pin annotated). <b>G75 passed</b>: OpenSTA's default activity guess overstates power by 1.7 to 2.2 times compared with real programs, which is a concrete reason synthetic power maps mislead.</dd>
+      <dt>Result</dt><dd>Real-activity power maps for the CPU and accelerator dies.</dd>
+    </dl></div></div>
+
+  <div class="stage"><div class="sn">4</div><div class="sbody">
+    <div class="shead"><h3>Stack: the 3D package</h3><span class="chip done">Done</span></div>
+    <dl>
+      <dt>What</dt><dd>Describes the stack (dies, bonds, materials, heat sink) once, in a form every solver can read.</dd>
+      <dt>Developed</dt><dd>Exploratory stacks were hand-written per solver, which caused errors. Now one YAML file is converted automatically for each solver (<b>G71</b>). <b>G93a</b> added side-by-side chiplets (2.5D), thin sublayers and a heat sink on either side.</dd>
+      <dt>Result</dt><dd>Three stacks: single die, two dies stacked, 2.5D chiplets.</dd>
+    </dl></div></div>
+
+  <div class="stage"><div class="sn">5</div><div class="sbody">
+    <div class="shead"><h3>Temperature: three solvers, one answer</h3><span class="chip done">Done</span></div>
+    <dl>
+      <dt>What</dt><dd>Computes each die's temperature from its power map.</dd>
+      <dt>Tools</dt><dd>3D-ICE, PACT and HotSpot: three independent thermal simulators.</dd>
+      <dt>Developed</dt><dd><b>G71 passed</b> (3D-ICE and PACT agree). <b>G93a passed</b> with HotSpot as a third solver. Its first run stopped on HotSpot's input-line limit, which was raised and recorded as an amendment. The temperature response is also captured as one matrix, so later stages need no slow re-solve.</dd>
+      <dt>Result</dt><dd>All three solvers agree within <b>0.41 K</b>, so the reference temperature does not rest on one tool.</dd>
+    </dl></div></div>
+
+  <div class="stage"><div class="sn">6</div><div class="sbody">
+    <div class="shead"><h3>Leakage loop: heat feeding heat</h3><span class="chip done">Loop done</span><span class="chip run">Library check running</span></div>
+    <dl>
+      <dt>What</dt><dd>Hot chips leak more current, which heats them more. This stage models that feedback and predicts when it runs away.</dd>
+      <dt>Tools</dt><dd>ngspice with transistor models, to measure each cell's leakage from 25 to 125 °C.</dd>
+      <dt>Developed</dt><dd><b>G74 passed</b>: one number, ρ, predicts runaway (96 of 96 cases right). <b>G75 found</b> that the open kits' shipped libraries understate hot leakage by 2 to 16 times. Building correct temperature-aware libraries took five gates: G92 to G92d each failed on a handful of the roughly 8,500 cell states, and each failure exposed a real bug (unsettled flip-flop states, a bad reference, cells silently falling back to shipped values).</dd>
+      <dt>Result</dt><dd>The loop is done. The final library check (G92e) is running; its first kit finished with zero failed states.</dd>
+    </dl></div></div>
+
+  <div class="stage"><div class="sn">7</div><div class="sbody">
+    <div class="shead"><h3>Estimation: seeing the hidden die</h3><span class="chip part">Partly done</span></div>
+    <dl>
+      <dt>What</dt><dd>From a few sensor readings, recover a buried die's power and temperature.</dd>
+      <dt>Developed</dt><dd>Exploratory studies covered Bayesian recovery, Kalman filters, sensor placement and error margins. <b>G73 passed</b>: "degrees of freedom" predicts each die's error (correlation −0.93), and a die is hidden by its <b>low power</b>, not by being buried. <b>G84 passed</b>: one command scores any estimator and gives identical numbers on any machine. Code for a regularised-inversion estimator (G77) is written and tested.</dd>
+      <dt>Next</dt><dd>Move the exploratory estimators into the testbed and gate them (G76 to G80).</dd>
+    </dl></div></div>
+
+  <div class="callout">
+    <h3>What the gates caught</h3>
+    <p>Almost every stage hit a failure that the gate process caught, and each one exposed a real flaw: the unknown-value testbench bug (G81a), unsettled SPICE states (G92 series), HotSpot's input limit (G93a). That is the evidence that the testbed is checked, not only built.</p>
+  </div>
+</section>
+
+<section aria-labelledby="h-real">
+  <h2 id="h-real">How close is this to consumer 3D stacks?</h2>
+  <p class="sub">Representative, not a replica. The densities and temperatures sit in consumer ranges; the dies are smaller and the CPU is an embedded core. Consumer figures below are approximate public numbers.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Quantity</th><th>OpenTSense (3D benchmark stack)</th><th>Consumer reference</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td>Top die density</td><td class="num">6.2 W / 9 mm² ≈ 0.69 W/mm²</td><td>GPU ≈ 0.85 W/mm²; CPU chiplet ≈ 0.5 to 1 W/mm²</td><td><span class="chip done">Realistic</span></td></tr>
+      <tr><td>Buried die density</td><td class="num">1.5 W / 9 mm² ≈ 0.16 W/mm²</td><td>Mobile or cache die ≈ 0.1 to 0.3 W/mm²</td><td><span class="chip done">Realistic</span></td></tr>
+      <tr><td>Peak temperature rise</td><td class="num">54 K mean, 67 K max</td><td>About 50 to 70 K above ambient</td><td><span class="chip done">Realistic</span></td></tr>
+      <tr><td>Activity</td><td>Real programs on real gates</td><td>Same principle</td><td><span class="chip done">Strong</span></td></tr>
+      <tr><td>Die size, total power</td><td class="num">9 mm², 6 to 8 W</td><td>70 to 800 mm², 30 to 700 W</td><td><span class="chip gap">Much smaller</span></td></tr>
+      <tr><td>Memory power</td><td>Random DRAM traffic</td><td>Follows the program</td><td><span class="chip gap">Not yet</span></td></tr>
+      <tr><td>Leakage share</td><td>Small (ρ ≈ 0.002 nominal)</td><td>Large on hot, fast chips</td><td><span class="chip gap">Understated</span></td></tr>
+      <tr><td>Power management</td><td>None</td><td>Voltage and frequency scaling, power gating</td><td><span class="chip gap">Missing</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="cols">
+    <div class="box"><span class="where">Fixing</span><h3>Three gaps closed in the project</h3><ul>
+      <li><b>Memory</b>: DRAMPower turns the program's real memory requests into a memory-die power map (G81e).</li>
+      <li><b>Leakage</b>: temperature-aware libraries (G92e, running), with fast-leaking cells as the stress case.</li>
+      <li><b>Die size</b>: consumer-sized HBM-style and three-tier stacks (G93).</li>
+    </ul></div>
+    <div class="box"><span class="where">Extension</span><h3>Modelled power management</h3><ul>
+      <li>Power scaled with frequency and voltage squared, idle blocks switched off, and a simple governor choosing the operating point.</li>
+      <li>A model, not real firmware. Planned for the extension window in March.</li>
+    </ul></div>
+    <div class="box"><span class="where">Stated limits</span><h3>Two gaps reported, not fixed</h3><ul>
+      <li>Consumer software (an operating system, games) cannot run in gate-level simulation on this hardware.</li>
+      <li>Real foundry process data is under NDA, so ASAP7, a predictive 7 nm kit, stands in for it.</li>
+    </ul></div>
+  </div>
+  <div class="callout">
+    <h3>What is new about the switching</h3>
+    <p>Computing power from real switching is standard in industry. What is new is bringing it, open and reproducible, into 3D thermal-sensing research, which still relies on synthetic power maps. The project also measures how much that shortcut distorts the results (1.7 to 2.2 times), and finds that a chip's own activity timeline tracks power almost exactly, so activity counters could act as extra sensors for a hidden die.</p>
+  </div>
+</section>
+
+<section aria-labelledby="h-tools">
+  <h2 id="h-tools">Where the tools run</h2>
+  <p class="sub">Everything runs on one Windows laptop. The chip and thermal tools are Linux programs, so they run in pinned Docker containers, which Docker Desktop hosts inside WSL 2. The analysis code runs on Windows directly.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Tool</th><th>Used in</th><th>Runs on</th></tr></thead>
+    <tbody>
+      <tr><td>OpenROAD flow, Yosys, OpenSTA</td><td>Stages 1, 3</td><td>Docker (Linux image, pinned by digest) in WSL 2</td></tr>
+      <tr><td>Icarus Verilog, Verilator</td><td>Stage 2</td><td>Docker in WSL 2</td></tr>
+      <tr><td>RISC-V compiler</td><td>Stage 2</td><td>Docker in WSL 2 (was a plain WSL install before G81b pinned it)</td></tr>
+      <tr><td>ngspice with transistor models</td><td>Stage 6</td><td>Docker in WSL 2</td></tr>
+      <tr><td>3D-ICE, PACT, HotSpot</td><td>Stage 5</td><td>Docker in WSL 2</td></tr>
+      <tr><td>Testbed package: stack converters, leakage loop, estimators, benchmark scorer, tests</td><td>Stages 4 to 7</td><td>Windows (Python) and Linux CI</td></tr>
+      <tr><td>Gate scripts that drive the containers</td><td>All</td><td>Windows (Git Bash calling Docker)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section aria-labelledby="h-next">
+  <h2 id="h-next">Next, and the dates</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Date</th><th>Milestone</th></tr></thead>
+    <tbody>
+      <tr><td class="num">3 Dec 2026</td><td>Interim report</td></tr>
+      <tr><td class="num">18 Dec 2026</td><td>Testbed checked: G92e closed, regression tests in CI</td></tr>
+      <tr><td class="num">15 Jan 2027</td><td>Test set and protocol frozen</td></tr>
+      <tr><td class="num">5 Feb 2027</td><td>Benchmark ready: estimators ported (G76 to G80), memory power (G81e), larger stacks (G93)</td></tr>
+      <tr><td class="num">5 Mar 2027</td><td>Core results, including the buried-die design rule</td></tr>
+      <tr><td class="num">15 Apr 2027</td><td>Dissertation</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>
+  <span>Figures come from the recorded gate results in the OpenTSense repository (<code>gates/*/record/result.json</code>, <code>gates.md</code>).</span>
+  <span>Companion pages: the Pipeline Atlas (per-stage data views) and the Ibex Stage Explorer.</span>
+</footer>
+</div>
