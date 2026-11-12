@@ -75,3 +75,15 @@ def test_prea_counts_once_per_open_bank():
     assert (tr.cmd == "PREA").sum() == 1 and (tr.cmd == "PRE").sum() == 0
     f = dramenergy.features(tr, NB)
     assert f["pre"][0].tolist() == [1, 1, 0, 0, 0, 0, 0, 0]
+
+
+def test_trace_to_die_maps_keeps_energy():
+    from opentsense.power import dram
+    tr = mixed(1)
+    m = dramenergy.Model(act=2e-9, pre=1e-9, rd=1.7e-10, wr=1.2e-10, refa=2.8e-9, closed=2.2e-12, any_open=2.3e-11,
+                         io_cycle=2e-12, io_cmd=1e-12, io_rd=3e-11, io_wr=4e-11)
+    edges = np.linspace(0, int(tr.time[-1]), 11)
+    w = dramenergy.windows(tr, NB, m, edges)
+    dt = np.diff(edges) * dramctl.LPDDR4_3200["t"]["tCK"]
+    P = dram.window_maps((20, 16), w["bank"], w["io"], dt)
+    assert np.allclose(P.sum((1, 2)) * dt, w["total"], rtol=1e-12)

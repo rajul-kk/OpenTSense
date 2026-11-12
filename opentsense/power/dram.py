@@ -42,11 +42,35 @@ def die_map(shape, background_W, active_W, io_W, banks=(2, 4), gap=1, strip_frac
     if mix is None:
         mix = np.random.default_rng(seed).dirichlet(np.full(nb, 2.0))
     mix = np.asarray(mix, float)
-    assert len(mix) == nb and np.isclose(mix.sum(), 1.0), "mix must have one share per bank and sum to 1"
+    if len(mix) != nb or not np.isclose(mix.sum(), 1.0):
+        raise ValueError("mix must have one share per bank and sum to 1")
     P = np.full(shape, background_W / lab.size)
     for k in range(nb):
         m = lab == k
         P[m] += active_W * mix[k] / m.sum()
     io = lab == -2
     P[io] += io_W / io.sum()
+    return P
+
+
+def window_maps(shape, bank_J, io_J, window_s, banks=(1, 4), gap=1, strip_frac=0.15):
+    """(nw, ny, nx) power maps in W from per-window memory energies (G81e: `power.dramenergy.windows`).
+
+    bank_J (nw, nb): each bank's energy in each window (commands plus its share of background), spread evenly over
+    that bank's area; io_J (nw,): interface energy, spread over the TSV/IO strip; window_s: window length in seconds
+    (a number or one per window). The default `banks` gives 8 banks, as in LPDDR4. Periphery cells get no power:
+    the energy model has no term for them."""
+    lab = layout(shape, banks, gap, strip_frac)
+    bank_J = np.atleast_2d(np.asarray(bank_J, float))
+    nw, nb = bank_J.shape
+    if lab.max() + 1 != nb:
+        raise ValueError(f"layout has {lab.max() + 1} banks, energies have {nb}")
+    io_J = np.asarray(io_J, float).reshape(nw)
+    dt = np.broadcast_to(np.asarray(window_s, float), (nw,))
+    P = np.zeros((nw,) + tuple(shape))
+    for k in range(nb):
+        m = lab == k
+        P[:, m] += (bank_J[:, k] / dt / m.sum())[:, None]
+    io = lab == -2
+    P[:, io] += (io_J / dt / io.sum())[:, None]
     return P

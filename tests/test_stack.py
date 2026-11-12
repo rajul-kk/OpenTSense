@@ -120,3 +120,17 @@ def test_dram_map():
     assert P.shape == (20, 16) and abs(P.sum() - 0.45) < 1e-12 and (P > 0).all()
     lab = dram.layout((20, 16))
     assert (lab == -2).any() and lab.max() + 1 == 16
+    with pytest.raises(ValueError):
+        dram.die_map((20, 16), 0.1, 0.3, 0.05, mix=np.ones(3) / 3)
+
+
+def test_dram_window_maps_keep_energy_per_window():
+    bank_J = np.arange(3 * 8, dtype=float).reshape(3, 8) * 1e-9
+    io_J = np.array([1e-9, 2e-9, 0.0])
+    P = dram.window_maps((20, 16), bank_J, io_J, 1e-6)
+    assert P.shape == (3, 20, 16)
+    assert np.allclose(P.sum((1, 2)) * 1e-6, bank_J.sum(1) + io_J, rtol=1e-12)
+    lab = dram.layout((20, 16), banks=(1, 4))
+    assert np.allclose(P[1][lab == 5].sum() * 1e-6, bank_J[1, 5]) and (P[:, lab == -1] == 0).all()
+    with pytest.raises(ValueError):
+        dram.window_maps((20, 16), bank_J[:, :4], io_J, 1e-6)
