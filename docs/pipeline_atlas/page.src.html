@@ -1,0 +1,370 @@
+<title>OpenTSense Pipeline Atlas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one long column of numbered pipeline stages; each stage = short caption + its own instrument panel. */
+:root {
+  --bg: #f6f6f3; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #8a8984; --rule: #e4e3df;
+  --accent: #2a78d6; --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4;
+  --div-mid: #f0efec; --mode: light;
+  --f-display: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121211; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #8f8e86; --rule: #2e2e2b;
+  --accent: #3987e5; --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181;
+  --div-mid: #383835; --mode: dark; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #121211; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #8f8e86; --rule: #2e2e2b;
+  --accent: #3987e5; --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181;
+  --div-mid: #383835; --mode: dark; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 64px }
+.wrap { max-width: 1120px; margin: 0 auto }
+header.top { padding-block: 40px 24px; display: grid; gap: 14px; border-bottom: 1px solid var(--rule) }
+.eyebrow { font: 500 12px/1 var(--f-data); letter-spacing: .08em; text-transform: uppercase; color: var(--muted) }
+h1 { font: 700 clamp(30px, 5vw, 46px)/1.05 var(--f-display); letter-spacing: -.02em; margin: 0; text-wrap: balance }
+.lede { max-width: 68ch; color: var(--ink-2); margin: 0 }
+nav.flow { display: flex; flex-wrap: wrap; gap: 6px; padding-block: 18px; position: sticky; top: env(safe-area-inset-top, 0px); background: var(--bg); z-index: 5; border-bottom: 1px solid var(--rule) }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg) }
+nav.flow a { font: 500 12.5px/1 var(--f-data); color: var(--ink-2); text-decoration: none; padding: 7px 10px; border: 1px solid var(--rule); border-radius: 999px; background: var(--surface) }
+nav.flow a:hover, nav.flow a:focus-visible { color: var(--ink); border-color: var(--accent); outline: none }
+nav.flow .arrow { color: var(--muted); font: 12px/28px var(--f-data) }
+section.stage { display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: 28px; padding-block: 44px; border-bottom: 1px solid var(--rule) }
+@media (max-width: 820px) { section.stage { grid-template-columns: minmax(0, 1fr); gap: 16px } }
+.cap { display: grid; gap: 10px; align-content: start; min-width: 0 }
+.num { font: 500 13px/1 var(--f-data); color: var(--accent) }
+h2 { font: 650 22px/1.2 var(--f-display); margin: 0; text-wrap: balance }
+.cap p { margin: 0; color: var(--ink-2); font-size: 14px }
+.src { font: 12px/1.4 var(--f-data); color: var(--muted); word-break: break-all }
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 18px; display: grid; gap: 14px; min-width: 0 }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; flex-wrap: wrap }
+.seg button { font: 500 12.5px/1 var(--f-data); padding: 8px 11px; border: 0; background: transparent; color: var(--ink-2); cursor: pointer }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--surface) }
+.seg button:focus-visible, select:focus-visible, input:focus-visible, .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+select, .btn { font: 500 13px/1 var(--f-data); padding: 8px 10px; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); color: var(--ink) }
+.btn { cursor: pointer }
+label.lbl { font: 12px/1 var(--f-data); color: var(--muted) }
+canvas { display: block; max-width: 100%; touch-action: none }
+.row { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start }
+.row > * { min-width: 0 }
+.mult { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px }
+.cell-title { font: 500 12px/1.3 var(--f-data); color: var(--ink-2); margin-bottom: 6px; display: flex; justify-content: space-between; gap: 6px }
+.cell-title b { color: var(--ink); font-weight: 500 }
+.legend { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font: 12px/1.2 var(--f-data); color: var(--ink-2) }
+.legend .bar { height: 10px; width: 180px; border-radius: 3px; max-width: 50vw }
+.key { display: inline-flex; align-items: center; gap: 6px }
+.key i { width: 10px; height: 10px; border-radius: 50%; display: inline-block }
+.stat { display: flex; flex-wrap: wrap; gap: 22px; font: 12px/1.3 var(--f-data); color: var(--muted) }
+.stat b { display: block; font: 600 20px/1.2 var(--f-display); color: var(--ink); font-variant-numeric: tabular-nums }
+.note { font-size: 13px; color: var(--ink-2); margin: 0; max-width: 72ch }
+#tip { position: fixed; pointer-events: none; z-index: 20; background: var(--ink); color: var(--surface); font: 12px/1.45 var(--f-data); padding: 7px 9px; border-radius: 6px; white-space: pre; opacity: 0; transition: opacity .08s }
+svg text { font-family: var(--f-data); font-size: 11px; fill: var(--ink-2) }
+.scroll-x { overflow-x: auto }
+footer { padding-block: 28px; color: var(--muted); font-size: 13px }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important } }
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">OpenTSense · FYP testbed · data from recorded gates</div>
+  <h1>From routed cells to a buried die's temperature</h1>
+  <p class="lede">Each stage below is drawn from the files a gate actually wrote: the placed ASAP7 ibex core, toggle timelines from 19 Embench programs, per-tile power, the stack geometry, three thermal solvers, the leakage loop and the identifiability numbers. Hover any map or point for its value.</p>
+</header>
+<nav class="flow" aria-label="Pipeline stages">
+  <a href="#layout">1 Cells</a><span class="arrow">→</span><a href="#activity">2 Activity</a><span class="arrow">→</span><a href="#power">3 Power maps</a><span class="arrow">→</span><a href="#stack">4 Stack</a><span class="arrow">→</span><a href="#thermal">5 Temperature</a><span class="arrow">→</span><a href="#loop">6 Leakage loop</a><span class="arrow">→</span><a href="#estimate">7 Estimation</a>
+</nav>
+
+<section class="stage" id="layout">
+  <div class="cap"><span class="num">STAGE 1 · PHYSICAL DESIGN → POWER</span><h2>Every placed cell, coloured by its power</h2>
+    <p>The routed ibex core on ASAP7 (76.7 µm square). Each dot is one standard cell at its placed location, coloured by its OpenSTA power while running kernel k0. Cells with zero reported power (fillers, taps) are left out.</p>
+    <p class="src">gates/g72/runs/main/power/ibex_loc.csv + ibex_k0.txt (G72)</p></div>
+  <div class="panel">
+    <div class="stat"><span><b id="l-n"></b>cells drawn</span><span><b id="l-tot"></b>design total</span><span><b>76.7 µm</b>die side</span></div>
+    <canvas id="c-layout" aria-label="Scatter of placed ibex cells coloured by power"></canvas>
+    <div class="legend" id="lg-layout"></div>
+  </div>
+</section>
+
+<section class="stage" id="activity">
+  <div class="cap"><span class="num">STAGE 2 · GATE-LEVEL SIMULATION</span><h2>Where the core switches, over a whole program</h2>
+    <p>Toggle counts per 1,000 cycles, summed over a 4 × 4 grid of die regions, for whole Embench-IoT programs and the compute/WFI idle program on the gate-level ibex. Scrub the timeline to see the spatial pattern move.</p>
+    <p class="src">gates/g81b/runs/main/&lt;program&gt;/timeline.csv (G81b, Verilator)</p></div>
+  <div class="panel">
+    <div class="controls"><label class="lbl" for="a-prog">Program</label><select id="a-prog"></select>
+      <button class="btn" id="a-play" type="button">Play</button>
+      <input id="a-t" type="range" min="0" max="159" value="0" aria-label="Time sample" style="flex:1;min-width:140px"></div>
+    <div class="row">
+      <div><div class="cell-title"><span>Regions at <b id="a-cyc"></b></span></div><canvas id="c-act-grid" aria-label="4 by 4 region toggle heatmap"></canvas></div>
+      <div style="flex:1;min-width:260px"><div class="cell-title"><span>All regions, toggles per 1,000 cycles</span></div><canvas id="c-act-line" aria-label="Total toggles over time"></canvas></div>
+    </div>
+    <div class="legend" id="lg-act"></div>
+    <div><div class="cell-title"><span>Mean dynamic power per program (G81b power windows)</span></div><div class="scroll-x"><canvas id="c-act-bars" aria-label="Dynamic power per program"></canvas></div></div>
+  </div>
+</section>
+
+<section class="stage" id="power">
+  <div class="cap"><span class="num">STAGE 3 · POWER MAPS</span><h2>Per-tile power, real activity against the default</h2>
+    <p>32 × 32 tile maps for the ibex CPU die and the TPU die. "def" uses OpenSTA's default activity (no VCD); the others use simulated VCD windows. k4 is ibex asleep, W3 is the idle TPU. Each design shares one colour scale.</p>
+    <p class="src">gates/g72/runs/main/maps.npz (G72)</p></div>
+  <div class="panel">
+    <div class="controls"><div class="seg" role="group" aria-label="Design" id="p-design"><button type="button" data-v="ibex" aria-pressed="true">ibex CPU</button><button type="button" data-v="tpu" aria-pressed="false">TPU</button></div></div>
+    <div class="mult" id="p-mult"></div>
+    <div class="legend" id="lg-power"></div>
+  </div>
+</section>
+
+<section class="stage" id="stack">
+  <div class="cap"><span class="num">STAGE 4 · STACK GEOMETRY</span><h2>The stacks the solvers see</h2>
+    <p>Layer cross-sections from the stack YAML, heat sink at the top. Thicknesses are drawn on a square-root scale so the 2 µm source layers stay visible beside a 500 µm spreader; true values are labelled.</p>
+    <p class="src">configs/stacks/g71_3d.yaml, g93a_25d_regions.yaml, g93a_3d_bottom.yaml</p></div>
+  <div class="panel">
+    <div class="controls"><div class="seg" role="group" aria-label="Stack" id="s-pick"><button type="button" data-v="g71_3d" aria-pressed="true">3D, two dies</button><button type="button" data-v="g93a_25d_regions" aria-pressed="false">2.5D chiplets</button><button type="button" data-v="g93a_3d_bottom" aria-pressed="false">3D, sink below</button></div></div>
+    <div class="scroll-x"><svg id="svg-stack" role="img" aria-label="Stack cross-section"></svg></div>
+    <div class="legend" id="lg-stack"></div>
+  </div>
+</section>
+
+<section class="stage" id="thermal">
+  <div class="cap"><span class="num">STAGE 5 · THERMAL SOLVE</span><h2>Three solvers, one temperature field</h2>
+    <p>Temperature rise above ambient on each die, seed 0, from 3D-ICE, PACT and HotSpot. The exploded view stacks the two dies of the 3D stack; the difference map shows where PACT departs from 3D-ICE. G93a passed with all pairs within 0.41 K at the peak.</p>
+    <p class="src">gates/g93a/runs/main/{3d,25d_regions}_fields.npz (G93a)</p></div>
+  <div class="panel">
+    <div class="controls"><div class="seg" role="group" aria-label="Stack" id="t-stack"><button type="button" data-v="3d" aria-pressed="true">3D stack</button><button type="button" data-v="25d_regions" aria-pressed="false">2.5D chiplets</button></div>
+      <div class="seg" role="group" aria-label="Die" id="t-die"></div></div>
+    <canvas id="c-iso" aria-label="Exploded isometric view of die temperature maps"></canvas>
+    <div class="mult" id="t-mult"></div>
+    <div class="legend" id="lg-thermal"></div>
+  </div>
+</section>
+
+<section class="stage" id="loop">
+  <div class="cap"><span class="num">STAGE 6 · ELECTRO-THERMAL LOOP</span><h2>Leakage feedback, and where it runs away</h2>
+    <p>Leakage rises with temperature, which raises temperature. The loop's spectral radius ρ predicts the amplification 1/(1 − ρ) while ρ &lt; 1; above 1 the loop has no fixed point. Points are measured cases; the line is the prediction.</p>
+    <p class="src">gates/g92d/record/asap7/result.json (c), gates/g74/record/result.json</p></div>
+  <div class="panel">
+    <canvas id="c-loop" aria-label="Amplification against spectral radius"></canvas>
+    <div class="legend"><span class="key"><i style="background:var(--s1)"></i>G92d ASAP7 cases (nominal, hot, stress)</span><span class="key"><i style="background:var(--s3)"></i>G74 converged</span><span class="key"><i style="background:var(--s2)"></i>G74 runaway (ρ &gt; 1, no fixed point)</span><span class="key"><i style="background:var(--ink-2);height:2px;border-radius:0;width:16px"></i>1/(1 − ρ)</span></div>
+    <p class="note" id="loop-note"></p>
+  </div>
+</section>
+
+<section class="stage" id="estimate">
+  <div class="cap"><span class="num">STAGE 7 · ESTIMATION</span><h2>How hidden is a buried die?</h2>
+    <p>For 18 die configurations (three bonds × three sensor counts × top or buried die), the degrees of freedom for signal predict the measured per-die power error. Buried dies carry fewer degrees of freedom and larger error. Below, measured CPU and accelerator duty cycles that feed the recovery workloads.</p>
+    <p class="src">gates/g73/record/result.json (G73); gates/g81d2/runs/main/timelines.npz (G81d2)</p></div>
+  <div class="panel">
+    <canvas id="c-g73" aria-label="Per-die error against degrees of freedom"></canvas>
+    <div class="legend"><span class="key"><i style="background:var(--s1)"></i>top die</span><span class="key"><i style="background:var(--s2)"></i>buried die</span><span>marker size = sensor count (4, 8, 16)</span></div>
+    <div class="controls"><label class="lbl">Offload workload (G81d2)</label><div class="seg" role="group" aria-label="Workload" id="o-pick"><button type="button" data-v="mm" aria-pressed="false">matmul</button><button type="button" data-v="conv" aria-pressed="true">conv</button><button type="button" data-v="mlp1" aria-pressed="false">mlp1</button></div></div>
+    <canvas id="c-off" aria-label="Rocket retire and Gemmini busy fractions over time"></canvas>
+    <div class="legend"><span class="key"><i style="background:var(--s1)"></i>Gemmini busy fraction</span><span class="key"><i style="background:var(--s2)"></i>Rocket retire fraction</span><span>per 1,000-cycle window, one steady period</span></div>
+  </div>
+</section>
+<footer>Built from the OpenTSense gate outputs on 10 Nov 2026 by <code>extract.py</code>. Values are as recorded; nothing is re-simulated in the page.</footer>
+</div>
+<div id="tip" role="tooltip"></div>
+
+<script id="data" type="application/json">__DATA__</script>
+<script>
+(function () {
+const D = JSON.parse(document.getElementById("data").textContent);
+const $ = s => document.querySelector(s);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const dark = () => css("--mode") === "dark";
+const BLUE = ["#cde2fb","#b7d3f6","#9ec5f4","#86b6ef","#6da7ec","#5598e7","#3987e5","#2a78d6","#256abf","#1c5cab","#184f95","#104281","#0d366b"];
+const ORANGE = ["#fde6da","#fbd2bd","#f8bc9f","#f4a582","#f08e64","#eb6834","#d95926","#c04c1f","#a33f19","#873313","#6b280e"];
+const hex = h => [1,3,5].map(i => parseInt(h.slice(i, i + 2), 16));
+function ramp(stops) { const c = stops.map(hex); return t => { t = Math.max(0, Math.min(1, t)); const x = t * (c.length - 1), i = Math.min(c.length - 2, Math.floor(x)), f = x - i; return c[i].map((v, k) => Math.round(v + (c[i + 1][k] - v) * f)); }; }
+// Sequential: light mode runs light->dark; dark mode is its own selection, dark->light, so "near zero" recedes into the dark surface.
+const seq = name => { const s = name === "orange" ? ORANGE : BLUE; return ramp(dark() ? s.slice().reverse() : s); };
+const rgb = a => `rgb(${a[0]},${a[1]},${a[2]})`;
+function diverging() { const mid = hex(css("--div-mid")); const b = hex(dark() ? "#3987e5" : "#2a78d6"), r = hex(dark() ? "#e66767" : "#e34948");
+  return t => { t = Math.max(-1, Math.min(1, t)); const e = t < 0 ? b : r, f = Math.abs(t); return mid.map((v, k) => Math.round(v + (e[k] - v) * f)); }; }
+const tip = $("#tip");
+function showTip(e, text) { tip.textContent = text; tip.style.opacity = 1; const w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = e.clientX + 14, y = e.clientY + 14; if (x + w > innerWidth - 8) x = e.clientX - w - 14; if (y + h > innerHeight - 8) y = e.clientY - h - 14; tip.style.left = x + "px"; tip.style.top = y + "px"; }
+const hideTip = () => tip.style.opacity = 0;
+function setup(cv, w, h) { const r = devicePixelRatio || 1; cv.width = Math.round(w * r); cv.height = Math.round(h * r); cv.style.width = w + "px"; cv.style.height = h + "px"; const g = cv.getContext("2d"); g.setTransform(r, 0, 0, r, 0, 0); return g; }
+const avail = el => Math.max(200, el.parentElement.clientWidth);
+function legendBar(el, f, lo, hi, unit, fmt) { const stops = []; for (let i = 0; i <= 10; i++) stops.push(rgb(f(i / 10)) + " " + i * 10 + "%");
+  el.innerHTML = `<span>${fmt(lo)}</span><span class="bar" style="background:linear-gradient(90deg,${stops.join(",")})"></span><span>${fmt(hi)}</span><span>${unit}</span>`; }
+function seg(id, onPick) { const g = $(id); g.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; g.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); onPick(b.dataset.v); }); }
+const segVal = id => $(id + " [aria-pressed=true]").dataset.v;
+// Draw a 2D field (rows = y from the lower edge) into a canvas; returns hover mapper
+function heat(cv, M, w, f, lo, hi) { const ny = M.length, nx = M[0].length, h = Math.round(w * ny / nx); const g = setup(cv, w, h);
+  const off = document.createElement("canvas"); off.width = nx; off.height = ny; const og = off.getContext("2d"), im = og.createImageData(nx, ny);
+  for (let i = 0; i < ny; i++) for (let j = 0; j < nx; j++) { const c = f((M[i][j] - lo) / (hi - lo || 1)), p = ((ny - 1 - i) * nx + j) * 4; im.data[p] = c[0]; im.data[p + 1] = c[1]; im.data[p + 2] = c[2]; im.data[p + 3] = 255; }
+  og.putImageData(im, 0, 0); g.imageSmoothingEnabled = false; g.drawImage(off, 0, 0, w, h);
+  return e => { const r = cv.getBoundingClientRect(), j = Math.floor((e.clientX - r.left) / r.width * nx), i = ny - 1 - Math.floor((e.clientY - r.top) / r.height * ny); return (i >= 0 && i < ny && j >= 0 && j < nx) ? { i, j, v: M[i][j] } : null; }; }
+function hover(cv, fn) { cv.onmousemove = e => { const t = fn(e); t ? showTip(e, t) : hideTip(); }; cv.onmouseleave = hideTip; }
+const fmtW = w => w >= 1e-3 ? (w * 1e3).toFixed(2) + " mW" : w >= 1e-6 ? (w * 1e6).toFixed(2) + " µW" : w >= 1e-9 ? (w * 1e9).toFixed(2) + " nW" : (w * 1e12).toFixed(2) + " pW";
+function axes(g, x0, y0, x1, y1, xt, yt, xl, yl) { g.strokeStyle = css("--rule"); g.fillStyle = css("--ink-2"); g.font = "11px " + css("--f-data"); g.lineWidth = 1;
+  yt.forEach(([v, y, s]) => { g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke(); g.textAlign = "right"; g.textBaseline = "middle"; g.fillText(s, x0 - 6, y); });
+  g.textAlign = "center"; g.textBaseline = "top"; xt.forEach(([v, x, s]) => { const hw = g.measureText(s).width / 2; g.fillText(s, Math.max(x0 + hw, Math.min(x1 - hw, x)), y1 + 6); });
+  g.fillStyle = css("--muted"); if (xl) g.fillText(xl, (x0 + x1) / 2, y1 + 22); if (yl) { g.save(); g.translate(12, (y0 + y1) / 2); g.rotate(-Math.PI / 2); g.textBaseline = "middle"; g.fillText(yl, 0, 0); g.restore(); } }
+
+/* ---------- 1. Layout ---------- */
+function drawLayout() { const L = D.layout, cv = $("#c-layout"), w = Math.min(avail(cv), 620), g = setup(cv, w, w); const f = seq("blue");
+  const lo = -13, hi = -4.4, s = w / L.box[2]; g.fillStyle = css("--surface"); g.fillRect(0, 0, w, w);
+  const idx = L.x10.map((_, i) => i).sort((a, b) => L.log10P100[a] - L.log10P100[b]);
+  const sz = Math.max(1.6, w / 330);
+  for (const i of idx) { g.fillStyle = rgb(f((L.log10P100[i] / 100 - lo) / (hi - lo))); g.fillRect(L.x10[i] / 10 * s - sz / 2, w - L.y10[i] / 10 * s - sz / 2, sz, sz); }
+  g.strokeStyle = css("--rule"); g.strokeRect(.5, .5, w - 1, w - 1);
+  $("#l-n").textContent = L.n.toLocaleString(); $("#l-tot").textContent = fmtW(L.total_W);
+  legendBar($("#lg-layout"), f, lo, hi, "cell power, W (log scale)", v => "1e" + v);
+  const grid = {}; const B = 2; L.x10.forEach((x, i) => { const k = Math.floor(x / 10 / B) + "," + Math.floor(L.y10[i] / 10 / B); (grid[k] = grid[k] || []).push(i); });
+  hover(cv, e => { const r = cv.getBoundingClientRect(), X = (e.clientX - r.left) / r.width * L.box[2], Y = (1 - (e.clientY - r.top) / r.height) * L.box[3];
+    let best = -1, bd = 1.2; for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) for (const i of grid[(Math.floor(X / B) + a) + "," + (Math.floor(Y / B) + b)] || []) { const d = Math.hypot(L.x10[i] / 10 - X, L.y10[i] / 10 - Y); if (d < bd) { bd = d; best = i; } }
+    return best < 0 ? null : `x ${(L.x10[best] / 10).toFixed(1)} µm  y ${(L.y10[best] / 10).toFixed(1)} µm\npower ${fmtW(Math.pow(10, L.log10P100[best] / 100))}`; }); }
+
+/* ---------- 2. Activity ---------- */
+const A = D.activity, progs = Object.keys(A.programs).filter(p => p !== "idle_pass1");
+const sel = $("#a-prog"); progs.forEach(p => sel.add(new Option(p, p))); sel.value = "crc32";
+let aT = 0, timer = null;
+function drawAct() { const P = A.programs[sel.value], f = seq("blue"), n = P.cycles.length; $("#a-t").max = n - 1; aT = Math.min(aT, n - 1);
+  let mx = 0; P.regions.forEach(r => r.forEach(v => mx = Math.max(mx, v)));
+  const r = P.regions[aT], M = [0, 1, 2, 3].map(i => r.slice(i * 4, i * 4 + 4));
+  const gc = $("#c-act-grid"), mp = heat(gc, M, 200, f, 0, mx);
+  const gg = gc.getContext("2d"); gg.strokeStyle = css("--surface"); gg.lineWidth = 2; for (let k = 1; k < 4; k++) { gg.beginPath(); gg.moveTo(k * 50, 0); gg.lineTo(k * 50, 200); gg.moveTo(0, k * 50); gg.lineTo(200, k * 50); gg.stroke(); }
+  hover(gc, e => { const h = mp(e); return h && `region row ${h.i}, col ${h.j}\n${Math.round(h.v).toLocaleString()} toggles / 1k cycles`; });
+  $("#a-cyc").textContent = "cycle " + P.cycles[aT].toLocaleString();
+  legendBar($("#lg-act"), f, 0, mx, "toggles per 1,000 cycles in one region", v => Math.round(v).toLocaleString());
+  // line
+  const lc = $("#c-act-line"), W = Math.max(260, lc.parentElement.clientWidth), H = 200, g = setup(lc, W, H), x0 = 56, x1 = W - 10, y0 = 8, y1 = H - 40;
+  const tot = P.regions.map(r => r.reduce((a, b) => a + b, 0)), tmax = Math.max(...tot) * 1.08, X = i => x0 + (x1 - x0) * i / (n - 1), Y = v => y1 - (y1 - y0) * v / tmax;
+  const yt = [0, .25, .5, .75, 1].map(q => [q * tmax, Y(q * tmax), (q * tmax / 1e6).toFixed(1) + "M"]);
+  const last = P.cycles[n - 1]; const xt = [0, .5, 1].map(q => { const i = Math.round(q * (n - 1)); return [i, X(i), (P.cycles[i] / 1e3).toFixed(0) + "k"]; });
+  axes(g, x0, y0, x1, y1, xt, yt, "cycle", null);
+  g.beginPath(); tot.forEach((v, i) => i ? g.lineTo(X(i), Y(v)) : g.moveTo(X(i), Y(v))); g.lineTo(X(n - 1), y1); g.lineTo(X(0), y1); g.closePath(); g.fillStyle = css("--s1") + "22"; g.fill();
+  g.beginPath(); tot.forEach((v, i) => i ? g.lineTo(X(i), Y(v)) : g.moveTo(X(i), Y(v))); g.strokeStyle = css("--s1"); g.lineWidth = 2; g.stroke();
+  g.strokeStyle = css("--ink"); g.lineWidth = 1; g.beginPath(); g.moveTo(X(aT), y0); g.lineTo(X(aT), y1); g.stroke(); g.fillStyle = css("--s1"); g.beginPath(); g.arc(X(aT), Y(tot[aT]), 4, 0, 7); g.fill(); g.strokeStyle = css("--surface"); g.lineWidth = 2; g.stroke();
+  const pick = e => { const r = lc.getBoundingClientRect(); return Math.max(0, Math.min(n - 1, Math.round(((e.clientX - r.left) - x0) / (x1 - x0) * (n - 1)))); };
+  hover(lc, e => { const i = pick(e); return `cycle ${P.cycles[i].toLocaleString()}\n${tot[i].toLocaleString()} toggles / 1k cycles`; });
+  lc.onclick = e => { aT = pick(e); $("#a-t").value = aT; drawAct(); };
+  drawBars(); }
+function drawBars() { const cv = $("#c-act-bars"), ent = Object.entries(A.dyn_mW).filter(([p]) => p !== "idle_pass1").sort((a, b) => b[1] - a[1]);
+  const W = Math.max(520, avail(cv)), H = 230, g = setup(cv, W, H), x0 = 44, x1 = W - 6, y0 = 10, y1 = H - 78, mx = Math.max(...ent.map(e => e[1])) * 1.1;
+  const bw = (x1 - x0) / ent.length, Y = v => y1 - (y1 - y0) * v / mx;
+  axes(g, x0, y0, x1, y1, [], [0, mx / 2, mx].map(v => [v, Y(v), v.toFixed(1)]), null, "mW");
+  ent.forEach(([p, v], i) => { const x = x0 + i * bw + 1, w = bw - 2, y = Y(v); g.fillStyle = p === sel.value ? css("--s2") : css("--s1"); g.beginPath(); g.roundRect(x, y, w, y1 - y, [4, 4, 0, 0]); g.fill();
+    g.save(); g.translate(x + w / 2, y1 + 6); g.rotate(-Math.PI / 3.2); g.fillStyle = p === sel.value ? css("--ink") : css("--ink-2"); g.textAlign = "right"; g.textBaseline = "middle"; g.fillText(p, 0, 0); g.restore(); });
+  hover(cv, e => { const r = cv.getBoundingClientRect(), i = Math.floor(((e.clientX - r.left) / r.width * W - x0) / bw); return ent[i] ? `${ent[i][0]}\n${ent[i][1].toFixed(3)} mW dynamic` : null; });
+  cv.onclick = e => { const r = cv.getBoundingClientRect(), i = Math.floor(((e.clientX - r.left) / r.width * W - x0) / bw); if (ent[i]) { sel.value = ent[i][0]; drawAct(); } }; }
+sel.onchange = () => { aT = 0; $("#a-t").value = 0; drawAct(); };
+$("#a-t").oninput = e => { aT = +e.target.value; drawAct(); };
+$("#a-play").onclick = () => { if (timer) { clearInterval(timer); timer = null; $("#a-play").textContent = "Play"; return; }
+  $("#a-play").textContent = "Pause"; timer = setInterval(() => { const n = A.programs[sel.value].cycles.length; aT = (aT + 1) % n; $("#a-t").value = aT; drawAct(); }, 90); };
+
+/* ---------- 3. Power maps ---------- */
+function drawPower() { const d = segVal("#p-design"), keys = Object.keys(D.maps).filter(k => k.startsWith(d + "_")), f = seq("blue");
+  let hi = 0; keys.forEach(k => D.maps[k].forEach(r => r.forEach(v => hi = Math.max(hi, v))));
+  const box = $("#p-mult"); box.innerHTML = "";
+  keys.forEach(k => { const tot = D.maps[k].flat().reduce((a, b) => a + b, 0), lab = k.split("_")[1];
+    const el = document.createElement("div"); el.innerHTML = `<div class="cell-title"><b>${lab}</b><span>${tot.toFixed(2)} mW</span></div><canvas></canvas>`; box.appendChild(el);
+    const cv = el.querySelector("canvas"), mp = heat(cv, D.maps[k], Math.floor(el.clientWidth), f, 0, hi);
+    hover(cv, e => { const h = mp(e); return h && `${lab}  tile (${h.j}, ${h.i})\n${(h.v * 1e3).toFixed(1)} µW`; }); });
+  legendBar($("#lg-power"), f, 0, hi * 1e3, "µW per tile", v => v.toFixed(0)); }
+seg("#p-design", drawPower);
+
+/* ---------- 4. Stack ---------- */
+const MAT_SLOT = { silicon: "--s1", copper: "--s2", tim: "--s3", bond: "--s4", underfill: "--s5" };
+function drawStack() { const S = D.stacks[segVal("#s-pick")], svg = $("#svg-stack"), W = Math.max(520, avail(svg)), x0 = 150, x1 = W - 170;
+  const bottom = S.heat_sink && S.heat_sink.side === "bottom"; const layers = S.layers.slice(); // listed from the sink side
+  const hOf = t => 10 + Math.sqrt(t) * 5.2; let y = 34, out = [];
+  out.push(`<rect x="${x0}" y="6" width="${x1 - x0}" height="18" rx="3" fill="none" stroke="var(--ink-2)" stroke-dasharray="3 3"/><text x="${(x0 + x1) / 2}" y="19" text-anchor="middle">heat sink, h = ${S.heat_sink.htc} W/m²K${bottom ? " (bottom)" : ""}</text>`);
+  const span = S.size_um[0];
+  layers.forEach(l => { const h = hOf(l.thickness_um), fill = `var(${MAT_SLOT[l.material] || "--muted"})`;
+    if (l.regions) { out.push(`<rect x="${x0}" y="${y}" width="${x1 - x0}" height="${h}" fill="var(${MAT_SLOT[l.material]})" opacity=".55"/>`);
+      l.regions.forEach(r => { const a = x0 + (x1 - x0) * r.rect_um[0] / span, b = (x1 - x0) * r.rect_um[2] / span; out.push(`<rect x="${a}" y="${y}" width="${b}" height="${h}" fill="var(${MAT_SLOT[r.material]})"/>`); }); }
+    else out.push(`<rect x="${x0}" y="${y}" width="${x1 - x0}" height="${h}" fill="${fill}" ${l.die ? "" : 'opacity=".8"'}/>`);
+    if (l.die) { const sy = l.source_side === "top" ? y : y + h - 3; out.push(`<rect x="${x0}" y="${sy}" width="${x1 - x0}" height="3" fill="var(--ink)" opacity=".75"/>`); }
+    out.push(`<line x1="${x0}" x2="${x1}" y1="${y + h}" y2="${y + h}" stroke="var(--surface)" stroke-width="2"/>`);
+    out.push(`<text x="${x0 - 10}" y="${y + h / 2 + 4}" text-anchor="end" style="fill:var(--ink)">${l.name}${l.die ? " · die" : ""}</text>`);
+    out.push(`<text x="${x1 + 10}" y="${y + h / 2 + 4}">${l.thickness_um} µm ${l.material}${l.regions ? " + Si regions" : ""}</text>`);
+    y += h; });
+  out.push(`<text x="${(x0 + x1) / 2}" y="${y + 20}" text-anchor="middle">${S.size_um[0].toLocaleString()} × ${S.size_um[1].toLocaleString()} µm footprint · dark line = power source layer</text>`);
+  svg.setAttribute("viewBox", `0 0 ${W} ${y + 30}`); svg.setAttribute("width", W); svg.setAttribute("height", y + 30); svg.innerHTML = out.join("");
+  const mats = [...new Set(S.layers.flatMap(l => [l.material, ...(l.regions || []).map(r => r.material)]))];
+  $("#lg-stack").innerHTML = mats.map(m => `<span class="key"><i style="background:var(${MAT_SLOT[m] || "--muted"});border-radius:2px"></i>${m}${S.materials[m] ? ", k = " + S.materials[m].k + " W/mK" : ""}</span>`).join(""); }
+seg("#s-pick", drawStack);
+
+/* ---------- 5. Thermal ---------- */
+const DIES = { "3d": [["top", "top die"], ["bot", "buried die"]], "25d_regions": [["chiplets", "chiplet layer"]] };
+const SOLV = [["ice", "3D-ICE"], ["pact", "PACT"], ["hs", "HotSpot"]];
+function dieButtons() { const st = segVal("#t-stack"); $("#t-die").innerHTML = DIES[st].map(([k, l], i) => `<button type="button" data-v="${k}" aria-pressed="${i === 0}">${l}</button>`).join(""); }
+function drawThermal() { const st = segVal("#t-stack"), die = segVal("#t-die"), f = seq("orange"), dv = diverging();
+  let lo = 1e9, hi = -1e9; Object.keys(D.thermal).filter(k => k.startsWith(st + "/")).forEach(k => D.thermal[k].forEach(r => r.forEach(v => { lo = Math.min(lo, v); hi = Math.max(hi, v); })));
+  const box = $("#t-mult"); box.innerHTML = "";
+  SOLV.forEach(([s, name]) => { const M = D.thermal[`${st}/${die}/${s}`], pk = Math.max(...M.flat());
+    const el = document.createElement("div"); el.innerHTML = `<div class="cell-title"><b>${name}</b><span>peak ${pk.toFixed(2)} K</span></div><canvas></canvas>`; box.appendChild(el);
+    const cv = el.querySelector("canvas"), mp = heat(cv, M, Math.floor(el.clientWidth), f, lo, hi); hover(cv, e => { const h = mp(e); return h && `${name}  cell (${h.j}, ${h.i})\nrise ${h.v.toFixed(3)} K`; }); });
+  const A = D.thermal[`${st}/${die}/pact`], B = D.thermal[`${st}/${die}/ice`], Dm = A.map((r, i) => r.map((v, j) => v - B[i][j])); const dm = Math.max(...Dm.flat().map(Math.abs)) || 1;
+  const el = document.createElement("div"); el.innerHTML = `<div class="cell-title"><b>PACT − 3D-ICE</b><span>max |Δ| ${dm.toFixed(3)} K</span></div><canvas></canvas>`; box.appendChild(el);
+  const cv = el.querySelector("canvas"), w = Math.floor(el.clientWidth), ny = Dm.length, nx = Dm[0].length, g = setup(cv, w, Math.round(w * ny / nx));
+  const off = document.createElement("canvas"); off.width = nx; off.height = ny; const og = off.getContext("2d"), im = og.createImageData(nx, ny);
+  for (let i = 0; i < ny; i++) for (let j = 0; j < nx; j++) { const c = dv(Dm[i][j] / dm), p = ((ny - 1 - i) * nx + j) * 4; im.data.set([c[0], c[1], c[2], 255], p); }
+  og.putImageData(im, 0, 0); g.imageSmoothingEnabled = false; g.drawImage(off, 0, 0, w, Math.round(w * ny / nx));
+  hover(cv, e => { const r = cv.getBoundingClientRect(), j = Math.floor((e.clientX - r.left) / r.width * nx), i = ny - 1 - Math.floor((e.clientY - r.top) / r.height * ny); return Dm[i] && Dm[i][j] !== undefined ? `cell (${j}, ${i})\nPACT − 3D-ICE ${Dm[i][j] >= 0 ? "+" : ""}${Dm[i][j].toFixed(3)} K` : null; });
+  legendBar($("#lg-thermal"), f, lo, hi, "K above ambient (300 K); difference map: blue = PACT cooler, red = PACT warmer", v => v.toFixed(1));
+  drawIso(st, lo, hi, f); }
+function drawIso(st, lo, hi, f) { const cv = $("#c-iso"), W = Math.min(avail(cv), 760), H = st === "3d" ? 420 : 300, g = setup(cv, W, H);
+  const dies = DIES[st].map(([k, l]) => [D.thermal[`${st}/${k}/ice`], l]); const nx = dies[0][0][0].length, ny = dies[0][0].length;
+  const gap = st === "3d" ? 120 : 0, top0 = 28, cx = (W - 150) / 2;
+  const s = Math.min((W - 170) / ((nx + ny) * 0.866), (H - top0 - gap - 16) / ((nx + ny) * 0.5));
+  // isometric: x = (j - i')*cos30, y = (j + i')*sin30 with i' = ny-1-i so the die's lower edge faces the viewer
+  const iso = (j, ip, z) => [cx + (j - ip) * s * 0.866, top0 + (j + ip) * s * 0.5 - z];
+  g.font = "12px " + css("--f-data");
+  dies.forEach(([M, label], d) => { const z = -d * gap; // later dies are drawn lower (buried)
+    for (let ip = 0; ip < ny; ip++) for (let j = 0; j < nx; j++) { const v = M[ny - 1 - ip][j], c = f((v - lo) / (hi - lo || 1));
+      const a = iso(j, ip, z), b = iso(j + 1, ip, z), c2 = iso(j + 1, ip + 1, z), e = iso(j, ip + 1, z);
+      g.fillStyle = rgb(c); g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.lineTo(c2[0], c2[1]); g.lineTo(e[0], e[1]); g.closePath(); g.fill(); g.strokeStyle = g.fillStyle; g.lineWidth = .6; g.stroke(); }
+    const L = iso(0, ny, z), R = iso(nx, 0, z), T = iso(0, 0, z); g.fillStyle = css("--ink"); g.textAlign = "left"; g.fillText(label + (d === 0 ? "" : " (beneath, via bond)"), R[0] + 10, R[1]);
+    g.fillStyle = css("--muted"); g.fillText("peak " + Math.max(...M.flat()).toFixed(1) + " K", R[0] + 10, R[1] + 16); });
+  if (st === "3d") { g.strokeStyle = css("--muted"); g.setLineDash([3, 4]); g.lineWidth = 1; [[0, 0], [nx, 0], [0, ny], [nx, ny]].forEach(([j, ip]) => { const a = iso(j, ip, 0), b = iso(j, ip, -gap); g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke(); }); g.setLineDash([]); }
+  g.textAlign = "left"; g.fillStyle = css("--muted"); g.fillText("3D-ICE, exploded view, same scale as below", 4, 16); }
+seg("#t-stack", () => { dieButtons(); drawThermal(); }); seg("#t-die", drawThermal); dieButtons();
+
+/* ---------- 6. Loop ---------- */
+function drawLoop() { const cv = $("#c-loop"), W = Math.max(300, avail(cv)), H = 320, g = setup(cv, W, H), x0 = 58, x1 = W - 14, y0 = 26, y1 = H - 46;
+  const lx = r => Math.log10(Math.max(r, 1e-8)), xmin = -8, xmax = 1, X = r => x0 + (x1 - x0) * (lx(r) - xmin) / (xmax - xmin), ymax = 2.2, Y = a => y1 - (y1 - y0) * (a - 1) / (ymax - 1);
+  const xt = [-8, -6, -4, -2, 0, 1].map(e => [e, X(Math.pow(10, e)), e === 0 ? "1" : e === 1 ? "10" : "1e" + e]);
+  axes(g, x0, y0, x1, y1, xt, [1, 1.4, 1.8, 2.2].map(a => [a, Y(a), a.toFixed(1) + "×"]), "spectral radius ρ (log scale)", "amplification");
+  g.fillStyle = css("--s2") + "18"; g.fillRect(X(1), y0, x1 - X(1), y1 - y0); g.fillStyle = css("--ink-2"); g.textAlign = "center"; g.textBaseline = "top"; g.fillText("ρ ≥ 1: no fixed point", (X(1) + x1) / 2, y0 + 4);
+  g.beginPath(); let first = true; for (let e = xmin; e <= Math.log10(0.545); e += 0.01) { const r = Math.pow(10, e), a = 1 / (1 - r); if (a > ymax) break; const p = [X(r), Y(a)]; first ? g.moveTo(...p) : g.lineTo(...p); first = false; } g.strokeStyle = css("--ink-2"); g.lineWidth = 2; g.stroke();
+  const pts = [];
+  Object.entries(D.electro).forEach(([k, v]) => pts.push({ x: X(v.rho), y: Y(v.amp_measured), c: "--s1", t: `G92d ${k}\nρ ${v.rho.toPrecision(3)}\nmeasured ${v.amp_measured.toFixed(4)}×  predicted ${v.amp_predicted.toFixed(4)}×\npeak shift ${v.peak_shift_vs_fixed25_K.toFixed(2)} K` }));
+  Object.entries(D.runaway).forEach(([k, v]) => { if (v.group === "runaway") pts.push({ x: X(v.rho), y: y0 + 34 + (k.includes("G31b") ? 16 : 0), c: "--s2", t: `G74 ${k}\nρ ${v.rho.toFixed(2)}  ${v.measured.replace("_", " ")}` });
+    else pts.push({ x: X(v.rho), y: Y(v.amp), c: "--s3", t: `G74 ${k}\nρ ${v.rho.toPrecision(3)}\nmeasured ${v.amp.toFixed(6)}×  peak ${v.peak_C.toFixed(1)} °C` }); });
+  pts.forEach(p => { g.beginPath(); g.arc(p.x, p.y, 5, 0, 7); g.fillStyle = css(p.c); g.fill(); g.strokeStyle = css("--surface"); g.lineWidth = 2; g.stroke(); });
+  hover(cv, e => { const r = cv.getBoundingClientRect(), mx = (e.clientX - r.left) / r.width * W, my = (e.clientY - r.top) / r.height * H; let b = null, bd = 12; pts.forEach(p => { const d = Math.hypot(p.x - mx, p.y - my); if (d < bd) { bd = d; b = p; } }); return b && b.t; });
+  const st = D.electro.k0_stress; $("#loop-note").textContent = `The stress case (ρ = ${st.rho.toFixed(2)}) is where prediction and measurement part: 1/(1 − ρ) gives ${st.amp_predicted.toFixed(2)}× but the converged loop amplified ${st.amp_measured.toFixed(2)}×, a ${st.peak_shift_vs_fixed25_K.toFixed(1)} K peak shift. No case lies between ρ ≈ 0.5 and ρ ≈ 6, so the boundary itself is untested (goal U4).`; }
+
+/* ---------- 7. Estimation ---------- */
+function drawG73() { const cv = $("#c-g73"), W = Math.max(300, avail(cv)), H = 300, g = setup(cv, W, H), x0 = 58, x1 = W - 14, y0 = 14, y1 = H - 46, R = D.g73;
+  const xmax = Math.ceil(Math.max(...R.map(r => r.dfs)) + 1), emax = Math.max(...R.map(r => r.err)), ymax = Math.ceil(emax * 10) / 10 + 0.05;
+  const X = v => x0 + (x1 - x0) * v / xmax, Y = v => y1 - (y1 - y0) * v / ymax;
+  const xt = []; for (let v = 0; v <= xmax; v += Math.ceil(xmax / 6)) xt.push([v, X(v), String(v)]);
+  axes(g, x0, y0, x1, y1, xt, [0, ymax / 2, ymax].map(v => [v, Y(v), v.toFixed(2)]), "degrees of freedom for signal (per die)", "per-die power error (rel. L2)");
+  const pts = R.map(r => ({ x: X(r.dfs), y: Y(r.err), rad: 3 + Math.log2(r.sensors) * 1.4, c: r.die === "top" ? "--s1" : "--s2", t: `${r.bond.replace("_", " ")}, ${r.die} die\n${r.sensors} sensors\ndfs ${r.dfs.toFixed(2)}   error ${r.err.toFixed(3)}\nσ_min ${r.sv_min.toExponential(2)}` }));
+  pts.forEach(p => { g.beginPath(); g.arc(p.x, p.y, p.rad, 0, 7); g.fillStyle = css(p.c); g.fill(); g.strokeStyle = css("--surface"); g.lineWidth = 2; g.stroke(); });
+  hover(cv, e => { const r = cv.getBoundingClientRect(), mx = (e.clientX - r.left) / r.width * W, my = (e.clientY - r.top) / r.height * H; let b = null, bd = 14; pts.forEach(p => { const d = Math.hypot(p.x - mx, p.y - my); if (d < bd) { bd = d; b = p; } }); return b && b.t; }); }
+function drawOff() { const w = segVal("#o-pick"), b = D.offload[w + "_busy"], r = D.offload[w + "_retire"], n = b.length;
+  const cv = $("#c-off"), W = Math.max(300, avail(cv)), H = 220, g = setup(cv, W, H), x0 = 46, x1 = W - 12, y0 = 10, y1 = H - 40, X = i => x0 + (x1 - x0) * i / Math.max(1, n - 1), Y = v => y1 - (y1 - y0) * v;
+  axes(g, x0, y0, x1, y1, [0, .5, 1].map(q => { const i = Math.round(q * (n - 1)); return [i, X(i), (i).toLocaleString() + "k"]; }), [0, .5, 1].map(v => [v, Y(v), v.toFixed(1)]), "cycles", null);
+  [[b, "--s1"], [r, "--s2"]].forEach(([s, c]) => { g.beginPath(); let pen = false; s.forEach((v, i) => { if (v === null) { pen = false; return; } pen ? g.lineTo(X(i), Y(v)) : g.moveTo(X(i), Y(v)); pen = true; }); g.strokeStyle = css(c); g.lineWidth = n > 1000 ? 1.2 : 2; g.stroke(); });
+  const f3 = v => v === null ? "no sample" : v.toFixed(3);
+  hover(cv, e => { const rr = cv.getBoundingClientRect(), i = Math.max(0, Math.min(n - 1, Math.round((((e.clientX - rr.left) / rr.width * W) - x0) / (x1 - x0) * (n - 1)))); return `window ${i.toLocaleString()} (${i}k cycles)\nGemmini busy ${f3(b[i])}\nRocket retire ${f3(r[i])}`; }); }
+seg("#o-pick", drawOff);
+
+function all() { drawLayout(); drawAct(); drawPower(); drawStack(); drawThermal(); drawLoop(); drawG73(); drawOff(); }
+all();
+let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(all, 150); });
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", all);
+new MutationObserver(all).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+})();
+</script>
