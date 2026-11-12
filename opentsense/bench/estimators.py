@@ -108,10 +108,15 @@ class Tikhonov(LinearPower):
     uses no training covariance, only the mean. Needs P and R in the case set."""
     SHORT = {"gcv": "gcv", "upre": "upre", "discrepancy": "dp", "lcurve": "lc"}
 
-    def __init__(self, rule="gcv"):
+    def __init__(self, rule="gcv", sigma_scale=1.0):
+        """sigma_scale: the noise level the rule is told, as a multiple of the true one (G77's wrong-sigma runs);
+        GCV and the L-curve do not use it."""
         if rule not in self.SHORT:
             raise ValueError(f"unknown rule {rule!r}")
-        self.rule, self.name = rule, f"ridge_{self.SHORT[rule]}"
+        if not sigma_scale > 0:
+            raise ValueError("sigma_scale must be positive")
+        self.rule, self.sigma_scale = rule, float(sigma_scale)
+        self.name = f"ridge_{self.SHORT[rule]}" + ("" if sigma_scale == 1 else f"_s{sigma_scale:g}")
 
     def fit(self, cs, idx):
         super().fit(cs, idx)
@@ -121,7 +126,7 @@ class Tikhonov(LinearPower):
     def solve(self, pub):
         """(power vectors (n, D*nb), the per-case lambda the rule picked); G77 reports the lambdas."""
         b = pub.readings - self.H @ self.mu
-        lam = regularise.choose(self.rule, self.svd, b, sigma=pub.noise_K)[0]
+        lam = regularise.choose(self.rule, self.svd, b, sigma=pub.noise_K * self.sigma_scale)[0]
         return self.mu + regularise.solve(self.svd, b, lam), lam
 
     def predict(self, pub):
@@ -141,3 +146,6 @@ class Inverted(BayesPower):
 
 REGISTRY = {c.name: c for c in (Average, FieldModel, BayesPower, Inverted)}
 REGISTRY.update({f"ridge_{short}": (lambda r=rule: Tikhonov(r)) for rule, short in Tikhonov.SHORT.items()})
+# G77 wrong-sigma runs: the two rules that need sigma, told half and twice the true noise level
+REGISTRY.update({f"ridge_{Tikhonov.SHORT[r]}_s{k:g}": (lambda r=r, k=k: Tikhonov(r, k))
+                 for r in ("upre", "discrepancy") for k in (0.5, 2.0)})

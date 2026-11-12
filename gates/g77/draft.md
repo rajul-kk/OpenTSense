@@ -31,6 +31,14 @@ One scorer run on G84's host case set (11 Nov), to check the plumbing. Group-med
 These numbers were seen before any bar was fixed. The registered run must use a case set the bars were not tuned on
 (a fresh `make_cases.py` seed, or the G93 stacks once they exist).
 
+## Ready for the registered run (12 Nov)
+
+- `gates/g77/make_cases.py OUT --seed S --noise N`: G84's case maker unchanged except SEED and NOISE (seed 84, the
+  pilot, is refused). Not yet run: it factorises G71's PACT matrix, a medium job, and waits for G92e's heavy run.
+- Wrong-sigma entries in the estimator registry: `ridge_upre_s0.5`, `ridge_upre_s2`, `ridge_dp_s0.5`, `ridge_dp_s2`
+  (the rule is told half or twice the true sigma). Unit test: at scale 1 they equal the plain entries, and the
+  discrepancy rule's lambda rises with the sigma it is told.
+
 ## Open choices for registration (student)
 
 1. **Case sets.** G84's set plus at least one other stack; the noise level swept (for example 0.01, 0.05, 0.1 K),

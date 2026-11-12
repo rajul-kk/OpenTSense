@@ -103,3 +103,20 @@ def test_bayes_refactor_keeps_numbers():
     out = est.predict(cs.public(te))
     assert np.allclose(out["P"].reshape(len(te), -1), p)
     assert np.allclose(out["T"].reshape(len(te), -1), p @ R)
+
+
+def test_wrong_sigma_entries():
+    """The wrong-sigma entries tell the rule a scaled noise level; at scale 1 they equal the plain entry."""
+    from opentsense.bench.estimators import REGISTRY, Tikhonov
+    assert {"ridge_upre_s0.5", "ridge_upre_s2", "ridge_dp_s0.5", "ridge_dp_s2"} <= set(REGISTRY)
+    assert REGISTRY["ridge_dp_s2"]().name == "ridge_dp_s2"
+    cs = synthetic()
+    tr, te = cs.idx("train"), cs.idx("test")
+    pub = cs.public(te)
+    p1, l1 = Tikhonov("upre").fit(cs, tr).solve(pub)
+    p2, l2 = Tikhonov("upre", 1.0).fit(cs, tr).solve(pub)
+    assert np.array_equal(p1, p2) and np.array_equal(l1, l2)
+    lam = {k: Tikhonov("discrepancy", k).fit(cs, tr).solve(pub)[1] for k in (0.5, 1.0, 2.0)}
+    assert np.all(lam[0.5] <= lam[1.0]) and np.all(lam[1.0] <= lam[2.0])   # a larger sigma allows a larger lambda
+    with pytest.raises(ValueError):
+        Tikhonov("upre", 0.0)
