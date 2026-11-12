@@ -18,3 +18,4 @@ gates/g81a/dry/underscore/
 # external source clones (pinned commit recorded in each gate's registration)
 gates/*/ext/
 docker/*.log
+docs/built/
