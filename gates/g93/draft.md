@@ -41,3 +41,20 @@
 ## Student decision (12 Nov 2026)
 
 Yes on the four stacks. The HBM die area is flagged in the table until a primary source is found. Bar numbers still follow the noise-floor rule of `plan.md` 2.1 where it applies.
+
+## Sources checked (12 Nov 2026, goal 4 step "primary sources")
+
+| Figure | Value to use | Source | Grade |
+|---|---|---|---|
+| V-Cache SRAM die (L3D) | **41 mm2** | AMD's ISSCC 2022 26.4 slides (Wuu et al.), slide 11: "64MB L3 Cache Extension ... 41mm2" (AMD's SlideShare upload) | primary |
+| Zen 3 CCD | **81 mm2** | same slides, slide 10: "CCD ... TSMC 7nm technology ... 81mm2". The widely quoted 80.7 mm2 is consistent; a die-shot measurement gives 83.7 mm2 (includes scribe) | primary |
+| TSV pitch, CCD to L3D | 9 um minimum | same slides, slide 16 | primary |
+| CCD and L3D thickness after thinning | **not published** | the slides say only "thinned CCD" and "support silicon added to match 2D CCD Z-height" (slides 12, 17) | assumption: state it and sweep it (e.g. 20, 50, 100 um) |
+| HBM3E stack heat | up to 32 W | KAIST Teralab roadmap (June 2025), as reported by heise and 3DInCites | secondary (a research roadmap, not a vendor figure) |
+| HBM DRAM die thickness | about 30 um (12-high) | SK hynix press release, April 2023, via AnandTech and KED Global | vendor statement, secondary report |
+| HBM die area | **not found** | Choi et al., JSSC 2023 ("A 192-Gb 12-High 896-GB/s HBM3 DRAM ...") is the likely primary source (paywalled); the stack package is 11 x 11 mm, and a later paper quotes the base die as about 121 mm2 | assumption: core dies at the 11 x 11 mm footprint (121 mm2), an upper bound, flagged |
+| Accelerator logic die | 814 mm2, 700 W (H100 SXM5) | consistent across AnandTech, Tom's Hardware, TechPowerUp; NVIDIA's datasheet not read here | secondary; confirm in NVIDIA's H100 datasheet before registration |
+
+Two figures need the student's library access (Choi et al. JSSC 2023 for the HBM die area; NVIDIA's datasheet is
+public). Everything else needed to register is in hand; the thickness is a stated, swept assumption.
+
