@@ -37,3 +37,7 @@
   which solver pair and stack, and the benchmark keeps to the sizes that passed.
 - **Not claimed.** Package and board beyond a heat-sink coefficient; transient (G94); measured silicon temperatures.
 - **Waits on.** G92e finishing (WSL); the student's yes on the four stacks; the primary sources above.
+
+## Student decision (12 Nov 2026)
+
+Yes on the four stacks. The HBM die area is flagged in the table until a primary source is found. Bar numbers still follow the noise-floor rule of `plan.md` 2.1 where it applies.

@@ -53,3 +53,7 @@ These numbers were seen before any bar was fixed. The registered run must use a 
    - (c) against `bayes_power`: reported, not gated, since it uses the training covariance and Tikhonov does not.
 5. **Grid.** 80 log-spaced values from 1e-10 to 1e2 times the largest singular value squared; report how often a
    rule picks a grid end (a pick at an end means the grid, not the rule, decided).
+
+## Student decision (12 Nov 2026)
+
+Open choices 1-5 accepted as written; bar (a)'s factor is fixed after the noise floor is measured. Bar numbers still follow the noise-floor rule of `plan.md` 2.1 where it applies.

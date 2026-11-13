@@ -58,3 +58,7 @@
   construction copied, so G92e's files stay untouched; runs in the image because the operator comes from PACT).
 - **Effort.** After G92e: run the sweep per kit (minutes; the operator build dominates), then write the scorer once
   the bars are fixed.
+
+## Student decision (12 Nov 2026)
+
+Bars (a) and (b) accepted as proposed (delta = 0.001; rho at the last converged f >= 0.97). Bar (c) is gated on rho_hot (the Jacobian at the converged temperature), with A against 1/(1 - rho_cold) reported only. Bar numbers still follow the noise-floor rule of `plan.md` 2.1 where it applies.

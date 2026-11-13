@@ -64,3 +64,7 @@
 - **Effort:** about one week (trace testbench 1 day, controller and checker 2 days, runs and evaluation 2 days).
 - **Decisions for the student before registration:** H1's cache sizes; whether DRAMPower moves into the image (needed
   for G91's reproducibility); the bar numbers after the noise floor is measured.
+
+## Student decision (12 Nov 2026)
+
+H1 is the gated hierarchy and H0 is reported only, as written. Bar numbers still follow the noise-floor rule of `plan.md` 2.1 where it applies.
