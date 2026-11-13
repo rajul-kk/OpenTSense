@@ -17,6 +17,14 @@
     ρ = 0.86 is 1% of leakage from runaway.
     **Not new:** this is Semenov's thermal-explosion condition (1928; Frank-Kamenetskii for fields) and the generic
     square-root law at a saddle-node; cite them. The contribution is its use as a leakage margin for buried dies.
+    **Prior art in chips (search 12 Nov):** Bhat, Gumussoy and Ogras, "Power-Temperature Stability and Safety
+    Analysis for Multiprocessor Systems", ACM TECS 16(5s) art. 145, 2017 (CODES+ISSS; arXiv 1806.06180): the same
+    fixed-point existence test (runaway iff no fixed point) on a discrete-time linear thermal model with exponential
+    leakage, a closed-form existence condition for one hotspot, a multi-hotspot extension, planar SoC (Odroid XU3).
+    Also Shim, Lee and Shin, IEEE TCAS-I 2015 (DOI 10.1109/TCSI.2014.2380638): closed-form temperatures with a
+    piecewise-quadratic leakage fit, used to prevent runaway. Neither treats stacked dies, a spectral-radius test
+    along Newton, or the square-root distance law, as far as the abstracts and Bhat's text up to Thm 4.2 show;
+    their full texts must be read before any claim.
   - 1/(1 − ρ) at the fixed point is not a predictor of amplification near the boundary: f = 0.99 gives 7.4 against a
     measured 2.5; f = 0.999 gives 22.7 against 2.8. G74's 1/(1 − ρ) agreed only because A ≤ 1.05 there.
   - Newton classifies f = 0.5 to 0.999 in 5 to 10 steps; a 40-iteration Picard (G74's cap) calls f ≥ 0.9
