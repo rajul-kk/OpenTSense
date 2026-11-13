@@ -82,11 +82,27 @@ Kept, with the reason:
 - `tests/test_bench.py:91` re-derives BayesPower's formula line by line: it checks the code against a copy of
   itself. Remove; the scorer-ordering tests check its behaviour.
 
-### Phase B, waiting for G92e (evidence from `codegraph.py`)
+### Phase B, waiting for G92e (planned 12 Nov from a read of the files; nothing changed yet)
 
-| Finding | Files | Note |
-|---|---|---|
-| Hidden link | `stack/model.py` with `to_3dice.py`, `to_pact.py`, `thermal/run.py` | changed together in 3 of 3 commits, no import between them |
-| Hidden link | `to_3dice.py` with `to_pact.py` | same cause |
-| Hidden link | `thermal/run.py` with `tests/test_stack.py` | |
-| Asserts | `stack/model.py` | to ValueError (goals.md) |
+Fixes, each above the problems it solves:
+
+- **The stack expands itself into solver sublayers** (`Stack.sublayers(from_sink_far_side)`, yielding layer,
+  kind (bulk, source, plain) and thickness in solver order), and every converter iterates that.
+  - `stack/to_pact.py:95-104` and `stack/to_hotspot.py:50-58` each write the sink-relative order and the die's
+    source/bulk split; `stack/to_3dice.py:214-222` writes its own top-first variant. This is the hidden link
+    codegraph found: `model.py`, `to_3dice.py`, `to_pact.py` and `thermal/run.py` changed together in 3 of 3 commits
+    (n_sub, source_side and regions each had to be added to every converter).
+- **`to_pact` owns PACT's grid layout** (one pair: our (die, row, col) <-> PACT's flat index), used by the reader,
+  the right-hand side and the response operator.
+  - PACT's row flip is written in `thermal/run.py:129` (`read_pact`), `thermal/response.py:193` (`rhs`), `:224`
+    (`build`), `:244` (`_build_observed`, as `ny - 1 - i`), and in `gates/g84/make_cases.py` and
+    `gates/g77/make_cases.py` (`[:, ::-1]`).
+- **One factorisation** (`response.factor(A)`, PACT's SuperLU options in one place) and one batched solve, used by
+  `build`, `_build_observed` and the case builders.
+  - `thermal/response.py:205-213` repeats `_factor` (`:228-237`) inside `build`; G84's and G77's builders repeat the
+    options; `:216-225` and `:246-250` repeat the batching loop.
+- `stack/model.py` checks with `assert` (`validate`, `place`): skipped under `python -O`. Make them ValueError, as
+  the case sets were on 11 Nov (goals.md).
+
+Behaviour check for phase B: G71's stored 3D-ICE and PACT fields and G93a's three-solver fields must be
+reproduced exactly from the same inputs (they are in runs/), plus the stack tests.
