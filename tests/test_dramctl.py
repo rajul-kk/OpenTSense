@@ -103,3 +103,20 @@ def test_csv_matches_the_g50a_format():
     t, cmd, *_rest, data = lines[1].split(",")
     assert cmd == "RD" and len(data) == 64 and set(data) == {"0"}
     assert lines[-1].split(",")[1] == "END"
+
+
+def test_bank_hash_needs_a_power_of_two_bank_count():
+    spec = {**dramctl.LPDDR4_3200, "arch": {**dramctl.LPDDR4_3200["arch"], "nbrOfBanks": 6}}
+    with pytest.raises(ValueError, match="power-of-two"):
+        dramctl.map_address(0, spec, bank_salt=1)
+
+
+def test_write_recovery_includes_the_extra_clock():
+    T, BL = dramctl.LPDDR4_3200["t"], dramctl.LPDDR4_3200["arch"]["burstLength"]
+    tw = T["RCD"]
+    ok_pre = tw + T["WL"] + BL // 2 + 1 + T["WR"]
+    for t_pre, legal in ((ok_pre, True), (ok_pre - 1, False)):
+        t_pre = max(t_pre, T["RAS"])
+        tr = dramctl.Trace(np.array([0, tw, t_pre]), np.array(["ACT", "WR", "PRE"]), np.zeros(3, np.int64),
+                           np.zeros(3, np.int64), np.zeros(3, np.int64))
+        assert (not any("write recovery" in v for v in dramctl.check(tr))) == legal

@@ -11,7 +11,9 @@ seed for the noise floor); `ref_phase` offsets the first refresh.
 
 `check` re-derives every timing rule from the trace alone, independently of the scheduler (G81e bar (v2)).
 
-Read-to-write turnaround is approximated as RL + BL/2 + DQSCK + WPRE + 1 - WL clocks (the JEDEC LPDDR4 form, with
+Write-to-read and write-to-precharge carry the extra clock of JEDEC LPDDR4 (WL + BL/2 + 1 + tWTR, and
+WL + BL/2 + 1 + tWR), as DRAMSys's CheckerLPDDR4 does (tWRRD; its tWRPRE and tRDPRE add 2 more clocks and subtract 6
+for its multi-cycle command timing, which a one-timestamp trace does not model). Read-to-write turnaround is approximated as RL + BL/2 + DQSCK + WPRE + 1 - WL clocks (the JEDEC LPDDR4 form, with
 tDQSCK taken from the memspec). Refresh may be postponed by up to 8 x tREFI under JEDEC; the checker allows that and
 the scheduler never needs it.
 """
@@ -60,6 +62,8 @@ def map_address(addr, spec, bank_salt=None):
     """Byte address -> (bank, row, column address). Row-interleaved over banks; optional XOR bank hash."""
     _, row_bytes, nb = geometry(spec)
     a = spec["arch"]
+    if bank_salt is not None and nb & (nb - 1):
+        raise ValueError(f"bank hash needs a power-of-two bank count, not {nb}")
     page = addr // row_bytes
     bank, row = page % nb, (page // nb) % a["nbrOfRows"]
     if bank_salt is not None:
@@ -94,7 +98,7 @@ class _Sched:
 
     def pre_ready(self, b):
         T = self.t
-        return max(self.t_act[b] + T["RAS"], self.t_rd[b] + T["RTP"], self.t_wr[b] + T["WL"] + self.BL // 2 + T["WR"])
+        return max(self.t_act[b] + T["RAS"], self.t_rd[b] + T["RTP"], self.t_wr[b] + T["WL"] + self.BL // 2 + 1 + T["WR"])
 
     def refresh(self, due):
         T = self.t
@@ -133,7 +137,7 @@ class _Sched:
         if write:
             tc = max(tc, self.last_rd_any + T["RL"] + BL // 2 + T["DQSCK"] + T["WPRE"] + 1 - T["WL"])
         else:
-            tc = max(tc, self.last_wr_any + T["WL"] + BL // 2 + T["WTR"])
+            tc = max(tc, self.last_wr_any + T["WL"] + BL // 2 + 1 + T["WTR"])
         tc = self.issue(tc, "WR" if write else "RD", b, row, col)
         self.last_col = tc
         if write:
@@ -194,7 +198,7 @@ def check(tr, spec=LPDDR4_3200):
             need(t >= t_act[b] + T["RCD"], t, f"{c} bank {b} before tRCD")
             need(t >= last_col + T["CCD"], t, "tCCD")
             if c == "RD":
-                need(t >= last_wr + T["WL"] + BL // 2 + T["WTR"], t, "write-to-read (tWTR)")
+                need(t >= last_wr + T["WL"] + BL // 2 + 1 + T["WTR"], t, "write-to-read (tWTR)")
                 t_rd[b] = last_rd = t
             else:
                 need(t >= last_rd + T["RL"] + BL // 2 + T["DQSCK"] + T["WPRE"] + 1 - T["WL"], t, "read-to-write")
@@ -208,7 +212,7 @@ def check(tr, spec=LPDDR4_3200):
                     continue
                 need(t >= t_act[k] + T["RAS"], t, f"{c} bank {k} before tRAS")
                 need(t >= t_rd[k] + T["RTP"], t, f"{c} bank {k} before tRTP")
-                need(t >= t_wr[k] + T["WL"] + BL // 2 + T["WR"], t, f"{c} bank {k} before write recovery")
+                need(t >= t_wr[k] + T["WL"] + BL // 2 + 1 + T["WR"], t, f"{c} bank {k} before write recovery")
                 open_row[k] = -1
                 t_pre[k] = t
             if c == "PREA":

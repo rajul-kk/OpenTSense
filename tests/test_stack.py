@@ -162,3 +162,20 @@ def test_read_tmaps_splits_slots(tmp_path):
     assert T.shape == (2, 2, 3) and T[1, 1, 2] == 12
     with pytest.raises(ValueError):
         to_3dice.read_tmaps(f, 3, 3)
+
+
+def test_dram_layout_refuses_a_grid_too_small_for_its_banks():
+    with pytest.raises(ValueError, match="no cells"):
+        dram.window_maps((8, 8), np.ones((1, 8)), np.ones(1), 1.0, banks=(1, 4), gap=1)
+
+
+def test_3dice_rejects_mismatched_modes_and_fractional_slots(tmp_path):
+    s = model.load(CFG)
+    nx, ny = s.grid
+    P3 = {d.name: np.zeros((2, ny, nx)) for d in s.dies}
+    with pytest.raises(ValueError, match="steady"):
+        to_3dice.write(s, P3, tmp_path)
+    with pytest.raises(ValueError, match="whole number"):
+        to_3dice.write(s, P3, tmp_path, transient=(0.1, 0.3))
+    with pytest.raises(ValueError, match="whole number"):
+        to_3dice.write(s, P3, tmp_path, transient=(3e-3, 1e-2))

@@ -87,3 +87,28 @@ def test_trace_to_die_maps_keeps_energy():
     dt = np.diff(edges) * dramctl.LPDDR4_3200["t"]["tCK"]
     P = dram.window_maps((20, 16), w["bank"], w["io"], dt)
     assert np.allclose(P.sum((1, 2)) * dt, w["total"], rtol=1e-12)
+
+
+def test_overlap_equals_the_direct_sum():
+    rng = np.random.default_rng(3)
+    pts = np.sort(rng.choice(10_000, 400, replace=False))
+    iv = [(int(a), int(b)) for a, b in zip(pts[::2], pts[1::2])]           # disjoint
+    edges = np.sort(np.concatenate([[0, 10_000], rng.choice(10_000, 30, replace=False)])).astype(float)
+    direct = [sum(max(0.0, min(hi, b) - max(lo, a)) for a, b in iv) for lo, hi in zip(edges[:-1], edges[1:])]
+    assert np.allclose(dramenergy._overlap(iv, edges), direct, atol=0)
+
+
+def test_windows_must_cover_the_trace():
+    tr = mixed(n=200, cycles=20_000)
+    with pytest.raises(ValueError, match="cover"):
+        dramenergy.features(tr, NB, np.array([1000.0, 5000.0, int(tr.time[-1])]))
+
+
+def test_refresh_only_background_is_spread_over_all_banks():
+    # one window: an all-bank refresh with nothing open, then a short open interval on one bank
+    t = np.array([0, 1000, 1010, 1030, 2000]); c = np.array(["REFA", "ACT", "RD", "PRE", "END"])
+    tr = dramctl.Trace(t, c, np.array([0, 3, 3, 3, 0]), np.zeros(5, np.int64), np.zeros(5, np.int64))
+    m = dramenergy.Model(act=0, pre=0, rd=0, wr=0, refa=0, closed=0, any_open=1.0, io_cycle=0, io_cmd=0, io_rd=0, io_wr=0)
+    bank = dramenergy.windows(tr, NB, m, np.array([0.0, 2000.0]))["bank"][0]
+    assert np.isclose(bank.sum(), RFC + 30)                                  # energy kept
+    assert np.allclose(np.delete(bank, 3), RFC / NB) and np.isclose(bank[3], RFC / NB + 30)

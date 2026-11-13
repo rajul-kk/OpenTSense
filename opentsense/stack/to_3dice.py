@@ -51,10 +51,18 @@ def write_lyt(path, stack, layer, cx, cy):
 def write(stack, power, workdir, transient=None):
     """power: {die layer name: (ny, nx) array in W}, or (n_slots, ny, nx) with transient = (step_s, slot_s).
     Returns the .stk path; maps go to tmap_<die>.txt (the final map, or one per slot)."""
-    if transient is not None:
+    if transient is None:
+        if any(np.ndim(power[d.name]) != 2 for d in stack.dies):
+            raise ValueError("steady power maps must be (ny, nx); give transient=(step, slot) for (n_slots, ny, nx)")
+    else:
         step, slot = transient
         if not 0 < step <= slot:
             raise ValueError("transient needs 0 < step <= slot")
+        # the slot must be a whole number of steps as written (the review reads 3D-ICE as truncating slot / step;
+        # to confirm in the image in G94's dry run)
+        ratio = float(f"{slot:.6e}") / float(f"{step:.6e}")
+        if math.floor(ratio) != round(ratio) or abs(ratio - round(ratio)) > 1e-9 * ratio:
+            raise ValueError(f"slot / step = {ratio!r} must be a whole number")
         if any(np.ndim(power[d.name]) != 3 for d in stack.dies):
             raise ValueError("transient power maps must be (n_slots, ny, nx)")
         if len({len(power[d.name]) for d in stack.dies}) != 1:

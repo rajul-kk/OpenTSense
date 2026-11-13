@@ -28,8 +28,9 @@ def layout(shape, banks=(2, 4), gap=1, strip_frac=0.15):
             for cc in np.array_split(np.arange(nx), bc):
                 r0, r1 = rr[0] + (gap if rr[0] > a else 0), rr[-1] + 1 - gap
                 c0, c1 = cc[0] + (gap if cc[0] > 0 else 0), cc[-1] + 1 - gap
-                if r1 > r0 and c1 > c0:
-                    lab[r0:r1, c0:c1] = k
+                if not (r1 > r0 and c1 > c0):
+                    raise ValueError(f"grid {shape} too small: bank {k} gets no cells with banks={banks}, gap={gap}")
+                lab[r0:r1, c0:c1] = k
                 k += 1
     return lab
 

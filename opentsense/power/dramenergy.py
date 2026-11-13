@@ -61,14 +61,17 @@ def _open_intervals(tr, nb):
 
 
 def _overlap(intervals, edges):
-    """Cycles each [edges[i], edges[i+1]) window overlaps a list of disjoint intervals."""
-    out = np.zeros(len(edges) - 1)
+    """Cycles each [edges[i], edges[i+1]) window overlaps a list of disjoint intervals: the difference of the
+    covered length up to each edge (prefix sums, O(intervals + windows) memory)."""
+    edges = np.asarray(edges, float)
     if not intervals:
-        return out
-    s = np.array([a for a, _ in intervals], float)
-    e = np.array([b for _, b in intervals], float)
-    lo, hi = edges[:-1, None], edges[1:, None]
-    return np.clip(np.minimum(hi, e[None, :]) - np.maximum(lo, s[None, :]), 0, None).sum(1)
+        return np.zeros(len(edges) - 1)
+    s, e = np.array(sorted(intervals), float).T
+    done = np.concatenate([[0.0], np.cumsum(e - s)])            # covered length of the first i intervals
+    k = np.searchsorted(s, edges, side="right")                 # intervals starting at or before each edge
+    j = np.maximum(k - 1, 0)
+    cover = np.where(k > 0, done[j] + np.clip(np.minimum(edges, e[j]) - s[j], 0, None), 0.0)
+    return np.diff(cover)
 
 
 def _union(iv_lists):
@@ -93,6 +96,8 @@ def features(tr, nb, edges=None, rfc=None):
     iv, closes, end = _open_intervals(tr, nb)
     refresh = [(int(t), int(t) + rfc) for t in tr.time[tr.cmd == "REFA"].tolist()]
     edges = np.array([0, end], float) if edges is None else np.asarray(edges, float)
+    if len(tr.time) and (tr.time.min() < edges[0] or tr.time.max() > edges[-1]):
+        raise ValueError(f"windows [{edges[0]:g}, {edges[-1]:g}] do not cover the trace [{tr.time.min()}, {tr.time.max()}]")
     nw = len(edges) - 1
 
     def window_of(t):
@@ -110,11 +115,12 @@ def features(tr, nb, edges=None, rfc=None):
     np.add.at(refa, win[tr.cmd == "REFA"], 1)
     for k in range(nb):
         f["open"][:, k] = _overlap(iv[k], edges)
+    open_union = _overlap(_union(iv), edges)
     any_open = _overlap(_union(iv + [refresh]), edges)
     length = np.diff(edges)
     ncmd = np.zeros(nw)
     np.add.at(ncmd, win[tr.cmd != "END"], 1)
-    return {**f, "refa": refa, "any_open": any_open, "closed": length - any_open, "length": length, "ncmd": ncmd}
+    return {**f, "refa": refa, "any_open": any_open, "open_union": open_union, "closed": length - any_open, "length": length, "ncmd": ncmd}
 
 
 def fit(runs, nb):
@@ -146,16 +152,18 @@ def fit(runs, nb):
 
 
 def windows(tr, nb, model, edges):
-    """Energy (J) per window: 'bank' (nw, nb) core energy booked to each bank (shared active background split by each
-    bank's open time in the window, or evenly when none is open), 'io' (nw,) interface energy, 'total' (nw,)."""
+    """Energy (J) per window: 'bank' (nw, nb) core energy booked to each bank, 'io' (nw,) interface energy, 'total'
+    (nw,). Shared active background: the time some bank is open is split by each bank's open time; the time only a
+    refresh holds the device active is split evenly over all banks (an all-bank refresh works every bank)."""
     f = features(tr, nb, edges)
     m = model
     core = (m.act * f["act"] + m.pre * f["pre"] + m.rd * f["rd"] + m.wr * f["wr"]
             + m.refa * f["refa"][:, None] + m.closed * f["closed"][:, None])
-    shared = m.any_open * f["any_open"]
+    by_open = m.any_open * f["open_union"]
+    refresh_only = m.any_open * (f["any_open"] - f["open_union"])
     share = np.divide(f["open"], f["open"].sum(1, keepdims=True), out=np.full_like(f["open"], 1.0 / nb),
                       where=f["open"].sum(1, keepdims=True) > 0)
-    bank = core + shared[:, None] * share
+    bank = core + by_open[:, None] * share + refresh_only[:, None] / nb
     io = m.io_cycle * f["length"] + m.io_cmd * f["ncmd"] + m.io_rd * f["rd"].sum(1) + m.io_wr * f["wr"].sum(1)
     return {"bank": bank, "io": io, "total": bank.sum(1) + io}
 
