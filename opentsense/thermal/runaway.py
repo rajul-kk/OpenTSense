@@ -50,8 +50,11 @@ def classify(R, dyn, leak, T_amb, tol=1e-9, max_it=100, h=0.5):
         if np.abs(step).max() < tol:
             r, _ = _rho(R, leak, T, h)
             path.append(r)
-            return Outcome("converged", T, r, it, monotone, path)
-    return Outcome("not_converged", T, path[-1], max_it, monotone, path)
+            # a fixed point with rho >= 1 is the fold itself (or past it): not a stable operating point
+            return Outcome("converged" if r < 1.0 else "runaway", T, r, it, monotone, path)
+    r, _ = _rho(R, leak, T, h)
+    path.append(r)
+    return Outcome("not_converged", T, r, max_it, monotone, path)
 
 
 def critical_scale_1tile(r_KW, dyn_W, c_W, a_perK, T_amb_K):

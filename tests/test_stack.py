@@ -148,6 +148,11 @@ def test_3dice_transient_files(tmp_path):
         to_3dice.write(s, {d.name: np.zeros((ny, nx)) for d in s.dies}, tmp_path, transient=(1e-3, 1e-2))
     with pytest.raises(ValueError):
         to_3dice.write(s, P, tmp_path, transient=(1e-2, 1e-3))
+    s2 = model.load(os.path.join(os.path.dirname(CFG), "g71_3d.yaml"))
+    assert len(s2.dies) == 2
+    Q = {d.name: np.zeros((k, s2.grid[1], s2.grid[0])) for d, k in zip(s2.dies, (3, 2))}
+    with pytest.raises(ValueError, match="same number of slots"):
+        to_3dice.write(s2, Q, tmp_path / "mix", transient=(1e-3, 1e-2))
 
 
 def test_read_tmaps_splits_slots(tmp_path):

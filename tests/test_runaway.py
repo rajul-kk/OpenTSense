@@ -48,6 +48,8 @@ def test_iteration_cap_is_its_own_status():
     c = 0.5 * runaway.critical_scale_1tile(r, dyn, 1.0, A, Tamb)
     out = runaway.classify(np.array([[r]]), np.array([dyn]), leak(c), Tamb, max_it=1)
     assert out.status == "not_converged"
+    r_end, _ = et.rho(np.array([[r]]), leak(c), out.T, 0.5)
+    assert out.rho == r_end and out.rho_path[-1] == r_end           # rho belongs to the returned T
 
 
 @pytest.mark.parametrize("frac", [0.3, 0.8, 0.99, 0.999])

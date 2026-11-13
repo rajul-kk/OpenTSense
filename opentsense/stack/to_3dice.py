@@ -57,6 +57,8 @@ def write(stack, power, workdir, transient=None):
             raise ValueError("transient needs 0 < step <= slot")
         if any(np.ndim(power[d.name]) != 3 for d in stack.dies):
             raise ValueError("transient power maps must be (n_slots, ny, nx)")
+        if len({len(power[d.name]) for d in stack.dies}) != 1:
+            raise ValueError("transient power maps must have the same number of slots on every die")
     os.makedirs(workdir, exist_ok=True)
     L, W = stack.size_um
     nx, ny = stack.grid
