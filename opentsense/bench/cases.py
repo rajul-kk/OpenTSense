@@ -75,6 +75,15 @@ class CaseSet:
     def has_power(self):
         return "P" in self.a
 
+    @property
+    def has_R(self):
+        return "R" in self.a
+
+    @property
+    def flat_sensors(self):
+        """(m,) index of each sensor's cell in a flattened (D, ny, nx) field."""
+        return np.ravel_multi_index(tuple(self.a["sensors"].T), self.a["T"].shape[1:])
+
     def validate(self):
         """Raises ValueError on a malformed case set (explicit checks, so they also run under python -O)."""
         a = self.a
@@ -103,11 +112,6 @@ class CaseSet:
         a = self.a
         return Public(readings=a["readings"][idx], sensors=a["sensors"], noise_K=float(a["noise_K"]),
                       R=a.get("R"), shape=a["T"].shape[1:], nb=a["P"].shape[2] if "P" in a else None)
-
-    def sensor_values(self, T):
-        """Field values at the sensor cells: T (n, D, ny, nx) -> (n, m)."""
-        s = self.a["sensors"]
-        return T[:, s[:, 0], s[:, 1], s[:, 2]]
 
     def sha256(self):
         h = hashlib.sha256()

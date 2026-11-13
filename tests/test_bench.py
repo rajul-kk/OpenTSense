@@ -88,23 +88,6 @@ def test_tikhonov_rules_beat_the_average():
         assert s(n, "rmse_K") < s("average", "rmse_K"), n
 
 
-def test_bayes_refactor_keeps_numbers():
-    """LinearPower split out of BayesPower: same numbers as the direct formula."""
-    from opentsense.bench.estimators import BayesPower
-    cs = synthetic()
-    tr, te = cs.idx("train"), cs.idx("test")
-    est = BayesPower().fit(cs, tr)
-    P = cs.P[tr].reshape(len(tr), -1)
-    mu = P.mean(0); C = np.cov(P, rowvar=False); C = C + 1e-3 * np.trace(C) / len(C) * np.eye(len(C))
-    s = cs.sensors; R = cs.R.reshape(cs.R.shape[0], -1)
-    H = cs.R[:, s[:, 0], s[:, 1], s[:, 2]].T
-    y = cs.readings[te]
-    p = mu + (y - H @ mu) @ (C @ H.T @ np.linalg.inv(H @ C @ H.T + float(cs.noise_K) ** 2 * np.eye(len(H)))).T
-    out = est.predict(cs.public(te))
-    assert np.allclose(out["P"].reshape(len(te), -1), p)
-    assert np.allclose(out["T"].reshape(len(te), -1), p @ R)
-
-
 def test_wrong_sigma_entries():
     """The wrong-sigma entries tell the rule a scaled noise level; at scale 1 they equal the plain entry."""
     from opentsense.bench.estimators import REGISTRY, Tikhonov

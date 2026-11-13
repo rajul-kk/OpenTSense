@@ -42,9 +42,6 @@ class Level:
     split: dict              # name -> slice
     case_source: str         # "manifest" or "README layout (unconfirmed)"
 
-    def part(self, name):
-        return self.T[self.split[name]], self.case[self.split[name]]
-
 
 def _cases(folder: str, level: str, N: int):
     man = os.path.join(folder, "manifest.json")

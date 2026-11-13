@@ -7,8 +7,10 @@ Per kit and power window, from G92e's run directory (power per temperature, inst
    (hot), measured amplification A against 1/(1 - rho_cold) and 1/(1 - rho_hot), and on the converged side the
    difference from a long Picard solve (`electrothermal.solve`, 1e5 iterations);
 4. the saddle-node check: rho at the last converged scale against 1 - sqrt(2 (1 - f)).
-The case construction copies G92e's evaluate.py (part c) so that G92e's own files stay untouched; it runs in the
-OpenTSense image because the tile operator comes from PACT (`response.build`).
+The case construction copies G92e's evaluate.py (part c), which runs at import and so cannot be imported. The copy
+is checked instead: each window's fixed point at the real leakage (s = 1, 300 K) must reproduce the peak G92e
+recorded for it (`result.json`, c.cases.<window>_nominal.peak_K), or the sweep stops. It runs in the OpenTSense image
+because the tile operator comes from PACT (`response.build`).
 
 Usage: sweep.py <kit> <G92e run dir> <inst_loc.csv> <stack yaml> <out dir>
 """
@@ -29,6 +31,19 @@ F_GRID = [0.5, 0.8, 0.9, 0.95, 0.99, 0.999, 1.001, 1.01, 1.1, 1.5]
 T_AMB = 300.0
 WINS = [f"k{k}" for k in range(4)]
 NEWTON = dict(max_it=400)
+RTOL = 1e-4               # bisection tolerance on s*
+SAME_AS_G92E_K = 1e-6     # largest peak difference from G92e's recorded nominal case
+
+
+def check_against_g92e(run, R, NT, cases):
+    """Raise if any window's nominal fixed point differs from the peak G92e recorded for it."""
+    rec = json.load(open(os.path.join(run, "result.json")))["c"]["cases"]
+    for w, (L, dyn, tl) in cases.items():
+        o = runaway.classify(R, dyn, et.LeakModel(TEMPS, L, tl, NT, 1.0), T_AMB, **NEWTON)
+        want = rec[f"{w}_nominal"]["peak_K"]
+        if o.status != "converged" or abs(o.T.max() - want) > SAME_AS_G92E_K:
+            raise RuntimeError(f"{w}: nominal case gives {o.status} peak {o.T.max():.9f} K, G92e recorded {want:.9f} K; "
+                               "this copy of G92e's case construction has drifted")
 
 
 def load(run, loc, stack_path, out):
@@ -60,7 +75,7 @@ def sweep_window(R, NT, L, dyn, tl):
         return et.LeakModel(TEMPS, L, tl, NT, s)
 
     lo, hi = 1e-2, 1e6
-    s_lo, s_hi, n = runaway.critical_scale(R, dyn, mk, T_AMB, lo=lo, hi=hi, rtol=1e-4, **NEWTON)
+    s_lo, s_hi, n = runaway.critical_scale(R, dyn, mk, T_AMB, lo=lo, hi=hi, rtol=RTOL, **NEWTON)
     s_star = np.sqrt(s_lo * s_hi)
     rows = []
     for f in F_GRID:
@@ -79,12 +94,13 @@ def sweep_window(R, NT, L, dyn, tl):
         rows.append(row)
     o_lo = runaway.classify(R, dyn, mk(s_lo), T_AMB, **NEWTON)
     return dict(s_lo=s_lo, s_hi=s_hi, probes=n, f_nominal=float(1 / s_star), rho_at_s_lo=float(o_lo.rho),
-                rho_bound_b=float(1 - np.sqrt(2 * 2e-4)), grid=rows)
+                rho_bound_b=float(1 - np.sqrt(2 * 2 * RTOL)), grid=rows)
 
 
 def main(kit, run, loc, stack_path, out):
     os.makedirs(out, exist_ok=True)
     R, NT, cases = load(run, loc, stack_path, out)
+    check_against_g92e(run, R, NT, cases)
     res = {"kit": kit, "T_amb_K": T_AMB, "windows": {}}
     for w, (L, dyn, tl) in cases.items():
         res["windows"][w] = r = sweep_window(R, NT, L, dyn, tl)

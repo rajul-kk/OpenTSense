@@ -19,7 +19,7 @@ def mixed(seed=0, n=3000, cycles=300_000):
 
 def test_refresh_counts_as_active_background():
     idle = dramctl.schedule(cache.Txn(*(np.zeros(0, t) for t in (np.int64, np.int64, bool, np.int64))), end_cycle=100_000)
-    f = dramenergy.features(idle, NB)
+    f = dramenergy.features(idle)
     nref = int((idle.cmd == "REFA").sum())
     assert f["any_open"][0] == nref * RFC
     assert f["closed"][0] == f["length"][0] - nref * RFC
@@ -28,7 +28,7 @@ def test_refresh_counts_as_active_background():
 def test_open_time_and_counts_of_one_access():
     tr = dramctl.schedule(cache.Txn(np.array([0]), np.array([0]), np.array([False]), np.array([64])),
                           ref_phase=10 ** 9, end_cycle=1000)
-    f = dramenergy.features(tr, NB)
+    f = dramenergy.features(tr)
     end = int(tr.time[-1])
     assert f["act"][0, 0] == 1 and f["rd"][0, 0] == 2 and f["pre"].sum() == 0
     assert f["open"][0, 0] == end and f["any_open"][0] == end      # opened at 0, never closed
@@ -41,8 +41,8 @@ def test_windows_add_up_to_the_whole_trace():
     end = int(tr.time[-1])
     edges = np.arange(0, end + 1600, 1600)                      # 1,000 CPU cycles at 1 GHz = 1,600 DRAM clocks
     edges[-1] = end
-    w = dramenergy.windows(tr, NB, m, edges)
-    p = dramenergy.predict_totals(tr, NB, m)
+    w = dramenergy.windows(tr, m, edges)
+    p = dramenergy.predict_totals(tr, m)
     assert w["total"].sum() == pytest.approx(p["total"], rel=1e-12)
     assert w["bank"].shape == (len(edges) - 1, NB) and (w["bank"] >= 0).all()
 
@@ -54,7 +54,7 @@ def test_fit_recovers_known_coefficients():
     runs = []
     for seed in range(4):
         tr = mixed(seed)
-        f = dramenergy.features(tr, NB)
+        f = dramenergy.features(tr)
         banks = [{"ACT": true.act * f["act"][0, k], "PRE": true.pre * f["pre"][0, k], "RD": true.rd * f["rd"][0, k],
                   "WR": true.wr * f["wr"][0, k], "REF_AB": true.refa * f["refa"][0],
                   "BG_PRE": true.closed * f["closed"][0]} for k in range(NB)]
@@ -62,7 +62,7 @@ def test_fit_recovers_known_coefficients():
               + true.io_wr * f["wr"].sum())
         runs.append((tr, {"CoreEnergy": {"BankEnergy": banks, "E_bg_act_shared": true.any_open * f["any_open"][0]},
                           "InterfaceEnergy": {"controller": {"dynamicEnergy": io}, "dram": {"dynamicEnergy": 0.0}}}))
-    m, resid = dramenergy.fit(runs, NB)
+    m, resid = dramenergy.fit(runs)
     for k, v in true.as_dict().items():
         assert getattr(m, k) == pytest.approx(v, rel=1e-6), k
     assert max(resid.values()) < 1e-9
@@ -73,7 +73,7 @@ def test_prea_counts_once_per_open_bank():
     tr = dramctl.schedule(cache.Txn(np.array([0, 1]), np.array([0, 2048]), np.zeros(2, bool), np.full(2, 64)),
                           ref_phase=2000, end_cycle=3000)
     assert (tr.cmd == "PREA").sum() == 1 and (tr.cmd == "PRE").sum() == 0
-    f = dramenergy.features(tr, NB)
+    f = dramenergy.features(tr)
     assert f["pre"][0].tolist() == [1, 1, 0, 0, 0, 0, 0, 0]
 
 
@@ -83,7 +83,7 @@ def test_trace_to_die_maps_keeps_energy():
     m = dramenergy.Model(act=2e-9, pre=1e-9, rd=1.7e-10, wr=1.2e-10, refa=2.8e-9, closed=2.2e-12, any_open=2.3e-11,
                          io_cycle=2e-12, io_cmd=1e-12, io_rd=3e-11, io_wr=4e-11)
     edges = np.linspace(0, int(tr.time[-1]), 11)
-    w = dramenergy.windows(tr, NB, m, edges)
+    w = dramenergy.windows(tr, m, edges)
     dt = np.diff(edges) * dramctl.LPDDR4_3200["t"]["tCK"]
     P = dram.window_maps((20, 16), w["bank"], w["io"], dt)
     assert np.allclose(P.sum((1, 2)) * dt, w["total"], rtol=1e-12)
@@ -101,7 +101,7 @@ def test_overlap_equals_the_direct_sum():
 def test_windows_must_cover_the_trace():
     tr = mixed(n=200, cycles=20_000)
     with pytest.raises(ValueError, match="cover"):
-        dramenergy.features(tr, NB, np.array([1000.0, 5000.0, int(tr.time[-1])]))
+        dramenergy.features(tr, np.array([1000.0, 5000.0, int(tr.time[-1])]))
 
 
 def test_refresh_only_background_is_spread_over_all_banks():
@@ -109,6 +109,6 @@ def test_refresh_only_background_is_spread_over_all_banks():
     t = np.array([0, 1000, 1010, 1030, 2000]); c = np.array(["REFA", "ACT", "RD", "PRE", "END"])
     tr = dramctl.Trace(t, c, np.array([0, 3, 3, 3, 0]), np.zeros(5, np.int64), np.zeros(5, np.int64))
     m = dramenergy.Model(act=0, pre=0, rd=0, wr=0, refa=0, closed=0, any_open=1.0, io_cycle=0, io_cmd=0, io_rd=0, io_wr=0)
-    bank = dramenergy.windows(tr, NB, m, np.array([0.0, 2000.0]))["bank"][0]
+    bank = dramenergy.windows(tr, m, np.array([0.0, 2000.0]))["bank"][0]
     assert np.isclose(bank.sum(), RFC + 30)                                  # energy kept
     assert np.allclose(np.delete(bank, 3), RFC / NB) and np.isclose(bank[3], RFC / NB + 30)

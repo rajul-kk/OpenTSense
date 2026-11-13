@@ -120,3 +120,30 @@ def test_write_recovery_includes_the_extra_clock():
         tr = dramctl.Trace(np.array([0, tw, t_pre]), np.array(["ACT", "WR", "PRE"]), np.zeros(3, np.int64),
                            np.zeros(3, np.int64), np.zeros(3, np.int64))
         assert (not any("write recovery" in v for v in dramctl.check(tr))) == legal
+
+
+def test_gap_table_has_the_hand_derived_lpddr4_3200_values():
+    """Worked from the memspec by hand (BL16 is 8 clocks on the bus): write-to-read 14 + 8 + 1 + 16, write recovery
+    14 + 8 + 1 + 29, read-to-write 28 + 8 + 6 + 2 + 1 - 14; the rest are the memspec's own values."""
+    assert dramctl.gaps(S) == {"act_col": 29, "col_col": 8, "act_act": 16, "faw": 64, "act_pre": 68, "rd_pre": 12,
+                               "wr_pre": 52, "wr_rd": 39, "rd_wr": 31, "pre_act": 29, "prea_act": 34,
+                               "ref_any": 448, "refi": 6246}
+
+
+def test_a_trace_carries_its_memspec():
+    """Bank count and tRFCab come from the spec the trace was scheduled with, not from a default."""
+    four = {"arch": dict(S["arch"], nbrOfBanks=4), "t": dict(T, RFCab=100)}
+    tr = dramctl.schedule(txn([0, 0], [0, 4 * 2048]), spec=four, end_cycle=20000)
+    assert tr.banks == 4 and dramctl.check(tr) == []
+    from opentsense.power import dramenergy
+    f = dramenergy.features(tr)
+    assert f["act"].shape[1] == 4
+    assert f["any_open"][0] - f["open_union"][0] <= 100 * (tr.cmd == "REFA").sum()
+
+
+
+def test_memspec_mismatches_names_each_differing_value():
+    drsys = {"memspec": {"memarchitecturespec": dict(S["arch"]), "memtimingspec": dict(T)}}
+    assert dramctl.memspec_mismatches(S, drsys) == []
+    drsys["memspec"]["memtimingspec"]["WR"] = 30
+    assert dramctl.memspec_mismatches(S, drsys) == ["t.WR: ours 29, memspec 30"]

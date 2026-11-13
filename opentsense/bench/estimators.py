@@ -45,9 +45,7 @@ class FieldModel(Estimator):
     def fit(self, cs, idx):
         self.shape = cs.T.shape[1:]
         self.gf = GaussianField(energy=self.energy).fit(cs.T[idx].reshape(len(idx), -1))
-        D, ny, nx = self.shape
-        s = cs.sensors
-        self.S = s[:, 0] * ny * nx + s[:, 1] * nx + s[:, 2]
+        self.S = cs.flat_sensors
         return self
 
     def predict(self, pub):
@@ -60,14 +58,13 @@ class LinearPower(Estimator):
     temperature with R: training-mean power mu, R flattened to (D*nb, D*ny*nx), and H = R at the sensor cells."""
 
     def fit(self, cs, idx):
-        if not cs.has_power or "R" not in cs.a:
+        if not (cs.has_power and cs.has_R):
             raise ValueError(f"{self.name} needs P and R in the case set")
         self.Ptrain = cs.P[idx].reshape(len(idx), -1).astype(np.float64)
         self.mu = self.Ptrain.mean(0)
         R = cs.R.astype(np.float64)
         self.R = R.reshape(R.shape[0], -1)                     # (D*nb, D*ny*nx)
-        s = cs.sensors
-        self.H = R[:, s[:, 0], s[:, 1], s[:, 2]].T              # (m, D*nb)
+        self.H = self.R[:, cs.flat_sensors].T                   # (m, D*nb)
         self.shape, self.nb = cs.T.shape[1:], cs.P.shape[2]
         return self
 
@@ -111,8 +108,8 @@ class Tikhonov(LinearPower):
     def __init__(self, rule="gcv", sigma_scale=1.0):
         """sigma_scale: the noise level the rule is told, as a multiple of the true one (G77's wrong-sigma runs);
         GCV and the L-curve do not use it."""
-        if rule not in self.SHORT:
-            raise ValueError(f"unknown rule {rule!r}")
+        if rule not in regularise.RULES:
+            raise ValueError(f"unknown rule {rule!r}; expected one of {regularise.RULES}")
         if not sigma_scale > 0:
             raise ValueError("sigma_scale must be positive")
         self.rule, self.sigma_scale = rule, float(sigma_scale)
@@ -144,8 +141,8 @@ class Inverted(BayesPower):
         return self.output(2 * self.mu - self.posterior_power(pub))
 
 
-REGISTRY = {c.name: c for c in (Average, FieldModel, BayesPower, Inverted)}
-REGISTRY.update({f"ridge_{short}": (lambda r=rule: Tikhonov(r)) for rule, short in Tikhonov.SHORT.items()})
-# G77 wrong-sigma runs: the two rules that need sigma, told half and twice the true noise level
-REGISTRY.update({f"ridge_{Tikhonov.SHORT[r]}_s{k:g}": (lambda r=r, k=k: Tikhonov(r, k))
-                 for r in ("upre", "discrepancy") for k in (0.5, 2.0)})
+_FACTORIES = [Average, FieldModel, BayesPower, Inverted]
+_FACTORIES += [lambda r=rule: Tikhonov(r) for rule in regularise.RULES]
+# G77's wrong-sigma runs: each rule that uses sigma, told half and twice the true noise level
+_FACTORIES += [lambda r=rule, k=k: Tikhonov(r, k) for rule in regularise.NEEDS_SIGMA for k in (0.5, 2.0)]
+REGISTRY = {f().name: f for f in _FACTORIES}

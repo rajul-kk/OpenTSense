@@ -10,14 +10,18 @@ This module fits those coefficients once from DRAMPower runs
 without one run per window. `features` and `predict_totals` let a caller check the fitted model against DRAMPower on
 traces it was not fitted on. Precharges are counted per bank actually closed (a PREA counts once per open bank).
 
-The trace is `power.dramctl.Trace`; times are DRAM clock cycles.
+The trace is `power.dramctl.Trace`; times are DRAM clock cycles, and its memspec gives the bank count and tRFCab.
 """
 from dataclasses import asdict, dataclass
 
 import numpy as np
 
-# DRAMPower output fields modelled, and the trace feature each one is linear in
+# Each energy term is a Model coefficient times the trace feature of the same name.
+# Core terms, booked per bank: DRAMPower's per-bank output field -> term. refa and closed are per device (every bank
+# gets the device's count).
 PER_BANK = {"ACT": "act", "PRE": "pre", "RD": "rd", "WR": "wr", "REF_AB": "refa", "BG_PRE": "closed"}
+# Interface terms, per window: coefficient -> feature (rd and wr summed over banks).
+IO = {"io_cycle": "length", "io_cmd": "ncmd", "io_rd": "rd", "io_wr": "wr"}
 
 
 @dataclass
@@ -67,8 +71,8 @@ def _overlap(intervals, edges):
     if not intervals:
         return np.zeros(len(edges) - 1)
     s, e = np.array(sorted(intervals), float).T
-    done = np.concatenate([[0.0], np.cumsum(e - s)])            # covered length of the first i intervals
-    k = np.searchsorted(s, edges, side="right")                 # intervals starting at or before each edge
+    done = np.concatenate([[0.0], np.cumsum(e - s)])
+    k = np.searchsorted(s, edges, side="right")
     j = np.maximum(k - 1, 0)
     cover = np.where(k > 0, done[j] + np.clip(np.minimum(edges, e[j]) - s[j], 0, None), 0.0)
     return np.diff(cover)
@@ -88,11 +92,10 @@ def _union(iv_lists):
     return out
 
 
-def features(tr, nb, edges=None, rfc=None):
-    """Counts and durations per window (rows) and bank. With edges=None, one window covering the whole trace.
-    `rfc` (cycles, default the LPDDR4-3200 tRFCab) is how long each REFA keeps the device in active background."""
-    from .dramctl import LPDDR4_3200
-    rfc = LPDDR4_3200["t"]["RFCab"] if rfc is None else rfc
+def features(tr, edges=None):
+    """Counts and durations per window (rows) and bank. With edges=None, one window covering the whole trace. Each
+    REFA keeps the device in active background for the trace's tRFCab."""
+    nb, rfc = tr.banks, tr.spec["t"]["RFCab"]
     iv, closes, end = _open_intervals(tr, nb)
     refresh = [(int(t), int(t) + rfc) for t in tr.time[tr.cmd == "REFA"].tolist()]
     edges = np.array([0, end], float) if edges is None else np.asarray(edges, float)
@@ -123,20 +126,39 @@ def features(tr, nb, edges=None, rfc=None):
     return {**f, "refa": refa, "any_open": any_open, "open_union": open_union, "closed": length - any_open, "length": length, "ncmd": ncmd}
 
 
-def fit(runs, nb):
+def _per_bank(f, key):
+    """Feature `key` as (nw, nb); a per-device feature counts in full for every bank."""
+    x = f[key]
+    return np.broadcast_to(x if x.ndim == 2 else x[:, None], f["open"].shape)
+
+
+def _io_columns(f):
+    """(nw, len(IO)) interface features, in IO's order."""
+    return np.stack([f[k].sum(1) if f[k].ndim == 2 else f[k] for k in IO.values()], axis=1)
+
+
+def _energy(f, m):
+    """Core energy per window and bank (nw, nb) without the shared active background, that background (nw,), and
+    interface energy (nw,)."""
+    core = sum(getattr(m, key) * _per_bank(f, key) for key in PER_BANK.values())
+    io = _io_columns(f) @ np.array([getattr(m, c) for c in IO])
+    return core, m.any_open * f["any_open"], io
+
+
+def fit(runs):
     """Least-squares coefficients from DRAMPower runs: [(trace, DRAMPower JSON dict)]. Returns (Model, residuals),
     where residuals gives each output field's largest relative error over the runs."""
-    rows = {k: ([], []) for k in ("ACT", "PRE", "RD", "WR", "REF_AB", "BG_PRE", "bg_act", "io")}
+    rows = {k: ([], []) for k in list(PER_BANK) + ["bg_act", "io"]}
     for tr, out in runs:
-        f = features(tr, nb)
+        f = features(tr)
         banks = out["CoreEnergy"]["BankEnergy"]
         for field, key in PER_BANK.items():
-            for k in range(nb):
-                x = f[key][0] if f[key].ndim == 1 else f[key][0, k]     # refa and closed are per device
-                rows[field][0].append([x]); rows[field][1].append(banks[k][field])
+            for k in range(tr.banks):
+                rows[field][0].append([_per_bank(f, key)[0, k]])
+                rows[field][1].append(banks[k][field])
         rows["bg_act"][0].append([f["any_open"][0]]); rows["bg_act"][1].append(out["CoreEnergy"]["E_bg_act_shared"])
         io = out["InterfaceEnergy"]
-        rows["io"][0].append([f["length"][0], f["ncmd"][0], f["rd"].sum(), f["wr"].sum()])
+        rows["io"][0].append(_io_columns(f)[0])
         rows["io"][1].append(io["controller"]["dynamicEnergy"] + io["dram"]["dynamicEnergy"])
     coef, resid = {}, {}
     for field, (X, y) in rows.items():
@@ -145,36 +167,28 @@ def fit(runs, nb):
         coef[field] = c
         rel = np.abs(X @ c - y) / np.maximum(np.abs(y), 1e-30)
         resid[field] = float(rel[np.abs(y) > 0].max()) if np.any(np.abs(y) > 0) else 0.0
-    m = Model(act=coef["ACT"][0], pre=coef["PRE"][0], rd=coef["RD"][0], wr=coef["WR"][0], refa=coef["REF_AB"][0],
-              closed=coef["BG_PRE"][0], any_open=coef["bg_act"][0], io_cycle=coef["io"][0], io_cmd=coef["io"][1],
-              io_rd=coef["io"][2], io_wr=coef["io"][3])
+    m = Model(any_open=coef["bg_act"][0], **{key: coef[field][0] for field, key in PER_BANK.items()},
+              **{c: coef["io"][i] for i, c in enumerate(IO)})
     return m, resid
 
 
-def windows(tr, nb, model, edges):
+def windows(tr, model, edges):
     """Energy (J) per window: 'bank' (nw, nb) core energy booked to each bank, 'io' (nw,) interface energy, 'total'
     (nw,). Shared active background: the time some bank is open is split by each bank's open time; the time only a
     refresh holds the device active is split evenly over all banks (an all-bank refresh works every bank)."""
-    f = features(tr, nb, edges)
-    m = model
-    core = (m.act * f["act"] + m.pre * f["pre"] + m.rd * f["rd"] + m.wr * f["wr"]
-            + m.refa * f["refa"][:, None] + m.closed * f["closed"][:, None])
-    by_open = m.any_open * f["open_union"]
-    refresh_only = m.any_open * (f["any_open"] - f["open_union"])
+    nb = tr.banks
+    f = features(tr, edges)
+    core, _, io = _energy(f, model)
+    by_open = model.any_open * f["open_union"]
+    refresh_only = model.any_open * (f["any_open"] - f["open_union"])
     share = np.divide(f["open"], f["open"].sum(1, keepdims=True), out=np.full_like(f["open"], 1.0 / nb),
                       where=f["open"].sum(1, keepdims=True) > 0)
     bank = core + by_open[:, None] * share + refresh_only[:, None] / nb
-    io = m.io_cycle * f["length"] + m.io_cmd * f["ncmd"] + m.io_rd * f["rd"].sum(1) + m.io_wr * f["wr"].sum(1)
     return {"bank": bank, "io": io, "total": bank.sum(1) + io}
 
 
-def predict_totals(tr, nb, model):
+def predict_totals(tr, model):
     """Whole-trace prediction in DRAMPower's terms, for checking a fitted model: per-bank core (without the shared
     active background), the shared active background, interface dynamic energy and the total."""
-    f = features(tr, nb)
-    m = model
-    core = (m.act * f["act"] + m.pre * f["pre"] + m.rd * f["rd"] + m.wr * f["wr"]
-            + m.refa * f["refa"][:, None] + m.closed * f["closed"][:, None])[0]
-    bg = m.any_open * f["any_open"][0]
-    io = m.io_cycle * f["length"][0] + m.io_cmd * f["ncmd"][0] + m.io_rd * f["rd"].sum() + m.io_wr * f["wr"].sum()
+    core, bg, io = (x[0] for x in _energy(features(tr), model))
     return {"bank_core": core, "bg_act": bg, "io": io, "total": core.sum() + bg + io}

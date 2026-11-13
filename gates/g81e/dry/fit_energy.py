@@ -16,7 +16,6 @@ sys.path.insert(0, ".")
 from opentsense.power import cache, dramctl, dramenergy  # noqa: E402
 
 MS = "/home/rajul/tools/DRAMSys/configs/memspec/JEDEC_8Gb_LPDDR4-3200_16bit.json"
-NB = dramctl.LPDDR4_3200["arch"]["nbrOfBanks"]
 CFG = json.dumps({"useToggleRate": False, "simconfig": {}})
 
 
@@ -38,23 +37,34 @@ def traffic(seed, n, cycles, wfrac, dfrac=0.5, salt=None, phase=0):
     addr = np.where(port == "I", rng.integers(0, 1 << 15, n), rng.integers(1 << 20, (1 << 20) + (1 << 18), n)) & ~3
     we = (port == "D") & (rng.random(n) < wfrac)
     tr = dramctl.schedule(cache.h1(cyc, port, we, addr).txn, bank_salt=salt, ref_phase=phase, end_cycle=cycles)
-    assert dramctl.check(tr) == []
+    bad = dramctl.check(tr)
+    if bad:
+        raise RuntimeError(f"illegal trace (seed {seed}): {bad[:3]}")
     return tr
 
 
+def check_memspec():
+    """The controller's copy of the memspec must equal the file DRAMPower reads."""
+    r = subprocess.run(["wsl", "-e", "cat", MS], capture_output=True, text=True, check=True)
+    bad = dramctl.memspec_mismatches(dramctl.LPDDR4_3200, json.loads(r.stdout))
+    if bad:
+        raise RuntimeError(f"dramctl.LPDDR4_3200 differs from {MS}: {bad}")
+
+
 def main(out_path):
+    check_memspec()
     cal = [traffic(1, 20000, 2_000_000, 0.0, dfrac=1.0),          # data reads only
            traffic(2, 20000, 2_000_000, 1.0, dfrac=1.0),          # data writes (plus their fills)
            dramctl.schedule(cache.Txn(*(np.zeros(0, t) for t in (np.int64, np.int64, bool, np.int64))),
                             end_cycle=2_000_000),                 # refresh only
            traffic(3, 20000, 2_000_000, 0.3)]
-    model, resid = dramenergy.fit([(t, drampower(t)) for t in cal], NB)
+    model, resid = dramenergy.fit([(t, drampower(t)) for t in cal])
     held = []
     for seed in range(10, 15):
         tr = traffic(seed, int(np.random.default_rng(seed).integers(5000, 40000)), 2_000_000, 0.3,
                      salt=seed, phase=seed * 997 % dramctl.LPDDR4_3200["t"]["REFI"])
         o = drampower(tr)
-        p = dramenergy.predict_totals(tr, NB, model)
+        p = dramenergy.predict_totals(tr, model)
         banks = o["CoreEnergy"]["BankEnergy"]
         core = np.array([sum(b[k] for k in dramenergy.PER_BANK) for b in banks])
         io = o["InterfaceEnergy"]["controller"]["dynamicEnergy"] + o["InterfaceEnergy"]["dram"]["dynamicEnergy"]

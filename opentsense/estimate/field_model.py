@@ -32,7 +32,6 @@ class GaussianField:
             raise ValueError("give exactly one of rank or energy")
         self.rank, self.energy = rank, energy
 
-    # ---------------- fitting ----------------
     def fit(self, fields: np.ndarray | Iterable[np.ndarray]) -> "GaussianField":
         """fields: (N, n) array, or an iterable of (b, n) chunks (streamed, so the full set need not be in memory)."""
         chunks = [fields] if isinstance(fields, np.ndarray) else fields
@@ -70,7 +69,6 @@ class GaussianField:
     def n(self) -> int:
         return len(self.mu)
 
-    # ---------------- conditioning ----------------
     def _noise(self, S: np.ndarray, noise: float) -> np.ndarray:
         return noise ** 2 + self.resid[S]
 

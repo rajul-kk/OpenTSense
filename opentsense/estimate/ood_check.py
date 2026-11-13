@@ -19,7 +19,16 @@ from . import calibrate, icthermbench, placement
 from .field_model import GaussianField
 
 
-def run(level, ms=(16, 32), rank=64, noise=0.1, alpha=0.1, methods=("qdeim", "greedy_a", "greedy_d", "uniform", "random"),
+def _posterior(model, X, ix, S, noise, rng):
+    """Posterior for fields X[ix] read at pixels S with Gaussian noise of `noise` K."""
+    return model.posterior(S, X[ix][:, S] + rng.normal(0, noise, (len(ix), len(S))), noise)
+
+
+METHODS = ("qdeim", "greedy_a", "greedy_d", "uniform", "random")
+LOCO_METHODS = ("qdeim", "greedy_a", "uniform")
+
+
+def run(level, ms=(16, 32), rank=64, noise=0.1, alpha=0.1, methods=METHODS,
         dedupe=True, root=icthermbench.DEFAULT_ROOT, seed=0):
     t0 = time.time()
     lv = icthermbench.load(level, root)
@@ -39,15 +48,9 @@ def run(level, ms=(16, 32), rank=64, noise=0.1, alpha=0.1, methods=("qdeim", "gr
                rank=model.r, energy_kept=model.energy_kept, noise_K=noise, alpha=alpha, results={})
     for m in ms:
         for meth in methods:
-            if meth == "uniform":
-                S = placement.uniform_grid((ny, nx), m)
-            elif meth == "random":
-                S = placement.random_sites(model.n, m, seed=seed)
-            else:
-                S = placement.METHODS[meth](model, m, noise)
+            S = placement.place(meth, model, m, noise, (ny, nx), seed)
             def post(ix):
-                y = X[ix][:, S] + rng.normal(0, noise, (len(ix), len(S)))
-                return model.posterior(S, y, noise)
+                return _posterior(model, X, ix, S, noise, rng)
             pc = post(cal)
             cb = calibrate.Calibrator(alpha).fit(X[cal], pc.mean, pc.std)
             res = {}
@@ -66,7 +69,7 @@ def run(level, ms=(16, 32), rank=64, noise=0.1, alpha=0.1, methods=("qdeim", "gr
     return out
 
 
-def run_loco(level, m=32, rank=64, noise=0.1, alpha=0.1, methods=("qdeim", "greedy_a", "uniform"), root=icthermbench.DEFAULT_ROOT, seed=0):
+def run_loco(level, m=32, rank=64, noise=0.1, alpha=0.1, methods=LOCO_METHODS, root=icthermbench.DEFAULT_ROOT, seed=0):
     """Leave one case (package) out: for each case, fit on every other case, calibrate on a random 10% of those, and test
     on the held-out case (fields byte-identical to any training or calibration field dropped). The ID row tests on a
     further random 10% of the other cases, disjoint from fit and calibration."""
@@ -87,9 +90,8 @@ def run_loco(level, m=32, rank=64, noise=0.1, alpha=0.1, methods=("qdeim", "gree
         model = GaussianField(rank=rank).fit(X[fit])
         fold = dict(n=dict(fit=len(fit), cal=len(cal), id=len(idt), held_out=len(te)), energy_kept=model.energy_kept)
         for meth in methods:
-            S = placement.uniform_grid((ny, nx), m) if meth == "uniform" else placement.METHODS[meth](model, m, noise)
-            post = lambda ix: model.posterior(S, X[ix][:, S] + rng.normal(0, noise, (len(ix), len(S))), noise)
-            pc, pi, po = post(cal), post(idt), post(te)
+            S = placement.place(meth, model, m, noise, (ny, nx), seed)
+            pc, pi, po = (_posterior(model, X, ix, S, noise, rng) for ix in (cal, idt, te))
             cb = calibrate.Calibrator(alpha).fit(X[cal], pc.mean, pc.std)
             fold[meth] = dict(id=cb.evaluate(X[idt], pi.mean, pi.std), held_out=cb.evaluate(X[te], po.mean, po.std),
                               ood_flag=calibrate.ood_report(pc.mahal2, pi.mahal2, po.mahal2, len(S)))
@@ -108,12 +110,16 @@ if __name__ == "__main__":
     ap.add_argument("--loco", action="store_true", help="leave-one-case-out sweep (uses the first --m value)")
     ap.add_argument("--m", default="16,32"); ap.add_argument("--rank", type=int, default=64)
     ap.add_argument("--noise", type=float, default=0.1); ap.add_argument("--alpha", type=float, default=0.1)
-    ap.add_argument("--methods", default="qdeim,greedy_a,greedy_d,uniform,random")
-    ap.add_argument("--keep-duplicates", action="store_true"); ap.add_argument("--root", default=icthermbench.DEFAULT_ROOT)
+    ap.add_argument("--methods", help=f"comma-separated; default {','.join(METHODS)} (with --loco: {','.join(LOCO_METHODS)})")
+    ap.add_argument("--keep-duplicates", action="store_true", help="not with --loco, which always drops fields seen in fit or calibration")
+    ap.add_argument("--root", default=icthermbench.DEFAULT_ROOT)
     a = ap.parse_args()
+    if a.loco and a.keep_duplicates:
+        ap.error("--keep-duplicates does not apply to --loco")
     if a.loco:
-        json.dump(run_loco(a.level, int(a.m.split(",")[0]), a.rank, a.noise, a.alpha, root=a.root), open(a.out, "w"), indent=1)
+        meth = tuple(a.methods.split(",")) if a.methods else LOCO_METHODS
+        json.dump(run_loco(a.level, int(a.m.split(",")[0]), a.rank, a.noise, a.alpha, meth, root=a.root), open(a.out, "w"), indent=1)
         raise SystemExit
-    r = run(a.level, tuple(int(x) for x in a.m.split(",")), a.rank, a.noise, a.alpha, tuple(a.methods.split(",")),
-            not a.keep_duplicates, a.root)
+    r = run(a.level, tuple(int(x) for x in a.m.split(",")), a.rank, a.noise, a.alpha,
+            tuple(a.methods.split(",")) if a.methods else METHODS, not a.keep_duplicates, a.root)
     json.dump(r, open(a.out, "w"), indent=1)

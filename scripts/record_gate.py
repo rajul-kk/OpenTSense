@@ -43,7 +43,7 @@ def main(argv=None):
             sys.exit(f"no run folder {os.path.relpath(src, ROOT)}")
         dst = rec if len(a.run) == 1 else os.path.join(rec, run)
         if a.parts:
-            parts = sorted(p for p in os.listdir(src) if os.path.isfile(os.path.join(src, p, "result.json")))
+            parts = sorted(p for p in os.listdir(src) if os.path.isdir(os.path.join(src, p)))
             for p in parts:
                 missing += copy(os.path.join(src, p), os.path.join(dst, p))
         else:

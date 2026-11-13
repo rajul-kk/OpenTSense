@@ -30,10 +30,6 @@ class Stats:
     writebacks: int = 0
     dirty_at_end: int = 0
 
-    @property
-    def miss_rate(self):
-        return self.misses / self.accesses if self.accesses else 0.0
-
 
 class Cache:
     """One set-associative, write-back, write-allocate cache with true LRU."""
@@ -61,7 +57,8 @@ class Cache:
             w = int(hit[0])
         else:
             self.stats.misses += 1
-            w = int(np.argmin(self.age[s]))                 # an empty way has age 0 and tag -1, so it goes first
+            empty = np.flatnonzero(self.tag[s] < 0)
+            w = int(empty[0]) if empty.size else int(np.argmin(self.age[s]))
             if self.tag[s, w] >= 0 and self.dirty[s, w]:
                 self.stats.writebacks += 1
                 ops.append(((int(self.tag[s, w]) * self.sets + s) * self.line, True))

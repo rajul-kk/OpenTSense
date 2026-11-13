@@ -6,7 +6,8 @@
 - greedy_a: A-optimal greedy: each step adds the sensor that most reduces the summed posterior variance of the field.
 - greedy_d: D-optimal greedy: each step adds the sensor with the largest predictive variance over its noise, which
             maximises the log-determinant of the coefficient information (and the mutual information of a Gaussian).
-- uniform_grid, random_sites: baselines."""
+- uniform_grid, random_sites: baselines.
+`place` runs any of them by name."""
 from __future__ import annotations
 
 import numpy as np
@@ -88,3 +89,14 @@ def random_sites(n, m, seed=0, allowed=None):
 
 
 METHODS = {"qdeim": qdeim, "greedy_a": greedy_a, "greedy_d": greedy_d}
+
+
+def place(method, model, m, noise, shape, seed=0, allowed=None):
+    """m sensor pixels by `method` (a key of METHODS, "uniform" or "random") on a model of an (ny, nx) field."""
+    if method == "uniform":
+        return uniform_grid(shape, m, allowed)
+    if method == "random":
+        return random_sites(model.n, m, seed, allowed)
+    if method not in METHODS:
+        raise ValueError(f"unknown placement {method!r}; expected uniform, random or one of {sorted(METHODS)}")
+    return METHODS[method](model, m, noise, allowed)

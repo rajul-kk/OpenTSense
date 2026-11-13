@@ -40,7 +40,6 @@ class Calibrator:
         self.q_marg = conformal_q(z, self.alpha, n_exch=len(z))
         self.q_sim = conformal_q(zmax, self.alpha)
         self.q_gauss = float(norm.ppf(1 - self.alpha / 2))
-        self.n_cal = len(z)
         return self
 
     def evaluate(self, truth, mean, std) -> dict:
@@ -63,7 +62,6 @@ def auroc(neg: np.ndarray, pos: np.ndarray) -> float:
     order = allv.argsort(kind="mergesort")
     ranks = np.empty(len(allv))
     ranks[order] = np.arange(1, len(allv) + 1)
-    # average ranks over ties
     _, inv, cnt = np.unique(allv, return_inverse=True, return_counts=True)
     sums = np.bincount(inv, weights=ranks)
     ranks = (sums / cnt)[inv]
