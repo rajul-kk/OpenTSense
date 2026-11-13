@@ -1,3 +1,5 @@
+> Superseded by `registration.md` (registered 13 Nov, with its corrections); kept as the pre-registration draft.
+
 # G99 draft (13 Nov 2026; NOT registered): layouts closed at the corner the power runs use (plan.md limit 4, fix forward)
 
 ### G99: Do the benchmark designs meet setup and hold at TT, at the clock their power is computed for? · DRAFT

@@ -7,18 +7,18 @@
   `gates/g96/draft.md`). The student chose to fix forward (13 Nov): re-close at TT, regenerate the windows, use the
   new layouts from the benchmark on. Recorded gates keep the old layouts (limit 4).
 - **What changes, and only that.** Same ORFS image (`openroad/orfs:latest`, id 55266bc72fd6), same design configs
-  (`designs/asap7/{ibex,tpu}/config.mk`), same RTL. Two overrides: `CORNER=TT`, and `SDC_FILE` = a copy of the stock
+  (`designs/asap7/{ibex,tpu}/config.mk`), same RTL. Two overrides: `CORNER=TC` (ASAP7's typical corner, `*_TT_nldm` libraries; see correction), and `SDC_FILE` = a copy of the stock
   constraint with `clk_period` changed. New `WORK_HOME` (`_build/g99/asap7-<design>`), so old layouts stay untouched.
 
-  | Design | Old clock | Met at TT on the old layout | G99 clock  | Fallback, once, if WNS < 0 |
+  | Design | Old clock | Met at TT on the old layout | G99 clock  | Fallback, once, if setup fails |
   |---|---|---|---|---|
   | ASAP7 ibex | 900 ps | about 1,320 ps | 1,400 ps | 1,550 ps |
   | ASAP7 TPU | 200 ps | about 720 ps | 800 ps | 900 ps |
   | IHP ibex (checked, not re-run) | 8.0 ns | ORFS report at typ: WNS -0.26 ns (3%) | stays; stated | none |
 
   Reference: ORFS ships its own `pos_slack` Ibex variant at 1,468 ps (at BC), so 1.4 ns at TT is plausible, not certain.
-- **Cost.** About 3 h serial compute (old runs: Ibex longest stage 54 min, TPU 30 min; peak RAM at most 1.4 GB), one
-  medium slot per design, heavy lock.
+- **Cost.** About 3.5 h serial compute (old runs: Ibex detailed routing 2 h 08 min, TPU about 1 h in all; peak RAM 3.8 GB
+  Ibex, 6.7 GB TPU, both in detailed routing), one heavy slot per design (see corrections).
 
 ## Bars (per ASAP7 design)
 
@@ -37,9 +37,11 @@ Regenerate the activity windows and power maps on G99's layouts at their clocks;
 
 ## Procedure (fixed)
 
-- `run_g99.sh <design> <ps>` in the ORFS image, one design at a time, heavy lock and a medium slot (2 GB).
-- Order: Ibex 1,400 ps, then TPU 800 ps. A design whose bar 1 or 2 fails is re-run once at its fallback clock; that
-  run is the result. If the fallback also fails, G99 FAILS for that design and the student decides.
+- `launch.sh <design> <ps>` (host; runs `run_g99.sh` in the ORFS image), one design at a time, a heavy slot of 4.5 GB
+  (Ibex) or 7.5 GB (TPU) and the same container cap; `make` has a 4 h timeout.
+- Order: Ibex 1,400 ps, then TPU 800 ps. A design whose bar 1 (setup) fails is re-run once at its fallback clock; that
+  run is the result. A slower clock cannot fix hold, so a bar 2 (hold) failure, or a failed fallback, makes G99 FAIL
+  for that design and the student decides.
 - Bars 1-3 read from the run's own reports plus `reg2reg.tcl` (TT, RVT for Ibex; RVT LVT SLVT for the TPU). Bar 4
   runs after windows are regenerated on the new netlist.
 
@@ -49,3 +51,18 @@ The first launch used `CORNER=TT`, which ASAP7's `platform config.mk` does not d
 yosys stopped in its first second with an empty library list, producing no layout or timing. The typical corner is
 `TC`, which loads the `*_TT_nldm` libraries the power runs use. `run_g99.sh` now passes `CORNER=TC`; nothing else
 changed. The empty work folder `asap7-ibex-1400` was deleted before the re-run.
+
+## Correction, memory (13 Nov)
+
+The draft's "peak RAM at most 1.4 GB" was wrong: the old runs' detailed routing peaked at 3.8 GB (Ibex, 2 h 08 min)
+and 6.7 GB (TPU, 19 min). The first Ibex run under a 1.6 GB container cap was killed in detailed routing (70%,
+before any final layout or timing existed); stages up to global routing were kept and `make` resumes from there.
+Slots from here: Ibex 4.5 GB, TPU 7.5 GB, container caps the same. No bar changes.
+
+## Correction, review (13 Nov, before any result)
+
+/code-review of the gate folder: the override line, cost and slot lines above now match the corrections; the
+fallback applies to setup only (hold was listed by mistake: a slower clock cannot fix it); `run_g99.sh` checks its
+arguments, writes a summary row on every exit and has a 4 h timeout; inst_loc.csv and power come from the package's
+`opentsense/power/extract.tcl` (with `OUT_DIR`), not an older copy; `launch.sh` copies both into the build folder so
+what ran is what is in the repo. No bar changed.
