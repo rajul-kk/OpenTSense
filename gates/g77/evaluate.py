@@ -22,6 +22,7 @@ import sys
 import numpy as np
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
+from opentsense import manifest                          # noqa: E402
 from opentsense.bench import metrics                     # noqa: E402
 from opentsense.bench.cases import CaseSet               # noqa: E402
 from opentsense.bench.estimators import Tikhonov         # noqa: E402
@@ -151,7 +152,14 @@ def main(argv=None):
     os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
     with open(a.out, "w") as fh:
         json.dump(result, fh, indent=1)
+    manifest.write(os.path.join(os.path.dirname(os.path.abspath(a.out)), "manifest.json"), run_record(a.cases_dir, result))
     return result
+
+
+def run_record(cases_dir, result):
+    """What the manifest records beside the versions: the case sets scored and the factor."""
+    return {"cases_dir": os.path.abspath(cases_dir), "factor": result["factor"],
+            "case_sets": {f: c["sha256"] for f, c in result["case_sets"].items()}}
 
 
 if __name__ == "__main__":
