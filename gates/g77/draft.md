@@ -57,3 +57,16 @@ These numbers were seen before any bar was fixed. The registered run must use a 
 ## Student decision (12 Nov 2026)
 
 Open choices 1-5 accepted as written; bar (a)'s factor is fixed after the noise floor is measured. Bar numbers still follow the noise-floor rule of `plan.md` 2.1 where it applies.
+
+## Code review before registration (12 Nov 2026)
+
+| Finding | Action |
+|---|---|
+| `evaluate.py` did not check validity (v1), the plumbing limit | Fixed: reads `cases.json`, bar `v1` |
+| `dry/floor.py` gave K = 1.5 silently on one seed directory (NaN floor) | Fixed: needs exactly seeds 78, 79, 80, the same case sets in each, and a finite floor |
+| Noise levels drew fresh noise in turn, so a file depended on the `--noise` order and sigma was confounded with the draw | Fixed: one standard-normal draw per stack, scaled by sigma; duplicate levels refused; G84 reproduction still identical |
+| Both stacks share the seed (same program split) | Kept, disclosed in the registration (the reproduction check needs the 3d stack on the plain seed) |
+| `boot_p` copied `metrics.bootstrap_diff` | Fixed: `bootstrap_diff` returns the two-sided p as well |
+| The gated entry list was written twice | Fixed: `evaluate.KNOWN` |
+| `evaluate.py` exits 0 when a bar fails | Kept: a failed bar is a result, and `record_gate.py` must still run after it |
+| `curves` recomputed for each rule | Kept: the whole evaluation takes 2 s |

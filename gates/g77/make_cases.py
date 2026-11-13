@@ -9,7 +9,8 @@ Construction: G84's (`gates/g84/make_cases.py`, registered, so not edited), gene
   10 x 11 bins (6 x 8 cells, since 88 columns do not divide by 10) and 16 sensors, so both stacks have 16 sensors.
 Power per case as G84: a G81b program segment drives the CPU block, a seeded TPU workload (W1-W3, x U[0.9, 1.1])
 drives the TPU block, and G71's background power on the inactive cells. Splits by program, seeded. One temperature
-set per stack; the readings for each noise level are drawn in turn from the same generator.
+set per stack and one standard-normal noise draw per stack, scaled by each sigma (common random numbers), so the
+noise levels differ only in sigma. Both stacks use the same seed, so they share the program split and TPU draws.
 
 Copy check: with G84's settings (`--reproduce-g84`: seed 84, 3d, noise 0.1) the output must equal G84's case set
 (sha256 in `gates/g84/record/result.json`), so the generalisation cannot drift from G84 unnoticed.
@@ -160,11 +161,11 @@ def build(stack_name, seed, noises):
                   tpu_workload=np.array([m[1] for m in meta]), dies=np.array(dies),
                   buried=np.array([d in cfg["buried"] for d in dies]), cell_um=float(stack.size_um[0] / nx),
                   stack_id=stack.name)
-    sets = {}
-    for sigma in noises:
-        readings = T[:, sens[:, 0], sens[:, 1], sens[:, 2]] + rng.normal(0, sigma, (len(T), len(sens)))
-        sets[sigma] = CaseSet(dict(common, readings=readings, noise_K=sigma))
-    info = {"stack": stack_name, "seed": seed, "cases": len(T), "plumbing_max_dT_K": plumb,
+    # rng.normal(0, s) is 0 + s * standard_normal, so with one sigma this equals G84's draw bit for bit
+    z = rng.standard_normal((len(T), len(sens)))
+    clean = T[:, sens[:, 0], sens[:, 1], sens[:, 2]]
+    sets = {sigma: CaseSet(dict(common, readings=clean + (0 + sigma * z), noise_K=sigma)) for sigma in noises}
+    info = {"stack": stack_name, "seed": seed, "cases": len(T), "noise_K": list(noises), "plumbing_max_dT_K": plumb,
             "split": {s: int((split == s).sum()) for s in ("train", "cal", "test")},
             "programs_by_split": {s: sorted(p for p, v in split_of.items() if v == s) for s in ("train", "cal", "test")},
             "sensors": int(len(sens)), "bins_per_die": by * bx,
@@ -189,8 +190,8 @@ def main(argv=None):
     if a.seed == 84:
         raise SystemExit("seed 84 is G84's pilot set, already seen; pick another")
     noises = [float(x) for x in a.noise.split(",")]
-    if not all(s > 0 for s in noises):
-        raise SystemExit("noise must be positive")
+    if not all(s > 0 for s in noises) or len({f"{s:g}" for s in noises}) != len(noises):
+        raise SystemExit("noise levels must be positive and distinct")
     index = {}
     for name in a.stacks.split(","):
         sets, info = build(name, a.seed, noises)

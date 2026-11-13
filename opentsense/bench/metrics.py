@@ -44,7 +44,7 @@ def summary(values, groups):
 
 def bootstrap_diff(a, b, groups, n_boot=10000, seed=0):
     """Group bootstrap of mean-over-groups(median a) - mean-over-groups(median b), paired by case.
-    Returns point estimate and 95% interval."""
+    Returns point estimate, 95% interval and the two-sided bootstrap p, 2 min(P(d <= 0), P(d >= 0))."""
     ga, _ = group_stats(a, groups)
     gb, _ = group_stats(b, groups)
     keys = sorted(set(ga) & set(gb))
@@ -52,4 +52,5 @@ def bootstrap_diff(a, b, groups, n_boot=10000, seed=0):
     rng = np.random.default_rng(seed)
     boots = d[rng.integers(0, len(d), (n_boot, len(d)))].mean(1)
     return {"diff": float(d.mean()), "ci95": [float(np.percentile(boots, 2.5)), float(np.percentile(boots, 97.5))],
+            "p": float(min(1.0, 2 * min((boots <= 0).mean(), (boots >= 0).mean()))),
             "groups": len(d), "n_boot": n_boot, "seed": seed}
