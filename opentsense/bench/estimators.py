@@ -102,27 +102,36 @@ class BayesPower(LinearPower):
 class Tikhonov(LinearPower):
     """Regularised inversion about the training-mean power (G77): p = mu + argmin ||H z - (y - H mu)||^2 + lam ||z||^2,
     with lam chosen per case by `rule` (gcv, upre, discrepancy, lcurve; see estimate.regularise). Unlike bayes_power it
-    uses no training covariance, only the mean. Needs P and R in the case set."""
-    SHORT = {"gcv": "gcv", "upre": "upre", "discrepancy": "dp", "lcurve": "lc"}
+    uses no training covariance, only the mean. Needs P and R in the case set.
 
-    def __init__(self, rule="gcv", sigma_scale=1.0):
+    reference: what the readings are compared with. "model" is H mu, the model's prediction for the mean power; any
+    error the binned model makes at the sensors stays in the data. "readings" is the training cases' mean readings,
+    which carry the model's fixed error at each sensor, so only the case-to-case part remains (G77's lead)."""
+    SHORT = {"gcv": "gcv", "upre": "upre", "discrepancy": "dp", "lcurve": "lc"}
+    REFERENCES = ("model", "readings")
+
+    def __init__(self, rule="gcv", sigma_scale=1.0, reference="model"):
         """sigma_scale: the noise level the rule is told, as a multiple of the true one (G77's wrong-sigma runs);
         GCV and the L-curve do not use it."""
         if rule not in regularise.RULES:
             raise ValueError(f"unknown rule {rule!r}; expected one of {regularise.RULES}")
         if not sigma_scale > 0:
             raise ValueError("sigma_scale must be positive")
-        self.rule, self.sigma_scale = rule, float(sigma_scale)
-        self.name = f"ridge_{self.SHORT[rule]}" + ("" if sigma_scale == 1 else f"_s{sigma_scale:g}")
+        if reference not in self.REFERENCES:
+            raise ValueError(f"unknown reference {reference!r}; expected one of {self.REFERENCES}")
+        self.rule, self.sigma_scale, self.reference = rule, float(sigma_scale), reference
+        self.name = (f"ridge_{self.SHORT[rule]}" + ("" if sigma_scale == 1 else f"_s{sigma_scale:g}")
+                     + ("" if reference == "model" else "_ref"))
 
     def fit(self, cs, idx):
         super().fit(cs, idx)
         self.svd = regularise.Svd.of(self.H)
+        self.y0 = self.H @ self.mu if self.reference == "model" else cs.readings[idx].astype(np.float64).mean(0)
         return self
 
     def solve(self, pub):
         """(power vectors (n, D*nb), the per-case lambda the rule picked); G77 reports the lambdas."""
-        b = pub.readings - self.H @ self.mu
+        b = pub.readings - self.y0
         lam = regularise.choose(self.rule, self.svd, b, sigma=pub.noise_K * self.sigma_scale)[0]
         return self.mu + regularise.solve(self.svd, b, lam), lam
 
@@ -145,4 +154,6 @@ _FACTORIES = [Average, FieldModel, BayesPower, Inverted]
 _FACTORIES += [lambda r=rule: Tikhonov(r) for rule in regularise.RULES]
 # G77's wrong-sigma runs: each rule that uses sigma, told half and twice the true noise level
 _FACTORIES += [lambda r=rule, k=k: Tikhonov(r, k) for rule in regularise.NEEDS_SIGMA for k in (0.5, 2.0)]
+# G77's lead: every rule against the training readings
+_FACTORIES += [lambda r=rule: Tikhonov(r, reference="readings") for rule in regularise.RULES]
 REGISTRY = {f().name: f for f in _FACTORIES}

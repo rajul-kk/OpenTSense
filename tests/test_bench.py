@@ -103,3 +103,22 @@ def test_wrong_sigma_entries():
     assert np.all(lam[0.5] <= lam[1.0]) and np.all(lam[1.0] <= lam[2.0])   # a larger sigma allows a larger lambda
     with pytest.raises(ValueError):
         Tikhonov("upre", 0.0)
+
+
+def test_reference_readings_removes_a_fixed_sensor_error():
+    """A fixed offset at each sensor (the binned model's error in G77) biases the solve about H mu; referencing the
+    training readings removes it. Without the offset the two references agree up to the training readings' noise."""
+    from opentsense.bench.estimators import REGISTRY, Tikhonov
+    assert {"ridge_gcv_ref", "ridge_upre_ref", "ridge_dp_ref", "ridge_lc_ref"} <= set(REGISTRY)
+    cs = synthetic()
+    tr, te = cs.idx("train"), cs.idx("test")
+    def pow_err(c, ref):
+        p, _ = Tikhonov("upre", reference=ref).fit(c, tr).solve(c.public(te))
+        return np.linalg.norm(p - c.P[te].reshape(len(te), -1), axis=1).mean()
+    clean = {ref: pow_err(cs, ref) for ref in ("model", "readings")}
+    assert abs(clean["model"] - clean["readings"]) < 0.1 * clean["model"]
+    shifted = CaseSet(dict(cs.a, readings=cs.readings + np.random.default_rng(1).uniform(-0.5, 0.5, cs.readings.shape[1])))
+    assert pow_err(shifted, "readings") < 0.5 * pow_err(shifted, "model")
+    assert abs(pow_err(shifted, "readings") - clean["readings"]) < 1e-9     # the offset cancels exactly
+    with pytest.raises(ValueError):
+        Tikhonov("gcv", reference="truth")
