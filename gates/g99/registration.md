@@ -42,3 +42,10 @@ Regenerate the activity windows and power maps on G99's layouts at their clocks;
   run is the result. If the fallback also fails, G99 FAILS for that design and the student decides.
 - Bars 1-3 read from the run's own reports plus `reg2reg.tcl` (TT, RVT for Ibex; RVT LVT SLVT for the TPU). Bar 4
   runs after windows are regenerated on the new netlist.
+
+## Correction before any result (13 Nov, 16:10)
+
+The first launch used `CORNER=TT`, which ASAP7's `platform config.mk` does not define (its corners are BC, TC and WC);
+yosys stopped in its first second with an empty library list, producing no layout or timing. The typical corner is
+`TC`, which loads the `*_TT_nldm` libraries the power runs use. `run_g99.sh` now passes `CORNER=TC`; nothing else
+changed. The empty work folder `asap7-ibex-1400` was deleted before the re-run.
