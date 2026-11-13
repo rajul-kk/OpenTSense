@@ -72,7 +72,7 @@ def test_region_checks():
     with pytest.raises(ValueError):
         s.cells((0.5 * cx, 0, cx, cy))                         # off the cell grid
     s.dies[0].regions = [model.Region("silicon", (0, 0, 2 * cx, 2 * cy)), model.Region("silicon", (cx, cx, 2 * cx, 2 * cy))]
-    with pytest.raises(AssertionError):
+    with pytest.raises(ValueError, match="overlap"):
         s.validate()                                           # overlap
 
 
@@ -179,3 +179,11 @@ def test_3dice_rejects_mismatched_modes_and_fractional_slots(tmp_path):
         to_3dice.write(s, P3, tmp_path, transient=(0.1, 0.3))
     with pytest.raises(ValueError, match="whole number"):
         to_3dice.write(s, P3, tmp_path, transient=(3e-3, 1e-2))
+
+
+def test_pact_and_hotspot_refuse_non_steady_maps(tmp_path):
+    s = model.load(CFG)
+    nx, ny = s.grid
+    for write in (to_pact.write, to_hotspot.write):
+        with pytest.raises(ValueError, match="steady"):
+            write(s, {d.name: np.zeros((2, ny, nx)) for d in s.dies}, tmp_path / write.__module__)

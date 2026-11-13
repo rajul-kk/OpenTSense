@@ -52,7 +52,7 @@ def classify(R, dyn, leak, T_amb, tol=1e-9, max_it=100, h=0.5):
             path.append(r)
             # a fixed point with rho >= 1 is the fold itself (or past it): not a stable operating point
             return Outcome("converged" if r < 1.0 else "runaway", T, r, it, monotone, path)
-    r, _ = _rho(R, leak, T, h)
+    r = _rho(R, leak, T, h)[0] if np.all(np.isfinite(T)) else float("nan")
     path.append(r)
     return Outcome("not_converged", T, r, max_it, monotone, path)
 
@@ -70,6 +70,9 @@ def critical_scale(R, dyn, make_leak, T_amb, lo=1e-3, hi=1e3, rtol=1e-4, **kw):
     make_leak(s) -> LeakModel with every instance's leakage times s. Needs classify(lo) converged and classify(hi)
     runaway. Returns (s_lo, s_hi, n_classified): s_lo converged, s_hi runaway, s_hi / s_lo - 1 <= rtol.
     Raises RuntimeError if the bracket is wrong or any probe is not converged (the boundary is then not located)."""
+    if not 0 < lo < hi:
+        raise ValueError(f"need 0 < lo < hi, got lo={lo:g}, hi={hi:g}")
+
     def status(s):
         st = classify(R, dyn, make_leak(s), T_amb, **kw).status
         if st == "not_converged":

@@ -52,8 +52,7 @@ def write(stack, power, workdir, transient=None):
     """power: {die layer name: (ny, nx) array in W}, or (n_slots, ny, nx) with transient = (step_s, slot_s).
     Returns the .stk path; maps go to tmap_<die>.txt (the final map, or one per slot)."""
     if transient is None:
-        if any(np.ndim(power[d.name]) != 2 for d in stack.dies):
-            raise ValueError("steady power maps must be (ny, nx); give transient=(step, slot) for (n_slots, ny, nx)")
+        stack.check_steady(power)
     else:
         step, slot = transient
         if not 0 < step <= slot:

@@ -6,9 +6,11 @@ material labels, so our materials are mapped onto them, the label's properties c
 those labels a material keeps its own name, which needs the image's PACT patch (pact-labels.patch: any label with a
 section in the stack config is an isotropic solid). Each die becomes a bulk layer plus a source layer. Layers with
 regions get one label per grid cell.
-Grid rows in PACT's output run opposite to 3D-ICE's (see thermal.run.read_pact).
+PACT numbers its grid rows from the opposite edge to ours; `rows` and `cell` are the only places that know it.
 """
 import os
+
+import numpy as np
 
 LABELS = ["lump0", "lump1", "Diel", "bcb", "Metal", "Metal7_8"]  # free labels after Si and Cu
 
@@ -61,6 +63,18 @@ properties = htc, thickness (m), thermalresistivity ((m-k)/w), specificheatcapac
 """
 
 
+def rows(M):
+    """A (..., ny, nx) map in our row order <-> PACT's: PACT row r is our row ny-1-r (the map is its own inverse;
+    point-source check in exploratory gate G47)."""
+    return M[..., ::-1, :]
+
+
+def cell(stack, layer, i, j):
+    """PACT's flat node index of our cell (row i, column j) on PACT layer `layer`; i and j may be arrays."""
+    nx, ny = stack.grid
+    return layer * nx * ny + (ny - 1 - np.asarray(i)) * nx + np.asarray(j)
+
+
 def label_map(stack):
     lab, free = {}, iter(LABELS)
     for m in stack.materials:
@@ -70,6 +84,7 @@ def label_map(stack):
 
 def write(stack, power, workdir):
     """power: {die layer name: (ny, nx) array in W}. Returns (args for PACT.py, {die: PACT layer index of its source})."""
+    stack.check_steady(power)
     workdir = os.path.abspath(workdir)  # PACT runs from its own source folder, so the layer CSV needs absolute paths
     os.makedirs(workdir, exist_ok=True)
     lab = label_map(stack)
@@ -92,31 +107,22 @@ def write(stack, power, workdir):
     for m in stack.materials:
         model += f"\n[{lab[m]}]\nlibrary_name = Solid\nlibrary = Solid.py\ntransient = False\nvirtual_node = bottom_center\nmode = single\n"
     model += "\n[Solid]\nproperties = thermalresistivity ((m-k)/w), specificheatcapacity (j/m^3k)\n"
-    # PACT order runs away from the sink's far side: bottom-up for a top sink (a die with its source on the bottom
-    # face is then (source, bulk...), one with it on top (bulk..., source)), top-down for a bottom sink
-    rows, src_index, li = ["Layer,FloorplanFile,Thickness (m),PtraceFile,LateralHeatFlow"], {}, 0
-    up = stack.sink_side == "top"
-    for l in (reversed(stack.layers) if up else stack.layers):
-        if l.die:
-            bulk = [("bulk", l.bulk_um / l.n_sub)] * l.n_sub
-            parts = [("src", l.source_um)] + bulk if (l.source_side == "bottom") == up else bulk + [("src", l.source_um)]
+    lcf, src_index, li = ["Layer,FloorplanFile,Thickness (m),PtraceFile,LateralHeatFlow"], {}, 0
+    for l, kind, th in stack.sublayers():
+        fl = os.path.join(workdir, f"L{li}_flp.csv")
+        if kind == "src":
+            P = power[l.name]
+            open(fl, "w", newline="\n").write(grid_flp(l))
+            pt = os.path.join(workdir, f"L{li}_ptrace.csv")
+            open(pt, "w", newline="\n").write("UnitName,Power\n" + "".join(f"U_{i}_{j},{P[i, j]:.9e}\n" for i in range(ny) for j in range(nx)))
+            lcf.append(f"{li},{fl},{th * 1e-6},{pt},True")
+            src_index[l.name] = li
         else:
-            parts = [("", l.thickness_um / l.n_sub)] * l.n_sub
-        for kind, th in parts:
-            fl = os.path.join(workdir, f"L{li}_flp.csv")
-            if kind == "src":
-                P = power[l.name]
-                open(fl, "w", newline="\n").write(grid_flp(l))
-                pt = os.path.join(workdir, f"L{li}_ptrace.csv")
-                open(pt, "w", newline="\n").write("UnitName,Power\n" + "".join(f"U_{i}_{j},{P[i, j]:.9e}\n" for i in range(ny) for j in range(nx)))
-                rows.append(f"{li},{fl},{th * 1e-6},{pt},True")
-                src_index[l.name] = li
-            else:
-                open(fl, "w", newline="\n").write(grid_flp(l))
-                rows.append(f"{li},{fl},{th * 1e-6},,True")
-            li += 1
+            open(fl, "w", newline="\n").write(grid_flp(l))
+            lcf.append(f"{li},{fl},{th * 1e-6},,True")
+        li += 1
     paths = [os.path.join(workdir, f) for f in ("stack_lcf.csv", "stack.config", "model.config")]
-    open(paths[0], "w", newline="\n").write("\n".join(rows) + "\n")
+    open(paths[0], "w", newline="\n").write("\n".join(lcf) + "\n")
     open(paths[1], "w", newline="\n").write(cfg)
     open(paths[2], "w", newline="\n").write(model)
     return paths, src_index

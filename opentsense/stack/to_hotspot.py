@@ -42,35 +42,28 @@ def _flp(path, stack, layer, prefix):
 
 def write(stack, power, workdir):
     """power: {die layer name: (ny, nx) array in W}. Returns (paths dict, {die: HotSpot layer index of its source})."""
+    stack.check_steady(power)
     workdir = os.path.abspath(workdir)
     os.makedirs(workdir, exist_ok=True)
     nx, ny = stack.grid
     L, W = stack.size_um[0] * 1e-6, stack.size_um[1] * 1e-6
     side = 1.001 * max(L, W)
-    # layer 0 is farthest from the sink: bottom-up for a top sink, top-down for a bottom sink
-    up = stack.sink_side == "top"
     lcf, src, names, values, li = [], {}, [], [], 0
-    for l in (reversed(stack.layers) if up else stack.layers):
-        if l.die:
-            bulk = [("bulk", l.bulk_um / l.n_sub)] * l.n_sub
-            parts = [("src", l.source_um)] + bulk if (l.source_side == "bottom") == up else bulk + [("src", l.source_um)]
-        else:
-            parts = [("", l.thickness_um / l.n_sub)] * l.n_sub
+    for l, kind, th in stack.sublayers():
         m = stack.materials[l.material]
-        for kind, th in parts:
-            flp = f"L{li}.flp"
-            prefix = f"L{li}_"
-            _flp(os.path.join(workdir, flp), stack, l, prefix)
-            lcf += [f"# {l.name} {kind}".rstrip(), str(li), "Y", "Y" if kind == "src" else "N",
-                    f"{m.cv:.6e}", f"{1 / m.k:.6e}", f"{th * 1e-6:.9e}", flp, ""]
-            if kind == "src":
-                src[l.name] = li
-                P = power[l.name]
-                for i in range(ny):
-                    for j in range(nx):
-                        names.append(f"{prefix}{i}_{j}")
-                        values.append(f"{P[i, j]:.9e}")
-            li += 1
+        flp = f"L{li}.flp"
+        prefix = f"L{li}_"
+        _flp(os.path.join(workdir, flp), stack, l, prefix)
+        lcf += [f"# {l.name} {kind}".rstrip(), str(li), "Y", "Y" if kind == "src" else "N",
+                f"{m.cv:.6e}", f"{1 / m.k:.6e}", f"{th * 1e-6:.9e}", flp, ""]
+        if kind == "src":
+            src[l.name] = li
+            P = power[l.name]
+            for i in range(ny):
+                for j in range(nx):
+                    names.append(f"{prefix}{i}_{j}")
+                    values.append(f"{P[i, j]:.9e}")
+        li += 1
     cfg = {
         "ambient": f"{stack.ambient_K:.3f}", "init_temp": f"{stack.ambient_K:.3f}",
         "grid_rows": ny, "grid_cols": nx, "grid_map_mode": "avg",

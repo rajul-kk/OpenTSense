@@ -107,34 +107,60 @@ class Stack:
         """A die-local power map P (rows = y from the rectangle's lower edge) -> (ny, nx) map over the footprint.
         P's shape must equal the rectangle's cell count."""
         j0, j1, i0, i1 = self.cells(rect_um)
-        assert P.shape == (i1 - i0, j1 - j0), f"map {P.shape} does not fit {(i1 - i0, j1 - j0)} cells"
+        _need(P.shape == (i1 - i0, j1 - j0), f"map {P.shape} does not fit {(i1 - i0, j1 - j0)} cells")
         nx, ny = self.grid
         M = np.zeros((ny, nx))
         M[i0:i1, j0:j1] = P
         return M
 
+    def check_steady(self, power):
+        """Every die has a steady (ny, nx) power map in `power` ({die name: W})."""
+        nx, ny = self.grid
+        for d in self.dies:
+            _need(np.shape(power[d.name]) == (ny, nx), f"die {d.name}: steady power map must be {(ny, nx)}, got "
+                  f"{np.shape(power[d.name])}; transient (n_slots, ny, nx) maps need 3D-ICE with transient=(step, slot)")
+
+    def sublayers(self):
+        """(layer, kind, thickness um) for every solver sublayer, starting at the side away from the heat sink.
+        kind is "src" for a die's source layer, "bulk" for its bulk sublayers and "" for a passive layer."""
+        up = self.sink_side == "top"
+        for l in (reversed(self.layers) if up else self.layers):
+            if l.die:
+                bulk = [("bulk", l.bulk_um / l.n_sub)] * l.n_sub
+                src = [("src", l.source_um)]
+                parts = src + bulk if (l.source_side == "bottom") == up else bulk + src
+            else:
+                parts = [("", l.thickness_um / l.n_sub)] * l.n_sub
+            for kind, th in parts:
+                yield l, kind, th
+
     def validate(self):
-        assert self.layers, "stack has no layers"
-        assert self.dies, "stack has no die"
-        assert self.sink_side in ("top", "bottom"), "heat_sink side must be top or bottom"
+        _need(self.layers, "stack has no layers")
+        _need(self.dies, "stack has no die")
+        _need(self.sink_side in ("top", "bottom"), "heat_sink side must be top or bottom")
         nx, ny = self.grid
         for l in self.layers:
-            assert l.material in self.materials, f"layer {l.name}: unknown material {l.material}"
-            assert l.thickness_um > 0, f"layer {l.name}: thickness must be > 0"
-            assert l.n_sub >= 1, f"layer {l.name}: n_sub must be >= 1"
+            _need(l.material in self.materials, f"layer {l.name}: unknown material {l.material}")
+            _need(l.thickness_um > 0, f"layer {l.name}: thickness must be > 0")
+            _need(l.n_sub >= 1, f"layer {l.name}: n_sub must be >= 1")
             if l.die:
-                assert 0 < l.source_um < l.thickness_um, f"die {l.name}: need 0 < source_um < thickness_um"
-                assert l.source_side in ("bottom", "top"), f"die {l.name}: source_side must be bottom or top"
+                _need(0 < l.source_um < l.thickness_um, f"die {l.name}: need 0 < source_um < thickness_um")
+                _need(l.source_side in ("bottom", "top"), f"die {l.name}: source_side must be bottom or top")
             seen = np.zeros((ny, nx), bool)
             for r in l.regions:
-                assert r.material in self.materials, f"layer {l.name}: unknown region material {r.material}"
+                _need(r.material in self.materials, f"layer {l.name}: unknown region material {r.material}")
                 j0, j1, i0, i1 = self.cells(r.rect_um)
-                assert 0 <= j0 < j1 <= nx and 0 <= i0 < i1 <= ny, f"layer {l.name}: region {r.rect_um} outside the footprint"
-                assert not seen[i0:i1, j0:j1].any(), f"layer {l.name}: regions overlap at {r.rect_um}"
+                _need(0 <= j0 < j1 <= nx and 0 <= i0 < i1 <= ny, f"layer {l.name}: region {r.rect_um} outside the footprint")
+                _need(not seen[i0:i1, j0:j1].any(), f"layer {l.name}: regions overlap at {r.rect_um}")
                 seen[i0:i1, j0:j1] = True
         names = [l.name for l in self.layers]
-        assert len(set(names)) == len(names), "layer names must be unique"
+        _need(len(set(names)) == len(names), "layer names must be unique")
         return self
+
+
+def _need(ok, msg):
+    if not ok:
+        raise ValueError(msg)
 
 
 def load(path):

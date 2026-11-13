@@ -78,3 +78,8 @@ def test_critical_scale_refuses_a_bad_bracket():
     c_crit = runaway.critical_scale_1tile(r, dyn, 1.0, A, Tamb)
     with pytest.raises(RuntimeError, match="bracket"):
         runaway.critical_scale(np.array([[r]]), np.array([dyn]), lambda s: leak(s * c_crit), Tamb, lo=2.0, hi=10.0)
+
+
+def test_critical_scale_refuses_a_bad_bracket():
+    with pytest.raises(ValueError, match="lo < hi"):
+        runaway.critical_scale(np.eye(1), np.ones(1), None, 300.0, lo=10.0, hi=0.1)

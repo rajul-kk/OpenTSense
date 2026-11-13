@@ -34,8 +34,7 @@ def run_3dice(stack, power, workdir, timeout=7200, transient=None):
 
 
 def read_pact(path, nx, ny):
-    # PACT grid row r is 3D-ICE row ny-1-r (point-source check in exploratory gate G47)
-    return np.loadtxt(path, delimiter=",", ndmin=2)[:, -1].reshape(ny, nx)[::-1]
+    return to_pact.rows(np.loadtxt(path, delimiter=",", ndmin=2)[:, -1].reshape(ny, nx))
 
 
 def run_pact(stack, power, workdir, timeout=7200, capture=False, return_src=False):
