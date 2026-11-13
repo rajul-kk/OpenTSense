@@ -19,3 +19,4 @@ gates/g81a/dry/underscore/
 gates/*/ext/
 docker/*.log
 docs/built/
+gates/g95/dry/*/*/operator/

@@ -62,3 +62,31 @@
 ## Student decision (12 Nov 2026)
 
 Bars (a) and (b) accepted as proposed (delta = 0.001; rho at the last converged f >= 0.97). Bar (c) is gated on rho_hot (the Jacobian at the converged temperature), with A against 1/(1 - rho_cold) reported only. Bar numbers still follow the noise-floor rule of `plan.md` 2.1 where it applies.
+
+## Dry sweep on G92e's designs (13 Nov 2026, `dry/run_sweep.sh`, output `dry/sweep/`, log `dry/sweep.log`)
+
+(Superseded after the code review by `dry/pilot300/`, same cases, with A's baseline at the ambient; the first
+run's output was replaced. Bar (c) at f <= 0.8 on the new A: worst 7.1% / 20.3% / 11.7% (IHP / RVT / LVT); f = 0.9 up
+to 30.5%. The numbers below are the first run's, with A_25C. Registration: `registration.md`.)
+
+Every window's nominal case reproduced G92e's recorded peak (to 1e-6 K) before the sweep ran. All 12 windows (3 kits
+x 4 windows), T_amb = 300 K:
+
+| Kit | runaway at leakage x (1/f_nominal) | status over f grid | rho at the last converged bisection point | rho_hot at f = 0.999 (sqrt law 0.955) |
+|---|---|---|---|---|
+| IHP | 33,000-33,200 | C C C C C C R R R R (0.5 ... 0.999 converge, 1.001 ... 1.5 run away) | 0.989-0.991 | 0.952 |
+| ASAP7 RVT | 176-197 | same | 0.992-0.998 | 0.956-0.957 |
+| ASAP7 LVT | 23-26 | same | 0.989-0.999 | 0.955-0.957 |
+
+- Newton: at most 10 steps; 20 classifications per bisection. Picard (1e5 iterations) converged on every converged
+  point and agrees with Newton to 2.2e-9 K. Every Newton step monotone except on IHP (all four windows), not gated.
+- So bars (a) (delta 0.001) and (b) (>= 0.97) hold on every window.
+- Amplification A against 1/(1 - rho_hot), worst window per kit: f = 0.5: within 3%; f = 0.8: within 8% (IHP), 21%
+  (RVT), 9% (LVT); f = 0.9: 17% (IHP), 26% (RVT), 28% (LVT); f >= 0.95 off by 1.5x to 8x. 1/(1 - rho_cold) under-predicts
+  everywhere above f = 0.5 (A 2.9-3.1 at f = 0.999 against 1.1-1.4).
+- Memory: the case builder's operator basis (`np.eye(NT)[k]` per tile, copied from G92e) held NT identity matrices
+  (about 8.6 GB at 1,024 tiles) and was OOM-killed under a 2 GB cap; the sweep now takes rows of one matrix (same
+  values). G92e's evaluate.py has the same line (frozen).
+- **Issue for registration:** the sweep is deterministic and these are the cases a registered run would use, so the
+  dry run is already the result on them. Bars (a) and (b) were fixed (12 Nov) before it; bar (c)'s gated region
+  would be chosen after it.
