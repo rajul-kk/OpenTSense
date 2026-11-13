@@ -63,3 +63,18 @@ def test_rho_at_the_fixed_point_follows_the_saddle_node_law(frac):
     exact = r * c * A * np.exp(A * (out.T[0] - 273.15))
     assert out.rho == pytest.approx(exact, rel=1e-6)
     assert out.rho - np.log(out.rho) == pytest.approx(1 - np.log(frac), rel=1e-9)
+
+
+def test_critical_scale_finds_the_analytic_boundary():
+    r, dyn, Tamb = 20.0, 1.0, 318.15
+    c_crit = runaway.critical_scale_1tile(r, dyn, 1.0, A, Tamb)
+    lo, hi, n = runaway.critical_scale(np.array([[r]]), np.array([dyn]), lambda s: leak(s * c_crit), Tamb,
+                                       lo=0.1, hi=10.0, rtol=1e-4, max_it=400)
+    assert lo <= 1.0 <= hi * (1 + 1e-9) and hi / lo - 1 <= 1e-4 and n < 40
+
+
+def test_critical_scale_refuses_a_bad_bracket():
+    r, dyn, Tamb = 20.0, 1.0, 318.15
+    c_crit = runaway.critical_scale_1tile(r, dyn, 1.0, A, Tamb)
+    with pytest.raises(RuntimeError, match="bracket"):
+        runaway.critical_scale(np.array([[r]]), np.array([dyn]), lambda s: leak(s * c_crit), Tamb, lo=2.0, hi=10.0)

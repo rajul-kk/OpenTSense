@@ -25,6 +25,15 @@
     piecewise-quadratic leakage fit, used to prevent runaway. Neither treats stacked dies, a spectral-radius test
     along Newton, or the square-root distance law, as far as the abstracts and Bhat's text up to Thm 4.2 show;
     their full texts must be read before any claim.
+  - **Several tiles (12 Nov, `gates/g95/sweep.py` on a synthetic 3-tile, 60-instance case):** the square-root
+    scaling holds, but the constant √2 is exact only when every instance has the same temperature exponent.
+    (1 − ρ)/√(1 − f) at f = 0.999: 1.431 with one exponent (0.03/K; √2 = 1.414), 1.447 with exponents spread over
+    0.01 to 0.06/K, 1.512 over 0.005 to 0.1/K. So "1 − ρ ≈ √(2(1 − f))" is a rule of thumb on real tables, and
+    the gate should report the fitted constant per design rather than assume √2. On that case Newton and a
+    10⁵-iteration Picard agree to round-off on every converged point, every step was monotone, and ρ at the last
+    converged bisection point was 0.990 (bar (b)'s bound 0.98).
+  - The sweep's resolution in f is the bisection tolerance: with rtol 1e-4 on s*, points closer than about 1e-4 to
+    the boundary are not resolved (f = 0.9999 gave a meaningless ratio).
   - 1/(1 − ρ) at the fixed point is not a predictor of amplification near the boundary: f = 0.99 gives 7.4 against a
     measured 2.5; f = 0.999 gives 22.7 against 2.8. G74's 1/(1 − ρ) agreed only because A ≤ 1.05 there.
   - Newton classifies f = 0.5 to 0.999 in 5 to 10 steps; a 40-iteration Picard (G74's cap) calls f ≥ 0.9
@@ -44,4 +53,8 @@
   is not convex across a knot; `classify` reports whether every Newton step was monotone). (b) or (c): ρ is a
   classifier but not a distance, and the report should quote the leakage margin f instead.
 - **Not claimed.** Transient runaway (needs G94); k(T) operators beyond G74's cases; process corners other than G92e's.
-- **Effort.** About one day after G92e: case builder from G92e's run, the sweep, and the scorer.
+- **Code (12 Nov).** `runaway.critical_scale` (bisection in log scale on Newton's status; refuses a bad bracket or
+  a not-converged probe; 2 unit tests against the analytic boundary) and `gates/g95/sweep.py` (G92e's case
+  construction copied, so G92e's files stay untouched; runs in the image because the operator comes from PACT).
+- **Effort.** After G92e: run the sweep per kit (minutes; the operator build dominates), then write the scorer once
+  the bars are fixed.

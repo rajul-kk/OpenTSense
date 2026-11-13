@@ -63,3 +63,26 @@ def critical_scale_1tile(r_KW, dyn_W, c_W, a_perK, T_amb_K):
     curve). Returns that largest c."""
     Tc = T_amb_K + r_KW * dyn_W + 1.0 / a_perK
     return np.exp(-a_perK * (Tc - 273.15)) / (r_KW * a_perK)
+
+
+def critical_scale(R, dyn, make_leak, T_amb, lo=1e-3, hi=1e3, rtol=1e-4, **kw):
+    """Largest leakage scale s with a stable fixed point, by bisection in log s on `classify`'s status.
+    make_leak(s) -> LeakModel with every instance's leakage times s. Needs classify(lo) converged and classify(hi)
+    runaway. Returns (s_lo, s_hi, n_classified): s_lo converged, s_hi runaway, s_hi / s_lo - 1 <= rtol.
+    Raises RuntimeError if the bracket is wrong or any probe is not converged (the boundary is then not located)."""
+    def status(s):
+        st = classify(R, dyn, make_leak(s), T_amb, **kw).status
+        if st == "not_converged":
+            raise RuntimeError(f"scale {s:.6g}: not converged; raise max_it")
+        return st
+    if status(lo) != "converged" or status(hi) != "runaway":
+        raise RuntimeError(f"bracket [{lo:g}, {hi:g}] does not contain the boundary")
+    n = 2
+    while hi / lo - 1 > rtol:
+        mid = np.sqrt(lo * hi)
+        if status(mid) == "converged":
+            lo = mid
+        else:
+            hi = mid
+        n += 1
+    return lo, hi, n
