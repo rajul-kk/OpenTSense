@@ -1,0 +1,83 @@
+OpenROAD unknown 
+Features included (+) or not (-): -GPU +GUI -Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0012] Hierarchical flow (-hier) is currently in development and may cause multiple issues. Do not use in production environments.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock vclk_core_clock can not be propagated.
+REG2REG max:
+max_delay/setup group core_clock
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+gen_regfile_ff.register_file_i.rf_reg[408]$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R) 1550.90 1529.48   21.41 (MET)
+gen_regfile_ff.register_file_i.rf_reg[536]$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R) 1551.01 1529.43   21.58 (MET)
+gen_regfile_ff.register_file_i.rf_reg[376]$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R) 1549.03 1527.02   22.01 (MET)
+gen_regfile_ff.register_file_i.rf_reg[88]$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R) 1549.84 1527.68   22.16 (MET)
+gen_regfile_ff.register_file_i.rf_reg[440]$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R) 1551.86 1528.70   23.16 (MET)
+
+REG2REG min:
+min_delay/hold group core_clock
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+if_stage_i.gen_prefetch_buffer.prefetch_buffer_i.fifo_i.rdata_q[6]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)  177.90  230.31   52.41 (MET)
+if_stage_i.gen_prefetch_buffer.prefetch_buffer_i.fifo_i.rdata_q[10]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)  175.13  227.61   52.48 (MET)
+if_stage_i.gen_prefetch_buffer.prefetch_buffer_i.fifo_i.rdata_q[3]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)  175.64  228.16   52.52 (MET)
+if_stage_i.gen_prefetch_buffer.prefetch_buffer_i.fifo_i.rdata_q[13]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)  177.74  230.42   52.68 (MET)
+if_stage_i.gen_prefetch_buffer.prefetch_buffer_i.fifo_i.rdata_q[8]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)  175.70  228.45   52.76 (MET)
+
+I/O and all paths:
+max_delay/setup group asynchronous
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+gen_regfile_ff.register_file_i.rf_reg[656]$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R) 1577.48  873.49  703.99 (MET)
+gen_regfile_ff.register_file_i.rf_reg[749]$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R) 1578.00  873.84  704.15 (MET)
+gen_regfile_ff.register_file_i.rf_reg[717]$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R) 1577.55  873.39  704.16 (MET)
+gen_regfile_ff.register_file_i.rf_reg[845]$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R) 1578.08  873.89  704.19 (MET)
+gen_regfile_ff.register_file_i.rf_reg[1005]$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R) 1577.94  873.55  704.39 (MET)
+
+max_delay/setup group gated clock
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+_22114_/B (AND2x2_ASAP7_75t_R)       1443.16  943.41  499.75 (MET)
+
+max_delay/setup group core_clock
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+gen_regfile_ff.register_file_i.rf_reg[408]$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R) 1550.90 1529.48   21.41 (MET)
+gen_regfile_ff.register_file_i.rf_reg[536]$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R) 1551.01 1529.43   21.58 (MET)
+gen_regfile_ff.register_file_i.rf_reg[376]$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R) 1549.03 1527.02   22.01 (MET)
+gen_regfile_ff.register_file_i.rf_reg[88]$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R) 1549.84 1527.68   22.16 (MET)
+gen_regfile_ff.register_file_i.rf_reg[440]$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R) 1551.86 1528.70   23.16 (MET)
+
+max_delay/setup group vclk_core_clock
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+instr_addr_o[27] (output)            1281.78 1261.78   19.99 (MET)
+instr_addr_o[23] (output)            1281.78 1246.02   35.75 (MET)
+instr_addr_o[24] (output)            1281.78 1243.88   37.89 (MET)
+instr_addr_o[26] (output)            1281.78 1243.07   38.71 (MET)
+instr_addr_o[29] (output)            1281.78 1242.09   39.68 (MET)
+
+tns max 0.00
+wns max 0.00

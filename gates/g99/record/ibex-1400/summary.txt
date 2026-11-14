@@ -1,0 +1,3 @@
+ibex 1400 flow_rc=2 extract_rc=-1 total_s=1
+ibex 1400 flow_rc=2 extract_rc=-1 total_s=481
+ibex 1400 flow_rc=0 extract_rc=0 flow_s=569 total_s=593 
