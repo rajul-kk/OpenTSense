@@ -46,6 +46,25 @@
   at the higher dynamic power, so they are conservative (hotter, smaller margins); estimator results (RQ2) depend on
   the power pattern more than on its level. To decide: state it and rescale, or re-close timing (see goals.md).
 
+- **Route (b) runs (14 Nov, old Ibex layout, kernel k0, 1.4 ns clock):**
+
+  | Run | Checksum | Done at cycle |
+  |---|---|---|
+  | zero-delay netlist (reference) | 00031a38 | 14,900 |
+  | delay netlist, testbench inputs on the ideal edge | 00000000, never finishes | - |
+  | rewritten netlist with all delays set to zero (structure check) | 00031a38 | 14,900 |
+  | delay netlist, inputs at the SDC's time (clock latency 161.8 + input delay 180 = 341.8 ps) | 00031a38 | 14,901 |
+
+  Cause: the testbench changed the core's inputs on the ideal clock edge, while the core's flops see the clock 162 ps
+  later through the clock tree, so they captured the next cycle's inputs (a hold race at the boundary that zero-delay
+  simulation hides). The SDC already says inputs change 341.8 ps after the edge; the testbenches now take that as
+  `+in_ps=` (and the clock as `+half_ps=`), defaults unchanged. The one-cycle shift is reset now landing after the
+  delayed edge. Compile and run cost: 270 s for 16,000 cycles at 1.5 GB cap.
+  Defaults unchanged (checked 14 Nov, old against new testbench, Ibex k0 700 cycles and TPU W1): every signal has the
+  same value sequence at every timestamp and the TPU result rows are identical; only the order of different signals
+  within a timestamp differs (the delayed-copy selector adds a delta cycle), which a VCD reader does not use. Verilator
+  `--lint-only --timing` as G81 builds it: same warnings as before.
+
 ## Proposed bars (to fix after route (b)'s dry run on one window)
 
 - (v) Both runs reproduce the window's checksum; route (b)'s delays equal OpenSTA's arc delays (spot check).
