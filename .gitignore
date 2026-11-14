@@ -20,3 +20,5 @@ gates/*/ext/
 docker/*.log
 docs/built/
 gates/g95/dry/*/*/operator/
+gates/g96/dry/*.sdf
+gates/g96/dry/*_delay.v
