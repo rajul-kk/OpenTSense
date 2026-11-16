@@ -1,0 +1,84 @@
+OpenROAD unknown 
+Features included (+) or not (-): -GPU +GUI -Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_SLVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock vclk_core can not be propagated.
+REG2REG max:
+max_delay/setup group core_clock
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+u_array.g_pe_row[3].g_pe_col[5].u_pe.psum_south[31]$_SDFFE_PP0N_/D (DFFHQNx1_ASAP7_75t_SL)  921.34  916.41    4.93 (MET)
+u_array.g_pe_row[3].g_pe_col[0].u_pe.psum_south[28]$_SDFFE_PP0N_/D (DFFHQNx1_ASAP7_75t_SL)  917.27  908.71    8.56 (MET)
+u_array.g_pe_row[3].g_pe_col[0].u_pe.psum_south[30]$_SDFFE_PP0N_/D (DFFHQNx1_ASAP7_75t_SL)  916.17  907.42    8.75 (MET)
+u_array.g_pe_row[3].g_pe_col[1].u_pe.psum_south[30]$_SDFFE_PP0N_/D (DFFHQNx1_ASAP7_75t_SL)  914.35  904.76    9.60 (MET)
+u_array.g_pe_row[4].g_pe_col[0].u_pe.psum_south[27]$_SDFFE_PP0N_/D (DFFHQNx1_ASAP7_75t_SL)  919.32  909.32   10.00 (MET)
+
+REG2REG min:
+min_delay/hold group core_clock
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+u_array.g_pe_row[7].g_pe_col[5].u_pe.psum_south[18]$_SDFFE_PP0N_/D (DFFHQNx1_ASAP7_75t_SL)  135.20  166.50   31.30 (MET)
+u_array.g_pe_row[7].g_pe_col[6].u_pe.psum_south[26]$_SDFFE_PP0N_/D (DFFHQNx1_ASAP7_75t_SL)  136.67  168.14   31.47 (MET)
+u_array.g_pe_row[7].g_pe_col[1].u_pe.psum_south[19]$_SDFFE_PP0N_/D (DFFHQNx1_ASAP7_75t_SL)  138.83  170.60   31.78 (MET)
+u_array.g_pe_row[7].g_pe_col[5].u_pe.psum_south[27]$_SDFFE_PP0N_/D (DFFHQNx1_ASAP7_75t_SL)  135.50  168.80   33.31 (MET)
+u_array.g_pe_row[4].g_pe_col[2].u_pe.psum_south[31]$_SDFFE_PP0N_/D (DFFHQNx1_ASAP7_75t_SL)  131.25  165.29   34.04 (MET)
+
+I/O and all paths:
+max_delay/setup group core_clock
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+u_array.g_pe_row[3].g_pe_col[5].u_pe.psum_south[31]$_SDFFE_PP0N_/D (DFFHQNx1_ASAP7_75t_SL)  921.34  916.41    4.93 (MET)
+u_array.g_pe_row[3].g_pe_col[0].u_pe.psum_south[28]$_SDFFE_PP0N_/D (DFFHQNx1_ASAP7_75t_SL)  917.27  908.71    8.56 (MET)
+u_array.g_pe_row[3].g_pe_col[0].u_pe.psum_south[30]$_SDFFE_PP0N_/D (DFFHQNx1_ASAP7_75t_SL)  916.17  907.42    8.75 (MET)
+u_array.g_pe_row[3].g_pe_col[1].u_pe.psum_south[30]$_SDFFE_PP0N_/D (DFFHQNx1_ASAP7_75t_SL)  914.35  904.76    9.60 (MET)
+u_array.g_pe_row[4].g_pe_col[0].u_pe.psum_south[27]$_SDFFE_PP0N_/D (DFFHQNx1_ASAP7_75t_SL)  919.32  909.32   10.00 (MET)
+
+max_delay/setup group vclk_core
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+c_data[243] (output)                  640.00  219.41  420.59 (MET)
+c_data[250] (output)                  640.00  214.02  425.98 (MET)
+c_data[190] (output)                  640.00  213.18  426.82 (MET)
+c_data[246] (output)                  640.00  213.04  426.96 (MET)
+c_data[238] (output)                  640.00  212.93  427.07 (MET)
+
+tns max 0.00
+wns max 0.00

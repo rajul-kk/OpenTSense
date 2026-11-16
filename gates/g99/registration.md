@@ -66,3 +66,11 @@ fallback applies to setup only (hold was listed by mistake: a slower clock canno
 arguments, writes a summary row on every exit and has a 4 h timeout; inst_loc.csv and power come from the package's
 `opentsense/power/extract.tcl` (with `OUT_DIR`), not an older copy; `launch.sh` copies both into the build folder so
 what ran is what is in the repo. No bar changed.
+
+## Correction, TPU resources (16 Nov; written after the TPU run finished and its finish report had been read)
+
+The TPU run was stopped twice for laptop RAM (15 Nov): once by the host's low-memory clean-up and once by a 1 GB
+free-RAM watchdog, both in detailed routing, at 6.1 GB and rising with all 12 threads. The run that finished used a
+4.5 GB container cap and `NUM_CORES=4` (routing threads) instead of 7.5 GB and all threads, and resumed from the
+finished global-routing stage (`make` keeps finished stages). Resources only: same RTL, config, corner, clock and
+bars. Detailed routing is expected not to depend on the thread count; that is not verified here.
