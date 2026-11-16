@@ -5,13 +5,12 @@ Usage: python gates/g72/sim.py <run dir> <build dir> [ibex windows] [tpu windows
 """
 import json
 import os
-import re
 import subprocess
 import sys
 import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
-from opentsense.power import asap7_models, workloads  # noqa: E402
+from opentsense.power import asap7_models, sdc, workloads  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TB = os.path.join(HERE, "..", "..", "opentsense", "power", "tb")
@@ -24,11 +23,7 @@ IBEX_MAX = {0: 30000, 1: 30000, 2: 30000, 3: 30000, 4: 2600}
 
 def half_ps(d, build):
     """Half the design's own SDC clock period (ps): the testbench clock matches the layout's (900 -> 450, 200 -> 100)."""
-    sdc = open(os.path.join(build, os.path.dirname(NETLIST[d]), "6_final.sdc")).read()
-    period = float(re.search(r"create_clock .*?-period (\S+)", sdc).group(1))
-    if period % 2:
-        raise ValueError(f"{d}: clock period {period} ps is not an even number of ps")
-    return int(period // 2)
+    return sdc.half_ps(os.path.join(build, os.path.dirname(NETLIST[d]), "6_final.sdc"))
 
 
 def compile_design(d, run, build):
