@@ -1,0 +1,53 @@
+{
+ "design": "ibex-1400",
+ "setup_reg2reg_ps": 21.41,
+ "hold_reg2reg_ps": 52.41,
+ "wns_tns_zero": true,
+ "drc_violations": 0,
+ "lec": "identical",
+ "windows": {
+  "ibex_k0": {
+   "rc": 0,
+   "wall_s": 587.1,
+   "checksum": "00031a38",
+   "done": 1,
+   "done_cycle": 14900,
+   "cycles": 30000,
+   "expected": "00031a38"
+  },
+  "ibex_k1": {
+   "rc": 0,
+   "wall_s": 653.1,
+   "checksum": "e89a564e",
+   "done": 1,
+   "done_cycle": 26455,
+   "cycles": 30000,
+   "expected": "e89a564e"
+  },
+  "ibex_k2": {
+   "rc": 0,
+   "wall_s": 653.1,
+   "checksum": "0230e831",
+   "done": 1,
+   "done_cycle": 27295,
+   "cycles": 30000,
+   "expected": "0230e831"
+  },
+  "ibex_k3": {
+   "rc": 0,
+   "wall_s": 653.1,
+   "checksum": "00001d1e",
+   "done": 1,
+   "done_cycle": 9624,
+   "cycles": 30000,
+   "expected": "00001d1e"
+  }
+ },
+ "windows_match": {
+  "ibex_k0": true,
+  "ibex_k1": true,
+  "ibex_k2": true,
+  "ibex_k3": true
+ },
+ "pass": true
+}

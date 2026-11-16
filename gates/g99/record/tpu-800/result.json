@@ -1,0 +1,34 @@
+{
+ "design": "tpu-800",
+ "setup_reg2reg_ps": 4.93,
+ "hold_reg2reg_ps": 31.3,
+ "wns_tns_zero": true,
+ "drc_violations": 0,
+ "lec": "not run",
+ "windows": {
+  "tpu_W1": {
+   "rc": 0,
+   "wall_s": 121.8,
+   "rows": 616,
+   "rows_match": 616
+  },
+  "tpu_W2": {
+   "rc": 0,
+   "wall_s": 121.8,
+   "rows": 616,
+   "rows_match": 616
+  },
+  "tpu_W3": {
+   "rc": 0,
+   "wall_s": 121.8,
+   "rows": 0,
+   "rows_match": 0
+  }
+ },
+ "windows_match": {
+  "tpu_W1": true,
+  "tpu_W2": true,
+  "tpu_W3": true
+ },
+ "pass": true
+}

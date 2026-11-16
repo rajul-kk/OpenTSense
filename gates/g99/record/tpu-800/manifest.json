@@ -1,0 +1,36 @@
+{
+  "time_utc": "2026-11-15T17:17:28+00:00",
+  "host": "Rajul",
+  "python": "3.10.0",
+  "repo": {
+    "commit": "628de24b4b8e2166bfb732ac5476e2db01bf542e",
+    "dirty": true
+  },
+  "image": null,
+  "orfs_image": "openroad/orfs@sha256:55266bc72fd67238407fa0c60da5a7f83c25ea14123829df769437d0dd0649ed",
+  "tools": {
+    "iverilog": null,
+    "verilator": null,
+    "ngspice": null,
+    "3dice_commit": "cat: /opt/3d-ice/COMMIT: No such file or directory",
+    "superlu_mt_commit": "fatal: cannot change to '/opt/3d-ice/superlu_mt-4.0.0': No such file or directory",
+    "pact_commit": "cat: /opt/pact/COMMIT: No such file or directory",
+    "spice_models_checksum": "cat: /opt/spice/CHECKSUM: No such file or directory",
+    "ca_certificates": null
+  },
+  "packages": {
+    "numpy": "2.2.6",
+    "scipy": "1.15.3",
+    "pandas": "2.3.3",
+    "PyYAML": "6.0.3",
+    "pytest": "9.0.2"
+  },
+  "layout_sha256": [
+    "1adf7c32b3483335e40868b44eec8b41278ab32c61a467bb1dc1261e896b01d8 *6_final.v",
+    "8a281bf9d37457b1627f5c36392e4ccd7b90c79704b8100fdea015c642e9b141 *6_final.odb",
+    "476f0cba5263988bfb20b4893cd7b9c0df525d67ade6f8a4f51ffe6a3a647085 *6_final.sdc",
+    "2df645dd01af0a6555bd835adf5b94e4a1362807f2ba7d549d9d0f4a20f3a0af *6_final.spef",
+    ""
+  ],
+  "from": "recorded reports in this folder; run by launch.sh and bar4.sh"
+}
