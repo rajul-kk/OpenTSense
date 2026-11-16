@@ -1,0 +1,290 @@
+{
+ "windows": {
+  "k0": {
+   "sta_total_W": 0.00444693258,
+   "g100_total_W": 0.00444693258,
+   "psm": {
+    "VDD FULL": {
+     "total_W": 0.00445,
+     "supply_V": 0.7
+    },
+    "VDD BUMPS": {
+     "total_W": 0.00445,
+     "supply_V": 0.7
+    },
+    "VSS FULL": {
+     "total_W": 0.00445,
+     "supply_V": 0.0
+    },
+    "VSS BUMPS": {
+     "total_W": 0.00445,
+     "supply_V": 0.0
+    }
+   },
+   "FULL": {
+    "worst_vdd_drop_mV": 1.3719999999999288,
+    "worst_vss_rise_mV": 1.2409999999999999,
+    "worst_squeeze_mV": 2.400999999999964,
+    "worst_tile_squeeze_mV": 2.400999999999964,
+    "worst_vdd_drop_share_of_vdd": 0.0019599999999998985,
+    "worst_vss_rise_share_of_vdd": 0.0017728571428571429,
+    "worst_squeeze_share_of_vdd": 0.0034299999999999487,
+    "worst_tile_squeeze_share_of_vdd": 0.0034299999999999487,
+    "mean_squeeze_mV": 0.3953318373703396,
+    "spearman_squeeze_vs_power": 0.8242253637360674,
+    "covered": true
+   },
+   "BUMPS": {
+    "worst_vdd_drop_mV": 1.3719999999999288,
+    "worst_vss_rise_mV": 1.2409999999999999,
+    "worst_squeeze_mV": 2.400999999999964,
+    "worst_tile_squeeze_mV": 2.400999999999964,
+    "worst_vdd_drop_share_of_vdd": 0.0019599999999998985,
+    "worst_vss_rise_share_of_vdd": 0.0017728571428571429,
+    "worst_squeeze_share_of_vdd": 0.0034299999999999487,
+    "worst_tile_squeeze_share_of_vdd": 0.0034299999999999487,
+    "mean_squeeze_mV": 0.3953318373703396,
+    "spearman_squeeze_vs_power": 0.8242253637360674,
+    "covered": true
+   },
+   "valid": {
+    "V1_grid": true,
+    "V2_power": true,
+    "V3_psm_power": true,
+    "V4_covered": true,
+    "supply_is_vdd": true
+   },
+   "matters": false
+  },
+  "k1": {
+   "sta_total_W": 0.00481579732,
+   "g100_total_W": 0.00481579732,
+   "psm": {
+    "VDD FULL": {
+     "total_W": 0.00482,
+     "supply_V": 0.7
+    },
+    "VDD BUMPS": {
+     "total_W": 0.00482,
+     "supply_V": 0.7
+    },
+    "VSS FULL": {
+     "total_W": 0.00482,
+     "supply_V": 0.0
+    },
+    "VSS BUMPS": {
+     "total_W": 0.00482,
+     "supply_V": 0.0
+    }
+   },
+   "FULL": {
+    "worst_vdd_drop_mV": 1.2889999999999846,
+    "worst_vss_rise_mV": 1.303,
+    "worst_squeeze_mV": 2.549999999999998,
+    "worst_tile_squeeze_mV": 2.549999999999998,
+    "worst_vdd_drop_share_of_vdd": 0.0018414285714285496,
+    "worst_vss_rise_share_of_vdd": 0.0018614285714285714,
+    "worst_squeeze_share_of_vdd": 0.0036428571428571404,
+    "worst_tile_squeeze_share_of_vdd": 0.0036428571428571404,
+    "mean_squeeze_mV": 0.4302387802778359,
+    "spearman_squeeze_vs_power": 0.8370893311010725,
+    "covered": true
+   },
+   "BUMPS": {
+    "worst_vdd_drop_mV": 1.2889999999999846,
+    "worst_vss_rise_mV": 1.303,
+    "worst_squeeze_mV": 2.549999999999998,
+    "worst_tile_squeeze_mV": 2.549999999999998,
+    "worst_vdd_drop_share_of_vdd": 0.0018414285714285496,
+    "worst_vss_rise_share_of_vdd": 0.0018614285714285714,
+    "worst_squeeze_share_of_vdd": 0.0036428571428571404,
+    "worst_tile_squeeze_share_of_vdd": 0.0036428571428571404,
+    "mean_squeeze_mV": 0.4302387802778359,
+    "spearman_squeeze_vs_power": 0.8370893311010725,
+    "covered": true
+   },
+   "valid": {
+    "V1_grid": true,
+    "V2_power": true,
+    "V3_psm_power": true,
+    "V4_covered": true,
+    "supply_is_vdd": true
+   },
+   "matters": false
+  },
+  "k2": {
+   "sta_total_W": 0.00470176572,
+   "g100_total_W": 0.00470176572,
+   "psm": {
+    "VDD FULL": {
+     "total_W": 0.0047,
+     "supply_V": 0.7
+    },
+    "VDD BUMPS": {
+     "total_W": 0.0047,
+     "supply_V": 0.7
+    },
+    "VSS FULL": {
+     "total_W": 0.0047,
+     "supply_V": 0.0
+    },
+    "VSS BUMPS": {
+     "total_W": 0.0047,
+     "supply_V": 0.0
+    }
+   },
+   "FULL": {
+    "worst_vdd_drop_mV": 1.3299999999999423,
+    "worst_vss_rise_mV": 1.239,
+    "worst_squeeze_mV": 2.3839999999999515,
+    "worst_tile_squeeze_mV": 2.3839999999999515,
+    "worst_vdd_drop_share_of_vdd": 0.0018999999999999178,
+    "worst_vss_rise_share_of_vdd": 0.0017700000000000003,
+    "worst_squeeze_share_of_vdd": 0.003405714285714217,
+    "worst_tile_squeeze_share_of_vdd": 0.003405714285714217,
+    "mean_squeeze_mV": 0.4199256117053534,
+    "spearman_squeeze_vs_power": 0.8340122365544622,
+    "covered": true
+   },
+   "BUMPS": {
+    "worst_vdd_drop_mV": 1.3299999999999423,
+    "worst_vss_rise_mV": 1.239,
+    "worst_squeeze_mV": 2.3839999999999515,
+    "worst_tile_squeeze_mV": 2.3839999999999515,
+    "worst_vdd_drop_share_of_vdd": 0.0018999999999999178,
+    "worst_vss_rise_share_of_vdd": 0.0017700000000000003,
+    "worst_squeeze_share_of_vdd": 0.003405714285714217,
+    "worst_tile_squeeze_share_of_vdd": 0.003405714285714217,
+    "mean_squeeze_mV": 0.4199256117053534,
+    "spearman_squeeze_vs_power": 0.8340122365544622,
+    "covered": true
+   },
+   "valid": {
+    "V1_grid": true,
+    "V2_power": true,
+    "V3_psm_power": true,
+    "V4_covered": true,
+    "supply_is_vdd": true
+   },
+   "matters": false
+  },
+  "k3": {
+   "sta_total_W": 0.00439068396,
+   "g100_total_W": 0.00439068396,
+   "psm": {
+    "VDD FULL": {
+     "total_W": 0.00439,
+     "supply_V": 0.7
+    },
+    "VDD BUMPS": {
+     "total_W": 0.00439,
+     "supply_V": 0.7
+    },
+    "VSS FULL": {
+     "total_W": 0.00439,
+     "supply_V": 0.0
+    },
+    "VSS BUMPS": {
+     "total_W": 0.00439,
+     "supply_V": 0.0
+    }
+   },
+   "FULL": {
+    "worst_vdd_drop_mV": 1.4399999999999968,
+    "worst_vss_rise_mV": 1.2409999999999999,
+    "worst_squeeze_mV": 2.526999999999997,
+    "worst_tile_squeeze_mV": 2.526999999999997,
+    "worst_vdd_drop_share_of_vdd": 0.002057142857142853,
+    "worst_vss_rise_share_of_vdd": 0.0017728571428571429,
+    "worst_squeeze_share_of_vdd": 0.003609999999999996,
+    "worst_tile_squeeze_share_of_vdd": 0.003609999999999996,
+    "mean_squeeze_mV": 0.3898545637115835,
+    "spearman_squeeze_vs_power": 0.8231764843233693,
+    "covered": true
+   },
+   "BUMPS": {
+    "worst_vdd_drop_mV": 1.4399999999999968,
+    "worst_vss_rise_mV": 1.2409999999999999,
+    "worst_squeeze_mV": 2.526999999999997,
+    "worst_tile_squeeze_mV": 2.526999999999997,
+    "worst_vdd_drop_share_of_vdd": 0.002057142857142853,
+    "worst_vss_rise_share_of_vdd": 0.0017728571428571429,
+    "worst_squeeze_share_of_vdd": 0.003609999999999996,
+    "worst_tile_squeeze_share_of_vdd": 0.003609999999999996,
+    "mean_squeeze_mV": 0.3898545637115835,
+    "spearman_squeeze_vs_power": 0.8231764843233693,
+    "covered": true
+   },
+   "valid": {
+    "V1_grid": true,
+    "V2_power": true,
+    "V3_psm_power": true,
+    "V4_covered": true,
+    "supply_is_vdd": true
+   },
+   "matters": false
+  },
+  "k4": {
+   "sta_total_W": 0.0016920917,
+   "g100_total_W": 0.0016920917,
+   "psm": {
+    "VDD FULL": {
+     "total_W": 0.00169,
+     "supply_V": 0.7
+    },
+    "VDD BUMPS": {
+     "total_W": 0.00169,
+     "supply_V": 0.7
+    },
+    "VSS FULL": {
+     "total_W": 0.00169,
+     "supply_V": 0.0
+    },
+    "VSS BUMPS": {
+     "total_W": 0.00169,
+     "supply_V": 0.0
+    }
+   },
+   "FULL": {
+    "worst_vdd_drop_mV": 1.0059999999999514,
+    "worst_vss_rise_mV": 1.03,
+    "worst_squeeze_mV": 1.8849999999999514,
+    "worst_tile_squeeze_mV": 1.8849999999999514,
+    "worst_vdd_drop_share_of_vdd": 0.0014371428571427877,
+    "worst_vss_rise_share_of_vdd": 0.0014714285714285717,
+    "worst_squeeze_share_of_vdd": 0.0026928571428570737,
+    "worst_tile_squeeze_share_of_vdd": 0.0026928571428570737,
+    "mean_squeeze_mV": 0.1467241075453461,
+    "spearman_squeeze_vs_power": 0.7592928786141766,
+    "covered": true
+   },
+   "BUMPS": {
+    "worst_vdd_drop_mV": 1.0059999999999514,
+    "worst_vss_rise_mV": 1.03,
+    "worst_squeeze_mV": 1.8849999999999514,
+    "worst_tile_squeeze_mV": 1.8849999999999514,
+    "worst_vdd_drop_share_of_vdd": 0.0014371428571427877,
+    "worst_vss_rise_share_of_vdd": 0.0014714285714285717,
+    "worst_squeeze_share_of_vdd": 0.0026928571428570737,
+    "worst_tile_squeeze_share_of_vdd": 0.0026928571428570737,
+    "mean_squeeze_mV": 0.1467241075453461,
+    "spearman_squeeze_vs_power": 0.7592928786141766,
+    "covered": true
+   },
+   "valid": {
+    "V1_grid": true,
+    "V2_power": true,
+    "V3_psm_power": true,
+    "V4_covered": true,
+    "supply_is_vdd": true
+   },
+   "matters": false
+  }
+ },
+ "maps_differ_across_windows": true,
+ "valid": true,
+ "worst_tile_squeeze_mV": 2.549999999999998,
+ "worst_tile_squeeze_share_of_vdd": 0.0036428571428571404,
+ "threshold_mV": 17.5,
+ "decision": "nominal-VDD power maps stand; limit stated"
+}

@@ -1,0 +1,48 @@
+{
+  "time_utc": "2026-11-15T16:26:31+00:00",
+  "host": "Rajul",
+  "python": "3.10.0",
+  "repo": {
+    "commit": "628de24b4b8e2166bfb732ac5476e2db01bf542e",
+    "dirty": true
+  },
+  "image": null,
+  "orfs_image": "openroad/orfs@sha256:55266bc72fd67238407fa0c60da5a7f83c25ea14123829df769437d0dd0649ed",
+  "tools": {
+    "iverilog": null,
+    "verilator": null,
+    "ngspice": null,
+    "3dice_commit": "cat: /opt/3d-ice/COMMIT: No such file or directory",
+    "superlu_mt_commit": "fatal: cannot change to '/opt/3d-ice/superlu_mt-4.0.0': No such file or directory",
+    "pact_commit": "cat: /opt/pact/COMMIT: No such file or directory",
+    "spice_models_checksum": "cat: /opt/spice/CHECKSUM: No such file or directory",
+    "ca_certificates": null
+  },
+  "packages": {
+    "numpy": "2.2.6",
+    "scipy": "1.15.3",
+    "pandas": "2.3.3",
+    "PyYAML": "6.0.3",
+    "pytest": "9.0.2"
+  },
+  "gate": "G97",
+  "inputs_sha256": {
+    "gates/g97/registration.md": "1cb8f022f5381d1e2c901692391b6af6e0465fdbe09ffcdafb4be5a70621c54d",
+    "gates/g97/ir.tcl": "3f9d44e1a2ebe451c71faf516bf89ba7f2755930805adf4de37375771596a20a",
+    "gates/g97/run.sh": "b1deaf874bab566eac4c8bcda384be580c82930e4401826c64a11087abd4a783",
+    "gates/g97/evaluate.py": "4a5cb276c7b5d11636d27a397fe69b8db85ecd1db4939370b2f9c44bebfcd96a",
+    "gates/g96/dry/load_routed.tcl": "60fcbc899b7179038891cc8606dc8438d1a972cc1ef5a28329ef784f5526b6c4",
+    "opentsense/power/maps.py": "eb279e9e478824262aceddbd6bb26b8868c7b2b4d104a550d55ce25049fb2ce1",
+    "gates/g100/record/ibex-1400/result.json": "f2988c6171ffc2b3f0cb86be90b0d746c61a382e9ff219398cb3be3f22b2e268",
+    "gates/g100/runs/ibex-1400/maps.npz": "5e4001a12c2f1f72896c343037d32f8d90f6e6a64f6c4537ad335a00ada63be1",
+    "gates/g100/runs/ibex-1400/power/ibex_loc.csv": "83037296bd59fdeb163088cc7494f2b40cd3d0c5caec19b16a0a83bf70bd0c33",
+    "layout/6_final.odb": "8ceea97d0b61dda1b9e22051da047d9583c84d0d13467f7289fb949cd90593ef",
+    "layout/6_final.sdc": "c4628a32ac3498f37574021e95480d0ff463d72c65e7061f4f4a95d86c4346d0",
+    "layout/6_final.spef": "0ed9f49c46510b09b06dfd5cd2eb69976a37fa6491816e88ca06099d0b51b2f4",
+    "vcd/k0.vcd": "c9cdc73db3f4f799fd2a75fda1cfd0d9606aa74dbfd5e4aaf202a2d1c7704580",
+    "vcd/k1.vcd": "aea7d9951a93d85d1ed1ffe70140750ef2c5e9751934ba9582e784afd63b47ae",
+    "vcd/k2.vcd": "2bec595ddb457f56ee104dd80f020e48fe7722cdd953fba9e307a2e75b6c1819",
+    "vcd/k3.vcd": "53d05a3281c0e73b1b9001b2b266a585a3aa5af1261a40d7e66f51634eba9cf5",
+    "vcd/k4.vcd": "2c5c80a508fdd7b7d55dd0e2a2ddbb0e57d84d9a9d786d2171deb8dab1a3bc0a"
+  }
+}
