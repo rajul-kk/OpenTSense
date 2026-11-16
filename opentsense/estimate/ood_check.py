@@ -84,9 +84,10 @@ def run_loco(level, m=32, rank=64, noise=0.1, alpha=0.1, methods=LOCO_METHODS, r
         rest = rng.permutation(np.flatnonzero(lv.case != c))
         k = len(rest) // 10
         cal, idt, fit = rest[:k], rest[k:2 * k], rest[2 * k:]
-        seen = set(h[fit]) | set(h[cal])
+        fit_seen = set(h[fit])
+        seen = fit_seen | set(h[cal])
         te = np.array([i for i in np.flatnonzero(lv.case == c) if h[i] not in seen], int)
-        idt = np.array([i for i in idt if h[i] not in set(h[fit])], int)
+        idt = np.array([i for i in idt if h[i] not in fit_seen], int)
         model = GaussianField(rank=rank).fit(X[fit])
         fold = dict(n=dict(fit=len(fit), cal=len(cal), id=len(idt), held_out=len(te)), energy_kept=model.energy_kept)
         for meth in methods:
