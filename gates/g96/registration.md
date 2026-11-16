@@ -93,7 +93,7 @@ byte-identical to the one scored.
 virtual `vclk_*`), 0 when the SDC sets none, plus the largest input delay: what STA signed off. Ibex is unchanged
 (161.775 + 280 → 442 ps); TPU: 0 + 160 → 160 ps. Evidence (`dry/tpu_latency.log`, OpenSTA on G99's routed TPU, TT,
 propagated clock): clock insertion delay 117-156 ps; at 160 ps the input hold slack is +34.0 ps and the input setup
-slack at least +120.6 ps. Using the insertion delay instead (about 307 ps) would cut input setup slack to about
--26 ps, a violation STA never checked. The +34 ps is STA's min-delay margin; the simulation uses the delay
+slack at least +120.6 ps. Taking the insertion delay as the latency instead (about 147 ps, so inputs at about 307 ps) would cut input
+setup slack to about -26 ps, a violation STA never checked. The +34 ps is STA's min-delay margin; the simulation uses the delay
 netlist's own arcs (registration above), so its margin can differ. A race at 160 ps would show as a failure of bar
 (a) (W1's 616 rows); it is then traced to this choice before anything else is concluded.
