@@ -33,19 +33,21 @@ def read_annotation(path):
     return (int(a.group(1)), int(u.group(1))) if a and u else None
 
 
-def tile_map(inst, box, pos, grid, col=3):
-    """Sum column `col` of each instance into a (ny, nx) map; row i = y index from the die's lower edge.
-    Instances without a location (hierarchical modules, whose children are listed and placed) are skipped and counted."""
+def tile_index(xy, box, grid):
+    """(row, column) of a point on a (ny, nx) grid over the die; row = y index from the die's lower edge."""
     nx, ny = grid
     x0, y0, x1, y1 = box
-    M = np.zeros((ny, nx))
+    return min(ny - 1, int((xy[1] - y0) / (y1 - y0) * ny)), min(nx - 1, int((xy[0] - x0) / (x1 - x0) * nx))
+
+
+def tile_map(inst, box, pos, grid, col=3):
+    """Sum column `col` of each instance into a (ny, nx) map (rows from the die's lower edge).
+    Instances without a location (hierarchical modules, whose children are listed and placed) are skipped and counted."""
+    M = np.zeros((grid[1], grid[0]))
     missing = 0
     for n, v in inst.items():
         if n not in pos:
             missing += 1
             continue
-        x, y = pos[n]
-        i = min(ny - 1, int((y - y0) / (y1 - y0) * ny))
-        j = min(nx - 1, int((x - x0) / (x1 - x0) * nx))
-        M[i, j] += v[col]
+        M[tile_index(pos[n], box, grid)] += v[col]
     return M, missing
