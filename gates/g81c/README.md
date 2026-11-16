@@ -8,7 +8,7 @@ Registration: `registration.md` (bars fixed before any run; no amendments). Code
 | Dry run 1 | `dry_attempt1_memerr.log` | Blocked: host low on memory, `MemoryError` (396 MiB) inside G39's `sensors` |
 | Dry run 2 | `dry_attempt2_noplant.log` | Blocked: `experiments/code/sens/plant62.npz` had been moved to `experiments/scratch_archive_2026-10-29/sens/`. Copied back (sha256 `e9d24859…83c1`, identical to the archive copy) |
 | Dry run 3 | `dry.log`, `dry/result.json` | (v) PASS: limits, oracle calibration, (a), (b) and verdicts equal `g69_res.json` |
-| Main | `run_main.log`, `runs/main/result.json` | (v) PASS again; (a) PASS; (b) FAIL. Claude Code's low-memory guard stopped the launching shell; the Python process kept running to completion, and its output is unaffected |
+| Main | `run_main.log`, `runs/main/result.json` | (v) PASS again; (a) PASS; (b) FAIL. the session's low-memory guard stopped the launching shell; the Python process kept running to completion, and its output is unaffected |
 
 ## Results
 Tile power: programs 6.44–7.96 mW (G81b totals × 7.75/8.081), sleep 2.565 mW; G30 kernels 7.00–7.75 mW.
