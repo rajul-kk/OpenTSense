@@ -1,5 +1,5 @@
 {
-  "time_utc": "2026-11-15T17:17:28+00:00",
+  "time_utc": "2026-11-15T21:33:02+00:00",
   "host": "Rajul",
   "python": "3.10.0",
   "repo": {
@@ -7,7 +7,7 @@
     "dirty": true
   },
   "image": null,
-  "orfs_image": "openroad/orfs@sha256:55266bc72fd67238407fa0c60da5a7f83c25ea14123829df769437d0dd0649ed",
+  "orfs_image": null,
   "tools": {
     "iverilog": null,
     "verilator": null,

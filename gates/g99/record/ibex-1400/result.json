@@ -3,6 +3,7 @@
  "setup_reg2reg_ps": 21.41,
  "hold_reg2reg_ps": 52.41,
  "wns_tns_zero": true,
+ "hold_violations_all_paths": 0,
  "drc_violations": 0,
  "lec": "identical",
  "windows": {
