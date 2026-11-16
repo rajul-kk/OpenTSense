@@ -1,0 +1,46 @@
+{
+  "time_utc": "2026-11-15T11:48:08+00:00",
+  "host": "a9f2ca17b8ca",
+  "python": "3.14.4",
+  "repo": {
+    "commit": "628de24b4b8e2166bfb732ac5476e2db01bf542e",
+    "dirty": true
+  },
+  "image": null,
+  "orfs_image": null,
+  "tools": {
+    "iverilog": "Icarus Verilog version 12.0 (stable) ()",
+    "verilator": "Verilator 5.032 2025-01-01 rev (Debian 5.032-1)",
+    "ngspice": "ngspice-45.2 : Circuit level simulation program",
+    "3dice_commit": "4953952a1ef6d38807ff307212a6f15e5b2ef935",
+    "superlu_mt_commit": "e60ed2c1dd491e1832d783f519c1851288f9d422",
+    "pact_commit": "bb7f05a0a893eac4826b1bc55b3e1f2415ba057d",
+    "spice_models_checksum": "c2e03ea1f08c84c7492e18e40dd1f882e32e3838f828910b8485c2070e9d109d",
+    "ca_certificates": "20260816ubuntu0.26.04.1"
+  },
+  "packages": {
+    "numpy": "2.3.4",
+    "scipy": "1.16.3",
+    "pandas": "2.3.3",
+    "PyYAML": "6.0.3",
+    "pytest": "8.4.2"
+  },
+  "spice_models": [
+    "openvaf-r v24.0.2mob",
+    "IHP-Open-PDK 5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+    "VA-Models 6099b4e12e6f66ff530f59b8d01fb909094be85a",
+    "asap7sc7p5t_28 e5bd25da72cd297b8c0ec6f77600e0cbaa1124d0"
+  ],
+  "gate": "G101",
+  "inputs": {
+    "gates/g101/run.py": "1a74acef57355812ec803168fd0120311cbd724c0f1804bf005cae9ac5bb966e",
+    "gates/g95/sweep.py": "30212662316b609f6c57de1bd289bfdf798754fed3c8f48829c75b41a2718e90",
+    "opentsense/thermal/runaway.py": "8699cd33c574ae977a5b23aac3101ee4328b279ac8944708e5e2e40ef1fd716e",
+    "opentsense/thermal/electrothermal.py": "99ad1bd3b5ff28735afe02d568b0fd15e5898801a2c8b18a0be0f540c303e2c2",
+    "configs/stacks/g92_ihp.yaml": "69edaa573a198c73d5c34faf0d5c393b505e5968e4118eb8bcda45a6bbdd957c",
+    "configs/stacks/g92b_asap7.yaml": "e79bfdba3f5b8bc7ba3f5551580dd39fde47f6376ca5e959b52b6967b28ae922",
+    "gates/g92e/runs/main/ihp/result.json": "b5be617a01e2a612d94dd51041bed7c54b654586a37e22e8240b77b7937ffa0a",
+    "gates/g92e/runs/main/asap7/result.json": "383d07de2689dbbaa07bfe167102f50204ce3570469be54ac9ffade6a6b15919",
+    "gates/g92e/runs/main/asap7_lvt/result.json": "b8efa14a6b47a9dbebdc8d1669e1bea18053e91443997c6a27a0db69552a95a8"
+  }
+}
