@@ -1,0 +1,30 @@
+{
+  "time_utc": "2026-11-15T10:31:28+00:00",
+  "host": "a896bc23f1a8",
+  "python": "3.14.4",
+  "repo": {
+    "commit": "628de24b4b8e2166bfb732ac5476e2db01bf542e",
+    "dirty": true
+  },
+  "image": "sha256:73335acfb98bac0cb41b60dfc4e1da347281b505f6ec793e601d90cfef534f9b",
+  "orfs_image": "openroad/orfs@sha256:55266bc72fd67238407fa0c60da5a7f83c25ea14123829df769437d0dd0649ed",
+  "tools": {
+    "iverilog": "Icarus Verilog version 12.0 (stable) ()",
+    "verilator": "Verilator 5.032 2025-01-01 rev (Debian 5.032-1)",
+    "ngspice": "ngspice-45.2 : Circuit level simulation program",
+    "3dice_commit": "4953952a1ef6d38807ff307212a6f15e5b2ef935",
+    "superlu_mt_commit": "e60ed2c1dd491e1832d783f519c1851288f9d422",
+    "pact_commit": "bb7f05a0a893eac4826b1bc55b3e1f2415ba057d",
+    "spice_models_checksum": "cat: /opt/spice/CHECKSUM: No such file or directory",
+    "ca_certificates": "20260816ubuntu0.26.04.1"
+  },
+  "packages": {
+    "numpy": "2.3.4",
+    "scipy": "1.16.3",
+    "pandas": "2.3.3",
+    "PyYAML": "6.0.3",
+    "pytest": "8.4.2"
+  },
+  "gate": "G96",
+  "design": "ibex"
+}

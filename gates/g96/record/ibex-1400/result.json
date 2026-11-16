@@ -1,0 +1,55 @@
+{
+ "design": "ibex",
+ "bar": {
+  "annotation": 0.99,
+  "decision_share": 0.05,
+  "tile_min_frac": 0.001
+ },
+ "sim": {
+  "half_ps": 700,
+  "in_ps": 442,
+  "zero": {
+   "rc": 0,
+   "checksum": "00031a38",
+   "done": 1,
+   "done_cycle": 14901,
+   "expected": "00031a38",
+   "ok": true
+  },
+  "delay": {
+   "rc": 0,
+   "checksum": "00031a38",
+   "done": 1,
+   "done_cycle": 14901,
+   "expected": "00031a38",
+   "ok": true
+  }
+ },
+ "converter": "outputs cut 18608 (SDF outputs 18706); inputs delayed 49332; SDF instances not in the netlist 0 []; outputs not parsed 0 []",
+ "zero": {
+  "total_W": 0.00446855044,
+  "dynamic_W": 0.004466204698481595,
+  "toggles": 22875021,
+  "annotation": 1.0
+ },
+ "delay": {
+  "total_W": 0.00553320162,
+  "dynamic_W": 0.0055308185444644924,
+  "toggles": 39399689,
+  "annotation": 0.9552747928439669
+ },
+ "summary": {
+  "criteria": {
+   "a_reference": true,
+   "b_converter": true,
+   "c_annotation": false
+  },
+  "valid": false,
+  "glitch_share": 0.19248757438415942,
+  "below_decision_threshold": false,
+  "toggle_ratio": 1.7223891947465315,
+  "tile_share_median": 0.13100353190625902,
+  "tile_share_max": 0.8732198843840565,
+  "tiles_counted": 335
+ }
+}

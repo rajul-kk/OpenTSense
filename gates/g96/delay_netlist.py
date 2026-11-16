@@ -14,6 +14,7 @@ with several arcs (conditions, edges) uses its slowest; values are the max of ea
 Times are ps; the SDF must say 1ps.
 
 Usage: python gates/g96/delay_netlist.py <netlist.v> <design.sdf> <out.v>
+       python gates/g96/delay_netlist.py view <out.v> <its vcd> <vcd for OpenSTA>   (see sta_view)
 Prints the counts; exits 1 if an SDF instance is missing from the netlist or an output in the netlist was not cut.
 """
 import re
@@ -154,6 +155,123 @@ def annotate(netlist, out, slow, wire):
     return lines, w, sorted({i for i, _ in out} - present), uncut
 
 
+ASSIGN = re.compile(r"^\s*assign #\([^)]*\) (.+?) = (g96o_\d+);")
+
+
+def sta_view(netlist, vcd_in, vcd_out):
+    """The delay netlist's VCD as OpenSTA must read it. OpenSTA takes activity from the cell-instance scopes' pin
+    variables, but here a cell's own output pin is the signal before its inertial delay, and a multi-output cell is
+    split into copies. So: every output pin variable is pointed at the net it drives (after the delay; a bit of a
+    vector net gets its own 1-bit variable), and the copies `<name>_g96_<pin>` are merged back under `<name>`.
+    Value changes are copied unchanged. Returns (output pins re-pointed, of which vector bits, copies merged)."""
+    target = {}                                          # g96o_k -> net name (raw) as the netlist assigns it
+    with open(netlist) as fh:
+        for line in fh:
+            if m := ASSIGN.match(line):
+                target[m.group(2)] = raw(m.group(1))
+    with open(vcd_in) as src, open(vcd_out, "w", newline="\n") as out:
+        head = []
+        for line in src:
+            head.append(line)
+            if line.startswith("$enddefinitions"):
+                break
+        # header -> scope tree: [name, [var line parts], [children]]
+        root, stack = ["", [], []], []
+        stack.append(root)
+        pre = []
+        for line in head:
+            p = line.split()
+            if line.startswith("$scope"):
+                node = [p[2], [], []]
+                stack[-1][2].append(node)
+                stack.append(node)
+            elif line.startswith("$upscope"):
+                stack.pop()
+            elif line.startswith("$var"):
+                stack[-1][1].append(p)
+            elif not stack[1:] and not line.startswith("$enddefinitions"):
+                pre.append(line)
+        # in each scope: the net each g96o_k drives -> its id, or (vector id, bit position from the left)
+        repoint, vec_bits, used, unresolved = {}, {}, set(), []
+        n_new = 0
+
+        def walk_ids(node):
+            for v in node[1]:
+                used.add(v[3])
+            for c in node[2]:
+                walk_ids(c)
+        walk_ids(root)
+
+        def resolve(node):
+            nonlocal n_new
+            names = {raw(v[4]): v for v in node[1]}
+            for v in node[1]:
+                if v[4] not in target:
+                    continue
+                net = target[v[4]]
+                if net in names:
+                    repoint[v[3]] = names[net][3]
+                    continue
+                m = re.fullmatch(r"(.+?) ?\[(\d+)\]", net)
+                if not m or m.group(1) not in names:
+                    unresolved.append(net)
+                    continue
+                base, bit = m.groups()
+                vec = names[base]
+                msb, lsb = (int(x) for x in vec[5].strip("[]").split(":"))
+                pos = (msb - int(bit)) if msb >= lsb else (int(bit) - msb)
+                new, n_new = f"g96v{n_new}", n_new + 1
+                if new in used:
+                    raise SystemExit(f"synthesised id {new} is already a VCD id")
+                vec_bits.setdefault(vec[3], []).append((pos, int(vec[2]), new))
+                repoint[v[3]] = new
+            for c in node[2]:
+                resolve(c)
+        resolve(root)
+        if unresolved:
+            raise SystemExit(f"{len(unresolved)} driven nets not found in their VCD scope, e.g. {unresolved[:3]}")
+
+        n_merged = 0
+
+        def emit(node):
+            nonlocal n_merged
+            for v in node[1]:
+                out.write(" ".join(v[:3] + [repoint.get(v[3], v[3])] + v[4:]) + "\n")
+            merged = {}                                  # base name -> ({pin: var parts}, children)
+            for c in node[2]:
+                m = re.fullmatch(r"(.+)_g96_\w+", c[0])
+                base = m.group(1) if m else c[0]
+                n_merged += base in merged
+                pins = merged.setdefault(base, ({}, c[2]))[0]
+                for v in c[1]:
+                    if v[3] in repoint:                  # an output re-pointed to its net wins over a copy's unconnected pin
+                        pins[v[4]] = v
+                    else:
+                        pins.setdefault(v[4], v)
+            for base, (pins, kids) in merged.items():
+                out.write(f"$scope module {base} $end\n")
+                emit([base, list(pins.values()), kids])
+                out.write("$upscope $end\n")
+
+        out.writelines(pre)
+        for top in root[2]:
+            out.write(f"$scope module {top[0]} $end\n")
+            emit(top)
+            out.write("$upscope $end\n")
+        out.write("$enddefinitions $end\n")
+        last = {}
+        for line in src:
+            out.write(line)
+            if line[:1] in "bB":
+                val, vid = line[1:].split()
+                for pos, width, new in vec_bits.get(vid, ()):
+                    full = val.rjust(width, val[0] if val[0] in "xXzZ" else "0")
+                    if last.get(new) != full[pos]:
+                        last[new] = full[pos]
+                        out.write(f"{full[pos]}{new}\n")
+    return len(repoint), sum(len(b) for b in vec_bits.values()), n_merged
+
+
 def main(netlist, sdf, dst):
     out, slow, wire = read_sdf(sdf)
     lines, w, missing, uncut = annotate(netlist, out, slow, wire)
@@ -167,4 +285,7 @@ def main(netlist, sdf, dst):
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:4])
+    if sys.argv[1] == "view":            # python delay_netlist.py view <delay netlist> <vcd> <out vcd>
+        print("output pins re-pointed %d (vector bits %d); copies merged %d" % sta_view(*sys.argv[2:5]))
+    else:
+        main(*sys.argv[1:4])

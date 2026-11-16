@@ -1,5 +1,7 @@
 # G96 draft (13 Nov 2026; NOT registered): the glitch power that zero-delay activity misses (RQ1, plan.md limit 3)
 
+> Registered 15 Nov 2026: see `registration.md`. This draft stays as the record of the method and dry runs.
+
 ### G96: How much dynamic power, and which tiles, does zero-delay gate-level activity miss? · DRAFT
 
 - **Why.** Every activity window (G72 Icarus, G81 Verilator) is zero-delay: no cell delays, so no glitches. Stated as
