@@ -1,0 +1,79 @@
+{
+ "model": {
+  "act": 7.968750000000001e-10,
+  "pre": 4.078125e-10,
+  "rd": 1.3475000000000004e-09,
+  "wr": 9.9e-10,
+  "refa": 2.798250000000001e-09,
+  "closed": 2.6015624999999987e-12,
+  "any_open": 2.3156250000000004e-11,
+  "io_cycle": 1.999169522783324e-12,
+  "io_cmd": 7.180380893077023e-12,
+  "io_rd": 2.5838997712089375e-11,
+  "io_wr": 2.3499562274171055e-11
+ },
+ "fit_max_rel_residual": {
+  "ACT": 4.3914203939613215e-16,
+  "PRE": 4.254436001848624e-16,
+  "RD": 0.0,
+  "WR": 0.0,
+  "REF_AB": 4.4254525580905587e-16,
+  "BG_PRE": 6.128077682006235e-16,
+  "bg_act": 3.6817691348318803e-16,
+  "io": 1.984909061552519e-15
+ },
+ "held_out": [
+  {
+   "seed": 10,
+   "total_drampower_J": 0.0002228755898877625,
+   "total_model_J": 0.00022290981845444916,
+   "total_rel_err": 0.00015357700995378322,
+   "bank_core_max_rel_err": 1.954323695586662e-16,
+   "bg_act_rel_err": 0.0,
+   "io_rel_err": 0.004185803295594845,
+   "unmodelled_static_share": 1.6612183794396284e-05
+  },
+  {
+   "seed": 11,
+   "total_drampower_J": 0.000131723388781175,
+   "total_model_J": 0.00013170679622828314,
+   "total_rel_err": 0.00012596512316743712,
+   "bank_core_max_rel_err": 2.713558044944474e-16,
+   "bg_act_rel_err": 1.8603224648230556e-16,
+   "io_rel_err": 0.00190755376530714,
+   "unmodelled_static_share": 2.1441237210286776e-05
+  },
+  {
+   "seed": 12,
+   "total_drampower_J": 0.00019954058984383751,
+   "total_model_J": 0.00019955487334522923,
+   "total_rel_err": 7.158193429665925e-05,
+   "bank_core_max_rel_err": 1.186346081311871e-16,
+   "bg_act_rel_err": 0.0,
+   "io_rel_err": 0.0020673375504670433,
+   "unmodelled_static_share": 1.7463865824127318e-05
+  },
+  {
+   "seed": 13,
+   "total_drampower_J": 0.00023958279310623757,
+   "total_model_J": 0.00023963574092412463,
+   "total_rel_err": 0.0002210000860269742,
+   "bank_core_max_rel_err": 1.7679091302096502e-16,
+   "bg_act_rel_err": 0.0,
+   "io_rel_err": 0.006049875752230972,
+   "unmodelled_static_share": 1.6080740555485646e-05
+  },
+  {
+   "seed": 14,
+   "total_drampower_J": 0.000133947057593525,
+   "total_model_J": 0.00013393043065502636,
+   "total_rel_err": 0.0001241306736958057,
+   "bank_core_max_rel_err": 2.47516037314971e-16,
+   "bg_act_rel_err": 1.8602633344525463e-16,
+   "io_rel_err": 0.0018973595063525076,
+   "unmodelled_static_share": 2.1250465117627167e-05
+  }
+ ],
+ "held_out_worst_total_rel_err": 0.0002210000860269742,
+ "held_out_worst_bank_rel_err": 2.713558044944474e-16
+}

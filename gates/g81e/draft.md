@@ -68,3 +68,8 @@
 ## Student decision (12 Nov 2026)
 
 H1 is the gated hierarchy and H0 is reported only, as written. Bar numbers still follow the noise-floor rule of `plan.md` 2.1 where it applies.
+
+**Dry fit rerun (16 Nov 2026, after the 12 Nov review changed controller traces).** `fit_energy.py` unchanged, record
+`dry/fit_energy-rerun-20261116.json` beside the first (`dry/fit_energy.json`, kept as run): largest calibration
+residual 2e-15 relative, worst held-out total error 2.21e-4 (was 2.21e-4), worst per-bank error 3e-16. The model's
+numbers can be quoted as of this rerun.
