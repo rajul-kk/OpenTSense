@@ -137,3 +137,17 @@ def test_level5_cases_from_manifest():
     assert lv.case_source == "manifest" and lv.T.shape == (10, 64, 64)
     c, _ = icthermbench._cases(os.path.join(icthermbench.DEFAULT_ROOT, "level5_steady"), "level5", 5000)
     assert set(c[lv.split["test"]]) == {"Case20"} and set(c[lv.split["val"]]) == {"Case19"}
+
+
+def test_large_field_route_equals_gram_route(monkeypatch):
+    """Above GRAM_MAX pixels the modes come from a thin SVD; the posterior must equal the Gram route's."""
+    from opentsense.estimate import field_model as fm
+    rng = np.random.default_rng(0)
+    X = rng.normal(size=(60, 6)) @ rng.normal(size=(6, 300)) + 0.01 * rng.normal(size=(60, 300))
+    a = fm.GaussianField(rank=10).fit(X)
+    monkeypatch.setattr(fm, "GRAM_MAX", 100)
+    b = fm.GaussianField(rank=10).fit(X[i:i + 20] for i in range(0, 60, 20))
+    S = np.arange(0, 300, 23)
+    pa, pb = a.posterior(S, X[:4, S], 0.1), b.posterior(S, X[:4, S], 0.1)
+    assert np.allclose(pa.mean, pb.mean, atol=1e-10) and np.allclose(pa.std, pb.std, atol=1e-10)
+    assert np.allclose(pa.mahal2, pb.mahal2, rtol=1e-9)

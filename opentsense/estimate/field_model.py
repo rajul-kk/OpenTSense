@@ -14,6 +14,9 @@ from dataclasses import dataclass
 from typing import Iterable
 
 import numpy as np
+from scipy.linalg import cho_factor, cho_solve
+
+GRAM_MAX = 8192   # pixels: an 8192^2 float64 Gram matrix is 0.5 GB
 
 
 @dataclass
@@ -33,24 +36,39 @@ class GaussianField:
         self.rank, self.energy = rank, energy
 
     def fit(self, fields: np.ndarray | Iterable[np.ndarray]) -> "GaussianField":
-        """fields: (N, n) array, or an iterable of (b, n) chunks (streamed, so the full set need not be in memory)."""
+        """fields: (N, n) array, or an iterable of (b, n) chunks. Up to GRAM_MAX pixels the chunks stream into the
+        n x n Gram matrix (any N); above it they are stacked and the modes come from a thin SVD of the centred
+        fields, O(N^2 n) time and O(N n) memory, since an n x n covariance of a large stack does not fit in RAM."""
         chunks = [fields] if isinstance(fields, np.ndarray) else fields
-        N, s, G = 0, None, None
+        N, s, G, rows = 0, None, None, []
         for x in chunks:
             x = np.asarray(x, dtype=np.float64).reshape(len(x), -1)
             if s is None:
-                s, G = np.zeros(x.shape[1]), np.zeros((x.shape[1], x.shape[1]))
+                s = np.zeros(x.shape[1])
+                G = np.zeros((x.shape[1], x.shape[1])) if x.shape[1] <= GRAM_MAX else None
             N += len(x)
             s += x.sum(0)
-            G += x.T @ x
+            if G is None:
+                rows.append(x)
+            else:
+                G += x.T @ x
         if N < 2:
             raise ValueError("need at least two training fields")
         self.n_train = N
         self.mu = s / N
-        C = (G - N * np.outer(self.mu, self.mu)) / (N - 1)
-        del G
-        lam, V = np.linalg.eigh(C)
-        lam, V = np.clip(lam[::-1], 0, None), V[:, ::-1]
+        if G is not None:
+            C = (G - N * np.outer(self.mu, self.mu)) / (N - 1)
+            del G
+            lam, V = np.linalg.eigh(C)
+            lam, V = np.clip(lam[::-1], 0, None), V[:, ::-1]
+            var = np.diag(C).copy()
+        else:
+            Xc = np.concatenate(rows)
+            del rows
+            Xc -= self.mu
+            var = np.einsum("ij,ij->j", Xc, Xc) / (N - 1)
+            _, sv, Vt = np.linalg.svd(Xc, full_matrices=False)
+            lam, V = sv ** 2 / (N - 1), Vt.T
         if self.energy is not None:
             share = np.cumsum(lam) / lam.sum()
             r = int(np.searchsorted(share, self.energy) + 1)
@@ -60,7 +78,7 @@ class GaussianField:
         self.r = r
         self.lam = lam[:r]
         self.Phi = np.ascontiguousarray(V[:, :r])
-        self.var = np.clip(np.diag(C).copy(), 0, None)
+        self.var = np.clip(var, 0, None)
         self.resid = np.clip(self.var - (self.Phi ** 2) @ self.lam, 0, None)
         self.energy_kept = float(self.lam.sum() / lam.sum()) if lam.sum() > 0 else 1.0
         return self
@@ -77,7 +95,7 @@ class GaussianField:
         S = np.asarray(S)
         Ps = self.Phi[S]
         A = Ps.T @ (Ps / self._noise(S, noise)[:, None]) + np.diag(1.0 / self.lam)
-        return np.linalg.inv(A)
+        return cho_solve(cho_factor(A), np.eye(len(A)))   # the covariance itself is needed (std, placement)
 
     def posterior(self, S: np.ndarray, readings: np.ndarray, noise: float) -> Posterior:
         """S: (m,) flat pixel indices; readings: (B, m) or (m,). noise: sensor noise standard deviation (same units)."""

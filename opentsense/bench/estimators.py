@@ -4,6 +4,7 @@ An estimator has `name`, `fit(cs, idx)` (it may read everything about the traini
 `predict(pub)` -> {"T": (n, D, ny, nx), "P": (n, D, nb) or None}, where `pub` is `cases.Public` for the cases to score.
 """
 import numpy as np
+from scipy.linalg import cho_factor, cho_solve
 
 from ..estimate import regularise
 from ..estimate.field_model import GaussianField
@@ -87,13 +88,14 @@ class BayesPower(LinearPower):
         super().fit(cs, idx)
         C = np.cov(self.Ptrain, rowvar=False)
         self.C = C + self.shrink * np.trace(C) / len(C) * np.eye(len(C))
+        self.HC = self.H @ self.C                               # (m, D*nb); fixed across cases
+        self.HCH = self.HC @ self.H.T
         return self
 
     def posterior_power(self, pub):
-        H, C = self.H, self.C
-        K = H @ C @ H.T + pub.noise_K ** 2 * np.eye(len(H))
-        G = C @ H.T @ np.linalg.inv(K)                          # (D*nb, m)
-        return self.mu + (pub.readings - H @ self.mu) @ G.T
+        K = self.HCH + pub.noise_K ** 2 * np.eye(len(self.H))
+        Gt = cho_solve(cho_factor(K), self.HC)                  # K^-1 H C, the gain transposed
+        return self.mu + (pub.readings - self.H @ self.mu) @ Gt
 
     def predict(self, pub):
         return self.output(self.posterior_power(pub))
