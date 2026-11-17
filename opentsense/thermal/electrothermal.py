@@ -49,10 +49,33 @@ def solve(R, dyn, leak, T_amb, tol=1e-10, max_it=500, T0=None):
     return T, max_it, False, hist
 
 
+def perron(M, close=1e-12, max_it=10000):
+    """Perron root of M >= 0 with no zero row, by power iteration from x = 1, as the Collatz–Wielandt bracket
+    lo <= rho <= hi (G101: closes to 1e-12 in 5 to 13 iterations, 110 to 240 times faster than eigvals at 1,024
+    tiles). Returns (lo, hi, x) with x the right Perron vector, or None if the bracket does not close."""
+    x = np.ones(len(M))
+    for _ in range(max_it):
+        y = M @ x
+        r = y / x
+        lo, hi = r.min(), r.max()
+        x = y / y.max()
+        if hi - lo <= close * hi:
+            return float(lo), float(hi), x
+    return None
+
+
 def rho(R, leak, T, h=0.5):
-    """Spectral radius of R @ diag(dP_leak/dT) at T, by central difference of each tile's own leakage."""
+    """Spectral radius of R @ diag(dP_leak/dT) at T, by central difference of each tile's own leakage. Power
+    iteration where its bracket is valid (M >= 0, no zero row) and closes; dense eigvals otherwise."""
     D = (leak.tiles(T + h) - leak.tiles(T - h)) / (2 * h)
-    return float(np.abs(np.linalg.eigvals(R * D[None, :])).max()), D
+    if not D.any():
+        return 0.0, D
+    M = R * D[None, :]
+    if M.min() >= 0 and (M > 0).any(axis=1).all():
+        got = perron(M)
+        if got is not None:
+            return (got[0] + got[1]) / 2, D
+    return float(np.abs(np.linalg.eigvals(M)).max()), D
 
 
 def amplification(R, dyn, leak, T_amb, T_star):

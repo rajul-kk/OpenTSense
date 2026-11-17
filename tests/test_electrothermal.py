@@ -57,3 +57,25 @@ def test_one_over_one_minus_rho_only_holds_for_small_rho():
     (r1, g1), (r2, g2) = gaps
     assert r1 < 0.1 and g1 < 0.002
     assert r2 > 0.5 and g2 > 0.1
+
+
+def test_rho_power_iteration_equals_eigvals_and_falls_back():
+    """rho's Collatz-Wielandt route must give eigvals' spectral radius; a matrix outside its theory (a negative
+    entry) must take the eigvals route and still be right."""
+    from opentsense.thermal import electrothermal as et
+    g = 12
+    yy, xx = np.divmod(np.arange(g * g), g)
+    R = 0.8 / (1 + np.hypot(yy[:, None] - yy[None, :], xx[:, None] - xx[None, :])) ** 1.5
+
+    class Leak:
+        def __init__(self, sign):
+            self.sign = sign
+
+        def tiles(self, T):
+            return self.sign * 2e-3 * np.exp(0.03 * (T - 300))
+
+    T = np.full(g * g, 340.0)
+    for sign in (1.0, -1.0):
+        r, D = et.rho(R, Leak(sign), T)
+        assert abs(r - np.abs(np.linalg.eigvals(R * D[None, :])).max()) <= 1e-10 * r
+    assert et.rho(R, Leak(0.0), T)[0] == 0.0
