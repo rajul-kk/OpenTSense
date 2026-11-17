@@ -1,0 +1,16 @@
+# G93 S2 base (logic) die of an HBM3 stack. Footprint from the JSSC 2023 HBM3 paper as quoted; the PHY on the edge
+# facing the host and a central TSV band as in G59; densities are assumptions (G59's parametric 8 W base die).
+name: hbm3_base
+size_um: [11000, 11000]         # "maximum base die area is 11 mm x 11 mm" (Park et al., JSSC 2023, via a quoted excerpt)
+total_W: 8                      # assumption: G59's base die share of a 20 W stack at full traffic
+background_W_mm2: 0.0
+sources:
+  jssc23: "Park et al., A 192-Gb 12-High 896-GB/s HBM3 DRAM, IEEE JSSC 2023 (doi 10.1109/JSSC.2022.3193354), quoted excerpt: 11 x 11 mm, TSV locations adjusted at the base die"
+  hotchips26: "Samsung, Hot Chips 2026 (ServeTheHome report): on standard HBM the PHY is the largest block on the base die"
+  g59: "OpenTSense exploratory G59: 1 mm PHY strip along one edge, about 2 W/mm2 when busy"
+  assumed: "stated in this file, to sweep in G93"
+blocks:
+  - {name: phy, rect_um: [0, 0, 11000, 2500], W_mm2: 1.0, kind: phy, source: hotchips26, grade: assumption}
+  - {name: logic_south, rect_um: [0, 2500, 11000, 3250], W_mm2: 0.15, kind: logic, source: assumed, grade: assumption}
+  - {name: tsv_band, rect_um: [0, 5750, 11000, 1500], W_mm2: 0.3, kind: tsv, source: jssc23, grade: assumption}
+  - {name: logic_north, rect_um: [0, 7250, 11000, 3750], W_mm2: 0.15, kind: logic, source: assumed, grade: assumption}

@@ -1,0 +1,24 @@
+# G93 S1 logic die: an AMD Zen 3 CCD (bottom of the V-Cache stack). Areas from AMD's own ISSCC 2022 slides; the block
+# arrangement from public die photos; the split inside the CCX and all densities are assumptions to sweep.
+# Heights from areas: uncore 13 mm2 / 10.5 mm = 1238 um; core 4.0 mm2 = 2625 x 1524 um; L3 band 36 mm2 = 3428 um;
+# 1238 + 1524 + 3428 + 1524 = 7714 um, so the die is 10.5 x 7.714 mm = 81.0 mm2.
+name: zen3_ccd
+size_um: [10500, 7714]          # area primary (isscc22_zen3 s21); aspect ratio assumed
+total_W: 85                     # assumption: 105 W package TDP minus about 20 W for the I/O die
+background_W_mm2: 0.0           # the blocks tile the whole die
+sources:
+  isscc22_zen3: "AMD, Zen 3, ISSCC 2022 paper 2.7 slides: CCD 81 mm2 (s21), CCX 68 mm2 (s14), 8 cores + 32 MB L3 (s9), TSV columns left/right of the L3 (s12)"
+  dieshot: "public Zen 3 CCD die photos: two rows of four cores either side of a central L3 band (secondary, not a measured layout)"
+  core_est: "core with L2 about 4 mm2: a forum pixel count (AnandTech forums), unverified"
+  assumed: "stated in this file, to sweep in G93"
+blocks:
+  - {name: uncore, rect_um: [0, 0, 10500, 1238], W_mm2: 0.5, kind: io, source: isscc22_zen3, grade: assumption}
+  - {name: core0, rect_um: [0, 1238, 2625, 1524], W_mm2: 2.2, kind: core, source: core_est, grade: secondary}
+  - {name: core1, rect_um: [2625, 1238, 2625, 1524], W_mm2: 2.2, kind: core, source: core_est, grade: secondary}
+  - {name: core2, rect_um: [5250, 1238, 2625, 1524], W_mm2: 2.2, kind: core, source: core_est, grade: secondary}
+  - {name: core3, rect_um: [7875, 1238, 2625, 1524], W_mm2: 2.2, kind: core, source: core_est, grade: secondary}
+  - {name: l3, rect_um: [0, 2762, 10500, 3428], W_mm2: 0.25, kind: sram, source: dieshot, grade: secondary}
+  - {name: core4, rect_um: [0, 6190, 2625, 1524], W_mm2: 2.2, kind: core, source: core_est, grade: secondary}
+  - {name: core5, rect_um: [2625, 6190, 2625, 1524], W_mm2: 2.2, kind: core, source: core_est, grade: secondary}
+  - {name: core6, rect_um: [5250, 6190, 2625, 1524], W_mm2: 2.2, kind: core, source: core_est, grade: secondary}
+  - {name: core7, rect_um: [7875, 6190, 2625, 1524], W_mm2: 2.2, kind: core, source: core_est, grade: secondary}

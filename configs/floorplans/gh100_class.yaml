@@ -1,0 +1,24 @@
+# G93 S3 logic die: an H100-class accelerator (GH100). Area and power from consistent press figures; the block
+# arrangement follows the published block diagram (two L2 partitions) and package photos (HBM stacks on the two long
+# sides); strip widths, the band position and all densities are assumptions to sweep. Compute density is set from our
+# routed TPU tile (G100 W1, 2.07 W/mm2 at 800 ps); total_W then rescales every block by one factor.
+# Square die: 28530 um side = 814 mm2. HBM PHY strips 1500 um on left and right; NVLink/PCIe PHY strips 1000 um on
+# top and bottom between them; L2 band 2000 um high across the middle; compute in the two remaining halves
+# (1000 + 12265 + 2000 + 12265 + 1000 = 28530 um).
+name: gh100_class
+size_um: [28530, 28530]
+total_W: 700                    # H100 SXM5 TDP (press figures; NVIDIA datasheet not read)
+background_W_mm2: 0.0
+sources:
+  press_h100: "814 mm2, 700 W, 50 MB L2 in two partitions, five active HBM3 sites (TechPowerUp, AnandTech, Chips and Cheese, ServeTheHome)"
+  photos: "H100 SXM5 package photos: HBM stacks along the two long sides of the die (secondary)"
+  g100_tpu: "OpenTSense G100 record tpu-800 maps.npz, window W1: 2.07 W/mm2 (our own routed real-activity tile)"
+  assumed: "stated in this file, to sweep in G93"
+blocks:
+  - {name: hbm_phy_left, rect_um: [0, 0, 1500, 28530], W_mm2: 1.0, kind: phy, source: photos, grade: secondary}
+  - {name: hbm_phy_right, rect_um: [27030, 0, 1500, 28530], W_mm2: 1.0, kind: phy, source: photos, grade: secondary}
+  - {name: io_phy_bottom, rect_um: [1500, 0, 25530, 1000], W_mm2: 0.8, kind: phy, source: assumed, grade: assumption}
+  - {name: io_phy_top, rect_um: [1500, 27530, 25530, 1000], W_mm2: 0.8, kind: phy, source: assumed, grade: assumption}
+  - {name: compute_south, rect_um: [1500, 1000, 25530, 12265], W_mm2: 2.07, kind: compute, source: g100_tpu, grade: assumption}
+  - {name: l2, rect_um: [1500, 13265, 25530, 2000], W_mm2: 0.3, kind: sram, source: press_h100, grade: assumption}
+  - {name: compute_north, rect_um: [1500, 15265, 25530, 12265], W_mm2: 2.07, kind: compute, source: g100_tpu, grade: assumption}

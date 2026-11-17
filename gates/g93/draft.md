@@ -76,3 +76,20 @@ for bond layers is measured by 3D-ICE (directional against vertical-only k) and 
 stated floorplan (TPU-tile compute blocks, low-power SRAM, PHY strips facing the HBM stacks) rather than a pure grid of
 the 97 um tile. Limits: one k per layer in the k(T) loop (a hotspot's own lower k is not modelled); effective bond
 values from fill fraction, not a resolved bump array.
+
+## Floorplans (16 Nov 2026, task g93-floorplans)
+
+The millimetre-scale dies take block floorplans from published layouts (`opentsense/stack/floorplan.py`,
+`configs/floorplans/`), as HotSpot's ev6.flp was taken from a die photo, instead of grids of one routed tile. Every
+block carries its source and a grade (primary, secondary, assumption); `total_W` scales all blocks by one factor.
+
+| Die | Floorplan | Area | Total | Blocks | Main assumptions |
+|---|---|---|---|---|---|
+| S1 logic | `zen3_ccd` | 81.0 mm2 (AMD ISSCC 2022, primary) | 85 W | uncore strip 13 mm2 (81 - 68 mm2 CCX, primary), 8 cores of 4 mm2 in two rows, central L3 band 36 mm2 | aspect ratio; core area (forum pixel count); densities 2.2 / 0.25 / 0.5 W/mm2 before scaling |
+| S2 base | `hbm3_base` | 121 mm2 (JSSC 2023 HBM3, quoted) | 8 W | PHY strip facing the host, central TSV band, logic | strip widths; densities |
+| S3 logic | `gh100_class` | 814 mm2 (press) | 700 W | HBM PHY strips on the two long sides (package photos), I/O PHY top and bottom, two compute halves at our TPU tile's 2.07 W/mm2 (G100 W1), L2 band between | band and strip widths; L2 position; densities |
+
+S2's DRAM dies keep `power.dram` (bank grid around a TSV strip, G59). S4 (three logic dies) has no published layout;
+it reuses `zen3_ccd` per tier unless the registration says otherwise. Densities are uniform per block: at 0.25 to
+0.5 mm cells the 97 um texture of a routed tile averages out inside a cell. G100's tile maps are kept in its record
+(`gates/g100/record/*/maps.npz`) so the TPU density is traceable.
