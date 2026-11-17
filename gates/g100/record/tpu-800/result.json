@@ -1,0 +1,104 @@
+{
+ "design": "tpu",
+ "bar": {
+  "annotation": 0.99,
+  "tile_rel": 0.001,
+  "tpu_rows": 616
+ },
+ "sim": {
+  "compile_s": 8.4,
+  "clock": {
+   "tpu": "+half_ps=400"
+  },
+  "tpu_W1": {
+   "rc": 0,
+   "wall_s": 72.3,
+   "rows": 616,
+   "rows_match": 616
+  },
+  "tpu_W2": {
+   "rc": 0,
+   "wall_s": 72.3,
+   "rows": 616,
+   "rows_match": 616
+  },
+  "tpu_W3": {
+   "rc": 0,
+   "wall_s": 72.4,
+   "rows": 0,
+   "rows_match": 0
+  }
+ },
+ "die_um": [
+  0.0,
+  0.0,
+  97.448,
+  97.448
+ ],
+ "die_mm2": 0.009496112703999998,
+ "g72_die_mm2": 0.009496112703999998,
+ "def": {
+  "total_W": 0.0282847267,
+  "density_W_mm2": 2.9785584461403634,
+  "leak_share": 0.005483337425799854,
+  "n_inst": 96369,
+  "missing_loc": 0,
+  "tile_rel": 1.4601228870124892e-06,
+  "annotation": null,
+  "peak_over_mean": 3.7154100275325335,
+  "g72_total_W": 0.128535181,
+  "power_vs_g72": 0.22005435772483176
+ },
+ "W1": {
+  "total_W": 0.0196642932,
+  "density_W_mm2": 2.070772937616559,
+  "leak_share": 0.007678854375449962,
+  "n_inst": 96369,
+  "missing_loc": 0,
+  "tile_rel": 2.447311851360823e-06,
+  "annotation": 1.0,
+  "peak_over_mean": 5.346006950833028,
+  "g72_total_W": 0.0842152983,
+  "power_vs_g72": 0.233500249918369
+ },
+ "W2": {
+  "total_W": 0.0175579078,
+  "density_W_mm2": 1.8489573941771116,
+  "leak_share": 0.00890563350764079,
+  "n_inst": 96369,
+  "missing_loc": 0,
+  "tile_rel": 6.019957603843207e-06,
+  "annotation": 1.0,
+  "peak_over_mean": 5.970851731262334,
+  "g72_total_W": 0.073727563,
+  "power_vs_g72": 0.23814577731261785
+ },
+ "W3": {
+  "total_W": 0.0129024722,
+  "density_W_mm2": 1.358710938062599,
+  "leak_share": 0.013406390368894799,
+  "n_inst": 96369,
+  "missing_loc": 0,
+  "tile_rel": 1.2864710607484059e-05,
+  "annotation": 1.0,
+  "peak_over_mean": 7.6466966890070385,
+  "g72_total_W": 0.0504105426,
+  "power_vs_g72": 0.25594789372491306
+ },
+ "summary": {
+  "criteria": {
+   "a_checksums": true,
+   "b_annotation": true,
+   "c_tiles": true
+  },
+  "verdict": "PASS",
+  "min_annotation": 1.0,
+  "max_tile_rel": 1.2864710607484059e-05,
+  "power_vs_g72": {
+   "def": 0.22005435772483176,
+   "W1": 0.233500249918369,
+   "W2": 0.23814577731261785,
+   "W3": 0.25594789372491306
+  }
+ }
+}

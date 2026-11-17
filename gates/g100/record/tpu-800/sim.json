@@ -1,0 +1,24 @@
+{
+ "compile_s": 8.4,
+ "clock": {
+  "tpu": "+half_ps=400"
+ },
+ "tpu_W1": {
+  "rc": 0,
+  "wall_s": 72.3,
+  "rows": 616,
+  "rows_match": 616
+ },
+ "tpu_W2": {
+  "rc": 0,
+  "wall_s": 72.3,
+  "rows": 616,
+  "rows_match": 616
+ },
+ "tpu_W3": {
+  "rc": 0,
+  "wall_s": 72.4,
+  "rows": 0,
+  "rows_match": 0
+ }
+}
