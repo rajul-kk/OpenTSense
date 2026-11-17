@@ -8,9 +8,14 @@ import sys
 from dataclasses import replace
 
 import numpy as np
+import scipy.sparse as sp
+import scipy.sparse.linalg as sla
 
 from ..stack import to_3dice, to_hotspot, to_pact
 
+# PACT's own SuperLU settings, so our solves on its matrix match its steady solution
+SUPERLU = dict(permc_spec="MMD_AT_PLUS_A", diag_pivot_thresh=0.001,
+               options=dict(Fact="DOFACT", Equil=False, SymmetricMode=True))
 ICE_EXE = os.environ.get("ICE_EXE", "3D-ICE-Emulator")
 PACT_SRC = os.environ.get("PACT_SRC", "/opt/pact/src")
 HOTSPOT_EXE = os.environ.get("HOTSPOT_EXE", "hotspot")
@@ -38,8 +43,11 @@ def read_pact(path, nx, ny):
     return to_pact.rows(np.loadtxt(path, delimiter=",", ndmin=2)[:, -1].reshape(ny, nx))
 
 
-def run_pact(stack, power, workdir, timeout=7200, capture=False, return_src=False):
-    """capture=True also saves PACT's matrix and right-hand side as <workdir>/pact.A.npz and pact.b.npy."""
+def run_pact(stack, power, workdir, timeout=7200, capture=False, return_src=False, transient=None):
+    """capture=True also saves PACT's matrix and right-hand side as <workdir>/pact.A.npz and pact.b.npy.
+    transient = (step_s, slot_s) with (n_slots, ny, nx) maps: see pact_transient."""
+    if transient is not None:
+        return pact_transient(stack, power, workdir, *transient, timeout=timeout)
     (lcf, cfg, model), src = to_pact.write(stack, power, workdir)
     grid = os.path.join(os.path.abspath(workdir), "grid.steady")
     pre = [os.path.join(os.path.dirname(__file__), "pact_capture.py"), os.path.join(os.path.abspath(workdir), "pact")] if capture else ["PACT.py"]
@@ -50,6 +58,35 @@ def run_pact(stack, power, workdir, timeout=7200, capture=False, return_src=Fals
     nx, ny = stack.grid
     maps = {d: read_pact(f"{grid}.layer{li}", nx, ny) for d, li in src.items()}
     return (maps, src) if return_src else maps
+
+
+def pact_transient(stack, power, workdir, step, slot, timeout=7200):
+    """{die: (n_slots, ny, nx)} at the end of each slot, on PACT's own network: its conductance matrix A (captured
+    from one steady PACT run) and its node capacities C (cv x cell volume, as Solid.py), integrated by backward Euler,
+    C (T_k+1 - T_k) / step + A T_k+1 = P, from ambient. PACT's own transient path calls Xyce, which the image lacks,
+    and its power PWL delays every slot by one slot (G94 draft, 16 Nov)."""
+    n_slots = stack.check_transient(power)
+    k = round(slot / step)
+    if k < 1 or abs(k * step - slot) > 1e-9 * slot:
+        raise ValueError(f"slot {slot:g} s must be a whole number of steps {step:g} s")
+    _, src = run_pact(stack, {d: P.mean(0) for d, P in power.items()}, workdir, timeout, capture=True, return_src=True)
+    A = sp.load_npz(os.path.join(workdir, "pact.A.npz")).tocsc()
+    C = to_pact.capacity(stack)
+    if len(C) != A.shape[0]:
+        raise RuntimeError(f"PACT has {A.shape[0]} nodes, the stack's sublayers {len(C)}")
+    Cs = C / step
+    lu = sla.splu((sp.diags(Cs) + A).tocsc(), **SUPERLU)
+    nx, ny = stack.grid
+    rise, b = np.zeros(len(C)), np.zeros(len(C))
+    out = {d: np.zeros((n_slots, ny, nx)) for d in src}
+    for t in range(n_slots):
+        r = to_pact.rhs(stack, {d: P[t] for d, P in power.items()}, src)
+        b[:len(r)] = r
+        for _ in range(k):
+            rise = lu.solve(Cs * rise + b)
+        for d, li in src.items():
+            out[d][t] = stack.ambient_K + to_pact.rows(rise[li * nx * ny:(li + 1) * nx * ny].reshape(ny, nx))
+    return out
 
 
 def read_hotspot(path, layers, nx, ny):

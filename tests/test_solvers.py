@@ -146,9 +146,9 @@ def test_kT_loop_runs_in_all_three_and_heats_the_die(tmp_path):
 
 
 @need
-def test_hotspot_transient_follows_3dice_and_ends_at_its_steady(tmp_path):
-    """Plumbing for G94, not its bars: one map per slot, rows the right way up, HotSpot's capacitance fitting factor
-    undone (without it HotSpot rose about 40% faster), and a long constant run ending at the steady solve."""
+def test_transients_follow_3dice_and_end_at_their_steady(tmp_path):
+    """Plumbing for G94, not its bars: HotSpot and PACT, one map per slot, rows the right way up, HotSpot's capacitance
+    fitting factor undone (without it HotSpot rose about 40% faster), and a long constant run ending at the steady."""
     s = small(regions=False)
     nx, ny = s.grid
     P = np.full((ny, nx), 0.5 / (nx * ny))
@@ -163,3 +163,7 @@ def test_hotspot_transient_follows_3dice_and_ends_at_its_steady(tmp_path):
     assert np.all(np.diff(B.max((1, 2))) > -0.01)
     assert np.abs(B - A).max() < 0.6                                   # 0.30 K measured (probe, 16 Nov)
     assert np.abs(B[-1] - steady).max() < 0.02                         # 0.01 K print step before the image patch
+    C = run_pact(s, Pt, tmp_path / "pact", transient=(1e-3, 1e-2))[d]
+    pact_steady = run_pact(s, {d: P}, tmp_path / "pact_steady")[d]
+    assert C.shape == A.shape and np.abs(C - A).max() < 0.6
+    assert np.abs(C[-1] - pact_steady).max() < 0.01

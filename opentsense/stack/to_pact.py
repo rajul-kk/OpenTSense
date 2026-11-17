@@ -13,6 +13,7 @@ import os
 import numpy as np
 
 LABELS = ["lump0", "lump1", "Diel", "bcb", "Metal", "Metal7_8"]  # free labels after Si and Cu
+SINK_FILM_M, SINK_FILM_CV = 1e-9, 3.45e6  # PACT's NoPackage sink: a copper film that carries the htc; a node layer too
 
 MODEL = """[DEFAULT]
 label =
@@ -75,6 +76,26 @@ def cell(stack, layer, i, j):
     return layer * nx * ny + (ny - 1 - np.asarray(i)) * nx + np.asarray(j)
 
 
+def rhs(stack, power, src):
+    """Power pattern {die: (ny, nx) W} as a right-hand side in PACT's (layer, row, col) node order, up to the last
+    source layer (PACT's own b adds the ambient term on the layer next to the sink)."""
+    nx, ny = stack.grid
+    b = np.zeros((max(src.values()) + 1, ny, nx))
+    for d, P in power.items():
+        b[src[d]] = rows(P)
+    return b.ravel()
+
+
+def capacity(stack):
+    """Heat capacity of every PACT node (J/K) in PACT's order, as PACT's Solid.py sets it: cv x cell volume; the
+    sink film is PACT's last node layer."""
+    nx, ny = stack.grid
+    cell_m2 = stack.size_um[0] * stack.size_um[1] * 1e-12 / (nx * ny)
+    cv = {m: v.cv for m, v in stack.materials.items()}
+    return np.concatenate([rows(np.vectorize(cv.get, otypes=[float])(stack.material_map(l))).ravel() * cell_m2 * th * 1e-6
+                           for l, _, th in stack.sublayers()] + [np.full(nx * ny, SINK_FILM_CV * SINK_FILM_M * cell_m2)])
+
+
 def label_map(stack):
     lab, free = {}, iter(LABELS)
     for m in stack.materials:
@@ -103,7 +124,8 @@ def write(stack, power, workdir):
     for m, v in stack.materials.items():
         cfg += f"[{lab[m]}]\nthermalresistivity ((m-k)/w) = {1 / v.k:.6e}\nspecificheatcapacity (j/m^3k) = {v.cv:.4e}\n\n"
     cfg += (f"[Init]\nambient = {stack.ambient_K} K\ntemperature = {stack.ambient_K} K\n\n"
-            f"[NoPackage]\nhtc = {stack.htc}\nthickness (m) = 0.000000001\nthermalresistivity ((m-k)/w) = 0.0025\nspecificheatcapacity (j/m^3k) = 3.45e6\n")
+            f"[NoPackage]\nhtc = {stack.htc}\nthickness (m) = {SINK_FILM_M:.0e}\nthermalresistivity ((m-k)/w) = 0.0025\n"
+            f"specificheatcapacity (j/m^3k) = {SINK_FILM_CV:.2e}\n")
     model = MODEL.format(nx=nx, ny=ny)
     for m in stack.materials:
         model += f"\n[{lab[m]}]\nlibrary_name = Solid\nlibrary = Solid.py\ntransient = False\nvirtual_node = bottom_center\nmode = single\n"

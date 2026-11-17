@@ -10,20 +10,8 @@ import scipy.sparse as sp
 import scipy.sparse.linalg as sla
 
 from ..stack import to_pact
-from .run import run_pact
-
-# PACT's own SuperLU settings, so our solves match its steady solution
-SUPERLU = dict(permc_spec="MMD_AT_PLUS_A", diag_pivot_thresh=0.001,
-               options=dict(Fact="DOFACT", Equil=False, SymmetricMode=True))
-
-
-def rhs(stack, power, src):
-    """Right-hand side for a power pattern {die: (ny, nx) W}, in PACT's (layer, row, col) order."""
-    nx, ny = stack.grid
-    b = np.zeros((max(src.values()) + 1, ny, nx))
-    for d, P in power.items():
-        b[src[d]] = to_pact.rows(P)
-    return b.ravel()
+from ..stack.to_pact import rhs  # noqa: F401  (gates g77 and g84 call response.rhs)
+from .run import SUPERLU, run_pact
 
 
 def build(stack, basis, workdir, batch=64, observe=None, dtype=np.float64):
