@@ -96,7 +96,7 @@ it reuses `zen3_ccd` per tier unless the registration says otherwise. Densities 
 
 ## Solver limits that shape the stacks (16 Nov 2026)
 
-- **HotSpot units.** HotSpot 7 holds at most 8192 units per floorplan and per power trace (`MAX_UNITS`, `flp.h`, `hotspot.c`), counted as footprint cells x source layers. S1 and S4 fit at 0.25 to 0.5 mm cells; S2 (nine source dies) fits at 30 x 30; S3 (logic plus four nine-die HBM stacks over a ~40 mm interposer) needs about 60k. Plan: image patch amendment 3 raises MAX_UNITS and LINE_SIZE (buffer sizes only), built as a derived image together with amendment 2 (g94-rebuild), re-making /opt/hotspot in place (no network).
+- **HotSpot units.** HotSpot 7 holds at most 8192 units per floorplan and per power trace (`MAX_UNITS`) and allocates an n_units^2 wire-density matrix per floorplan (`flp.c`), so one unit per cell cannot reach S3 (about 620 MB per layer). `to_hotspot` now writes rectangles of equal material and power (a few dozen units per layer for block floorplans), with the same per-cell result; no image change is needed for S3.
 - **Grid alignment.** Die rectangles must lie on the cell grid, so S3 uses 0.5 mm cells: logic 57 x 57, HBM 22 x 22.
 - **What is gated.** Only physics all three solvers represent: isotropic bond k (vertical value), no `opposite_htc`; k(T) allowed. Anisotropy, the bottom path and the thickness sweep are reported from 3D-ICE, not gated.
 - **S4 power.** `zen3_ccd` at 85 W per tier would give 255 W; S4 sets total_W per tier so the stack is 30 to 60 W, as the draft states. Block floorplans have no seeds: the case set is per stack the nominal floorplan plus stated density variants (to be fixed in the registration).

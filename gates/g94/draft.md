@@ -54,3 +54,13 @@ Step response of `tests/test_solvers.small` (16 x 12 cells, one die, 0.5 W with 
 ### Student decision needed before registration
 
 Two of the three transient paths are partly ours: HotSpot with its capacitance fitting factor undone (not stock HotSpot), and PACT's network integrated by our backward Euler with capacities computed as PACT's Solid.py does (not PACT's Xyce path; not yet compared with PACT's own C array). So "three solvers agree in time" means "three discretisations agree". Options: accept that wording; or also report stock HotSpot (C_FACTOR kept) and PACT's netlist run in ngspice beside them. Before any bar is fixed, a uniform-power 1-D transient against a fine 1-D reference must say which side the 0.5 K early gap is on. G94 is not run unattended.
+
+### Which side is right early on (16 Nov 2026, task g94-1d; `dry/one_d.py`, output `dry/one_d.txt`)
+
+Uniform 0.5 W on the small stack makes the problem 1-D, so a fine 1-D reference (each sublayer split 20 times,
+Crank-Nicolson, 1 us steps) stands for the truth. Mean source-layer rise at 1 / 2 / 4 / 12 ms: reference 1.439 /
+1.841 / 2.182 / 3.148 K; 3D-ICE 1.446 / 1.872 / 2.225 / 3.176 (within 2% throughout); HotSpot 1.190 / 1.710 / 2.190 /
+3.160 (17% low at 1 ms, close from 4 ms); PACT 1.224 / 1.660 / 2.037 / 3.001 at a converged step (15% low at 1 ms and
+still 5% low at 12 ms). PACT's step does not explain it (0.1, 0.01 and 0.001 ms agree to 0.03 K), so the early gap is
+in HotSpot's and PACT's networks (node placement in thin layers), not in the integrators. 3D-ICE is the reference side
+for G94's early-time bars; the registration states this before any run.
