@@ -87,9 +87,17 @@ block carries its source and a grade (primary, secondary, assumption); `total_W`
 |---|---|---|---|---|---|
 | S1 logic | `zen3_ccd` | 81.0 mm2 (AMD ISSCC 2022, primary) | 85 W | uncore strip 13 mm2 (81 - 68 mm2 CCX, primary), 8 cores of 4 mm2 in two rows, central L3 band 36 mm2 | aspect ratio; core area (forum pixel count); densities 2.2 / 0.25 / 0.5 W/mm2 before scaling |
 | S2 base | `hbm3_base` | 121 mm2 (JSSC 2023 HBM3, quoted) | 8 W | PHY strip facing the host, central TSV band, logic | strip widths; densities |
-| S3 logic | `gh100_class` | 814 mm2 (press) | 700 W | HBM PHY strips on the two long sides (package photos), I/O PHY top and bottom, two compute halves at our TPU tile's 2.07 W/mm2 (G100 W1), L2 band between | band and strip widths; L2 position; densities |
+| S3 logic | `gh100_class` | 814 mm2 (NVIDIA's Hopper blog, primary), snapped to 28.5 x 28.5 mm (-0.2%) for a 0.5 mm grid | 700 W (press; NVIDIA's table not yet read verbatim) | HBM PHY strips on the two long sides (package photos), I/O PHY top and bottom, two compute halves at our TPU tile's 2.07 W/mm2 (G100 W1), L2 band between | band and strip widths; L2 position; densities |
 
 S2's DRAM dies keep `power.dram` (bank grid around a TSV strip, G59). S4 (three logic dies) has no published layout;
 it reuses `zen3_ccd` per tier unless the registration says otherwise. Densities are uniform per block: at 0.25 to
 0.5 mm cells the 97 um texture of a routed tile averages out inside a cell. G100's tile maps are kept in its record
 (`gates/g100/record/*/maps.npz`) so the TPU density is traceable.
+
+## Solver limits that shape the stacks (16 Nov 2026)
+
+- **HotSpot units.** HotSpot 7 holds at most 8192 units per floorplan and per power trace (`MAX_UNITS`, `flp.h`, `hotspot.c`), counted as footprint cells x source layers. S1 and S4 fit at 0.25 to 0.5 mm cells; S2 (nine source dies) fits at 30 x 30; S3 (logic plus four nine-die HBM stacks over a ~40 mm interposer) needs about 60k. Plan: image patch amendment 3 raises MAX_UNITS and LINE_SIZE (buffer sizes only), built as a derived image together with amendment 2 (g94-rebuild), re-making /opt/hotspot in place (no network).
+- **Grid alignment.** Die rectangles must lie on the cell grid, so S3 uses 0.5 mm cells: logic 57 x 57, HBM 22 x 22.
+- **What is gated.** Only physics all three solvers represent: isotropic bond k (vertical value), no `opposite_htc`; k(T) allowed. Anisotropy, the bottom path and the thickness sweep are reported from 3D-ICE, not gated.
+- **S4 power.** `zen3_ccd` at 85 W per tier would give 255 W; S4 sets total_W per tier so the stack is 30 to 60 W, as the draft states. Block floorplans have no seeds: the case set is per stack the nominal floorplan plus stated density variants (to be fixed in the registration).
+- **Bars.** Written as the noise-floor rule (mesh halving per solver), not G93a's 1 K, which does not transfer to 700 W. The size probe (uniform power; nodes, RAM, wall time only, no pairwise differences) runs before registration.
