@@ -15,6 +15,16 @@ Open testbed for recovering per-die power and temperature in 2.5D/3D chip stacks
 
 Plan, gates and findings: `../plan.md`, `../todo-gates.md`, `../gates.md`.
 
+## Designs the gates use
+
+| Name in the gates | What it is | Source |
+|---|---|---|
+| Ibex | RV32 CPU core (lowRISC Ibex) | ORFS `asap7/ibex` and IHP |
+| TPU | One 8 x 8 int8 weight-stationary systolic matrix tile (32-bit accumulators). Its header calls it "Google-TPU-style", but it is not a TPU chip: no buffers, memory interface or activation unit. Routed die 97 x 97 um on ASAP7 | ORFS `asap7/tpu`; RTL from LogikBench (Zero ASIC, MIT) at `62fc37ec` |
+
+A millimetre-sized "TPU die" in a stack gate is a grid of this tile's power maps (G38: 10 x 10 tiles per mm), so it
+has the tile's power texture, not an accelerator's floorplan.
+
 ## Quick start
 ```
 pip install -e .[dev]
