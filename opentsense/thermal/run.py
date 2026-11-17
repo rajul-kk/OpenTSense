@@ -2,6 +2,7 @@
 
 All three are expected inside the OpenTSense image: 3D-ICE-Emulator and hotspot on PATH, PACT in $PACT_SRC.
 """
+import itertools
 import os
 import subprocess
 import sys
@@ -29,14 +30,17 @@ def run_3dice(stack, power, workdir, timeout=7200, transient=None):
     if r.returncode:
         raise RuntimeError("3D-ICE failed:\n" + r.stdout[-1500:] + r.stderr[-1500:])
     nx, ny = stack.grid
-    out = {}
-    for d in stack.dies:
-        T = to_3dice.read_tmaps(os.path.join(workdir, f"tmap_{d.name}.txt"), ny, nx)
-        want = 1 if transient is None else len(power[d.name])
-        if len(T) != want:
-            raise RuntimeError(f"3D-ICE wrote {len(T)} maps for {d.name}, expected {want}")
-        out[d.name] = T[0] if transient is None else T
-    return out
+    T = {d.name: to_3dice.read_tmaps(os.path.join(workdir, f"tmap_{d.name}.txt"), ny, nx) for d in stack.dies}
+    return _per_die("3D-ICE", stack, power, transient, T)
+
+
+def _per_die(solver, stack, power, transient, T):
+    """{die: (n_dumps, ny, nx)} read back -> {die: (ny, nx)} steady or {die: (n_slots, ny, nx)}, after checking that
+    the solver wrote one map per slot."""
+    want = 1 if transient is None else stack.check_transient(power)
+    if any(len(v) != want for v in T.values()):
+        raise RuntimeError(f"{solver} wrote {({d: len(v) for d, v in T.items()})} maps per die, expected {want}")
+    return {d: v[0] if transient is None else v for d, v in T.items()}
 
 
 def read_pact(path, nx, ny):
@@ -47,6 +51,8 @@ def run_pact(stack, power, workdir, timeout=7200, capture=False, return_src=Fals
     """capture=True also saves PACT's matrix and right-hand side as <workdir>/pact.A.npz and pact.b.npy.
     transient = (step_s, slot_s) with (n_slots, ny, nx) maps: see pact_transient."""
     if transient is not None:
+        if capture or return_src:
+            raise ValueError("capture and return_src apply to steady runs only")
         return pact_transient(stack, power, workdir, *transient, timeout=timeout)
     (lcf, cfg, model), src = to_pact.write(stack, power, workdir)
     grid = os.path.join(os.path.abspath(workdir), "grid.steady")
@@ -94,13 +100,14 @@ def read_hotspot(path, layers, nx, ny):
     then one "index temperature" line per cell, row 0 at the top edge (temperature_grid.c set_bgmap), so rows are
     flipped to ours. Returns {layer index: (n_dumps, ny, nx)}."""
     out, cur, vals = {l: [] for l in layers}, None, []
-    for line in list(open(path)) + ["t = end"]:
-        if line.startswith(("Layer", "t =")):
-            if cur in layers:
-                out[cur].append(np.array(vals).reshape(ny, nx)[::-1])
-            cur, vals = (int(line.split()[1].rstrip(":")) if line.startswith("Layer") else None), []
-        elif line.strip():
-            vals.append(float(line.split()[1]))
+    with open(path) as f:
+        for line in itertools.chain(f, ["t = end"]):
+            if line.startswith(("Layer", "t =")):
+                if cur in layers:
+                    out[cur].append(np.array(vals).reshape(ny, nx)[::-1])
+                cur, vals = (int(line.split()[1].rstrip(":")) if line.startswith("Layer") else None), []
+            elif cur in layers and line.strip():
+                vals.append(float(line.split()[1]))
     return {l: np.array(v) for l, v in out.items()}
 
 
@@ -120,10 +127,7 @@ def run_hotspot(stack, power, workdir, timeout=7200, transient=None):
         raise RuntimeError("HotSpot failed:\n" + r.stdout[-1500:] + r.stderr[-1500:])
     nx, ny = stack.grid
     T = read_hotspot(grid, set(src.values()), nx, ny)
-    want = 1 if transient is None else stack.check_transient(power)
-    if any(len(v) != want for v in T.values()):
-        raise RuntimeError(f"HotSpot wrote {[len(v) for v in T.values()]} maps per die, expected {want}")
-    return {d: T[li][0] if transient is None else T[li] for d, li in src.items()}
+    return _per_die("HotSpot", stack, power, transient, {d: T[li] for d, li in src.items()})
 
 
 def solve_kT(run, stack, power, workdir, tol_K=0.01, max_it=20):

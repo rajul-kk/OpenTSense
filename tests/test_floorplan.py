@@ -60,3 +60,20 @@ def test_shipped_floorplans_tile_their_die_and_meet_their_total(path):
     w, h = f.size_um
     assert abs(sum(b.rect_um[2] * b.rect_um[3] for b in f.blocks) - w * h) < 1e-6 * w * h   # no unaccounted area
     assert abs(f.power_map((64, 64)).sum() - f.total_W) < 1e-9 * f.total_W
+
+
+def test_total_zero_gives_no_power_and_nothing_to_scale_is_refused():
+    p = plan([("a", (0.0, 0.0, 500.0, 800.0), 2.0)], total_W=0.0)
+    assert not p.power_map((10, 8)).any()
+    with pytest.raises(ValueError, match="total_W"):
+        plan([("a", (0.0, 0.0, 500.0, 800.0), 0.0)], total_W=5.0)
+    with pytest.raises(ValueError, match="total_W"):
+        plan([("a", (0.0, 0.0, 500.0, 800.0), 1.0)], total_W=-1.0)
+
+
+def test_misspelt_block_key_is_refused(tmp_path):
+    f = tmp_path / "f.yaml"
+    f.write_text("name: t\nsize_um: [10, 10]\nsources: {s: x}\nblocks:\n"
+                 "  - {name: a, rect_um: [0, 0, 5, 5], W_mm2: 1, kind: x, source: s, grade: primary, wmm2: 3}\n")
+    with pytest.raises(ValueError, match="wmm2"):
+        fp.load(str(f))

@@ -97,6 +97,12 @@ def test_writers_with_regions(tmp_path):
     assert abs(sum(map(float, trace[1].split())) - P["die0"].sum()) < 1e-12
 
 
+def test_hotspot_refuses_a_floorplan_over_its_unit_limit(tmp_path, monkeypatch):
+    s = hetero()
+    monkeypatch.setattr(to_hotspot, "MAX_UNITS", 2)          # the mould layer around 20 silicon cells needs more
+    with pytest.raises(ValueError, match="MAX_UNITS"):
+        to_hotspot.write(s, {"die0": np.full(s.grid[::-1], 1e-3)}, tmp_path)
+
 def test_bottom_sink_order(tmp_path):
     top, bot = hetero("top"), hetero("bottom")
     P = {"die0": np.full(top.grid[::-1], 1e-3)}
