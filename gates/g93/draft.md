@@ -101,3 +101,16 @@ it reuses `zen3_ccd` per tier unless the registration says otherwise. Densities 
 - **What is gated.** Only physics all three solvers represent: isotropic bond k (vertical value), no `opposite_htc`; k(T) allowed. Anisotropy, the bottom path and the thickness sweep are reported from 3D-ICE, not gated.
 - **S4 power.** `zen3_ccd` at 85 W per tier would give 255 W; S4 sets total_W per tier so the stack is 30 to 60 W, as the draft states. Block floorplans have no seeds: the case set is per stack the nominal floorplan plus stated density variants (to be fixed in the registration).
 - **Bars.** Written as the noise-floor rule (mesh halving per solver), not G93a's 1 K, which does not transfer to 700 W. The size probe (uniform power; nodes, RAM, wall time only, no pairwise differences) runs before registration.
+
+## Size probe, partial (16 Nov 2026; `dry/size_probe.jsonl`, uniform power, 2.5 GB cap per container)
+
+| Stack | Grid, sublayers, nodes | 3D-ICE | HotSpot | PACT |
+|---|---|---|---|---|
+| S1 V-Cache | 42 x 31, 26, 34k | 1.9 s, 0.17 GB | 7.8 s, 0.53 GB | 8.0 s, 0.33 GB |
+| S4 3-tier | 42 x 31, 27, 35k | 2.3 s, 0.18 GB | 8.1 s, 0.54 GB | 8.7 s, 0.34 GB |
+| S2 HBM | 44 x 44, 48, 93k | 21 s, 0.80 GB | 55 s, 2.03 GB | 36 s, 1.05 GB |
+| S3 2.5D | 107 x 59, 53, 335k | not finished | | |
+
+The probe was stopped during S3 by the session's low-memory guard (machine at about 3 GB free), not by the cap or an
+error. HotSpot's memory grows fastest (2 GB at 93k nodes), so S3 at 335k nodes likely needs a coarser HotSpot grid or
+more free RAM; S3 is to be probed alone when the machine has room.
