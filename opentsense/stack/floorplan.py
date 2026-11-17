@@ -21,10 +21,11 @@ from dataclasses import dataclass, field
 import numpy as np
 import yaml
 
-from .model import _need
+from .model import _known, _need
 
 GRADES = ("primary", "secondary", "assumption")
 KEYS = {"name", "size_um", "total_W", "background_W_mm2", "sources", "blocks"}
+BLOCK_KEYS = {"name", "rect_um", "W_mm2", "kind", "source", "grade"}
 
 
 @dataclass
@@ -60,6 +61,9 @@ class Floorplan:
                 _need(_overlap(a.rect_um, b.rect_um) < 1e-6, f"{self.name}: blocks {a.name} and {b.name} overlap")
         names = [b.name for b in self.blocks]
         _need(len(set(names)) == len(names), f"{self.name}: block names must be unique")
+        _need(self.background_W_mm2 >= 0, f"{self.name}: negative background density")
+        _need(self.total_W is None or self.total_W == 0 or (self.total_W > 0 and self.raw_W() > 0),
+              f"{self.name}: total_W {self.total_W} needs a non-negative value and, above 0, some block power to scale")
         return self
 
     def raw_W(self):
@@ -79,7 +83,9 @@ class Floorplan:
             ox = _overlap_1d(xs, b.rect_um[0], b.rect_um[2])         # (nx,) um of the block in each column
             oy = _overlap_1d(ys, b.rect_um[1], b.rect_um[3])
             P += (b.W_mm2 - self.background_W_mm2) * 1e-6 * np.outer(oy, ox)
-        return P * (self.total_W / self.raw_W() if self.total_W else 1.0)
+        if self.total_W is None:
+            return P
+        return P * (self.total_W / self.raw_W()) if self.total_W else np.zeros_like(P)
 
 
 def density_from_maps(npz_path, key):
@@ -90,10 +96,10 @@ def density_from_maps(npz_path, key):
 
 
 def load(path):
-    d = yaml.safe_load(open(path))
-    _need(not set(d) - KEYS, f"{path}: unknown key(s) {sorted(set(d) - KEYS)}")
+    with open(path) as f:
+        d = _known(path, yaml.safe_load(f), KEYS)
     blocks = [Block(b["name"], tuple(float(v) for v in b["rect_um"]), float(b["W_mm2"]), b["kind"], b["source"],
-                    b["grade"]) for b in d["blocks"]]
+                    b["grade"]) for b in (_known(f"{path} block", b, BLOCK_KEYS) for b in d["blocks"])]
     return Floorplan(d["name"], tuple(float(v) for v in d["size_um"]), blocks, float(d.get("background_W_mm2", 0.0)),
                      None if d.get("total_W") is None else float(d["total_W"]), d.get("sources", {})).validate()
 

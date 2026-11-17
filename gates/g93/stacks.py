@@ -10,8 +10,6 @@ power.dram's bank layout (G59), S4 scales zen3_ccd to S4_TIER_W per tier.
 """
 import os
 
-import numpy as np
-
 from opentsense.power import dram
 from opentsense.stack import floorplan, model
 
@@ -65,7 +63,7 @@ def plan(name, **override):
     f = floorplan.load(os.path.join(FLP, f"{name}.yaml"))
     for k, v in override.items():
         setattr(f, k, v)
-    return f
+    return f.validate()
 
 
 def s1(cell_um):
@@ -124,7 +122,6 @@ def s3(cell_um):
                                 [(x, y, hw) for x, y in sites] + [(lx, ly, lw)]]))
     layers.append(dict(name="interposer", material="silicon", thickness_um=S3_INTERPOSER_UM, n_sub=4))
     st = make("g93_s3_25d", (W, H), cell_um, [SPREADER, TIM] + layers)
-    ny, nx = st.grid[::-1]
     one = hbm_maps((int(round(hw / cell_um)),) * 2, dies, base)
     P = {d: sum(st.place(one[d], (x, y, hw, hw)) for x, y in sites) for d in dies}
     P[dies[-1]] = P[dies[-1]] + st.place(logic.power_map((int(round(lw / cell_um)),) * 2), (lx, ly, lw, lw))

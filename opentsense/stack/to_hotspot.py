@@ -64,20 +64,33 @@ def rectangles(labels):
     return out
 
 
-def _flp(path, stack, layer, prefix, P=None):
-    """One unit per rectangle of equal material (and, on a source layer, equal power in every slot, P: (n, ny, nx)).
-    Returns (unit names, (n_slots, n_units) unit powers) for a source layer."""
+def _props(m):
+    """HotSpot's "<volumetric heat capacity>\t<resistivity>" for material m, cv divided by C_FACTOR (see above)."""
+    return f"{m.cv / C_FACTOR:.6e}\t{1 / m.k:.6e}"
+
+
+def _units(stack, layer, P=None):
+    """Rectangles (i0, j0, h, w) of equal material and, on a source layer, equal power in every slot (P: (n, ny, nx))."""
+    nx, ny = stack.grid
+    key = np.unique(stack.material_map(layer), return_inverse=True)[1].reshape(ny, nx)[None]
+    if P is not None:
+        key = np.concatenate([key, P])
+    rects = rectangles(np.unique(key.reshape(len(key), -1).T, axis=0, return_inverse=True)[1].reshape(ny, nx))
+    if len(rects) > MAX_UNITS:
+        raise ValueError(f"layer {layer.name}: {len(rects)} units exceed HotSpot's MAX_UNITS ({MAX_UNITS}); "
+                         "use a coarser grid")
+    return rects
+
+
+def _flp(path, stack, layer, prefix, rects, P=None):
+    """One unit per rectangle. Returns (unit names, (n_slots, n_units) unit powers) for a source layer."""
     nx, ny = stack.grid
     cx, cy = stack.size_um[0] * 1e-6 / nx, stack.size_um[1] * 1e-6 / ny
     M = stack.material_map(layer)
-    key = np.unique(M, return_inverse=True)[1].reshape(ny, nx)[None]
-    if P is not None:
-        key = np.concatenate([key, P])
-    labels = np.unique(key.reshape(len(key), -1).T, axis=0, return_inverse=True)[1].reshape(ny, nx)
     out, names, watts = ["# <unit> <width> <height> <left-x> <bottom-y> <volumetric heat capacity> <resistivity>"], [], []
-    for i0, j0, h, w in rectangles(labels):
+    for i0, j0, h, w in rects:
         m, name = stack.materials[M[i0, j0]], f"{prefix}{i0}_{j0}"
-        out.append(f"{name}\t{w * cx:.9e}\t{h * cy:.9e}\t{j0 * cx:.9e}\t{i0 * cy:.9e}\t{m.cv / C_FACTOR:.6e}\t{1 / m.k:.6e}")
+        out.append(f"{name}\t{w * cx:.9e}\t{h * cy:.9e}\t{j0 * cx:.9e}\t{i0 * cy:.9e}\t{_props(m)}")
         names.append(name)
         if P is not None:
             watts.append(P[:, i0:i0 + h, j0:j0 + w].sum((1, 2)))
@@ -99,20 +112,28 @@ def write(stack, power, workdir, transient=None):
     nx, ny = stack.grid
     L, W = stack.size_um[0] * 1e-6, stack.size_um[1] * 1e-6
     side = 1.001 * max(L, W)
-    lcf, src, names, rows, li = [], {}, [], [], 0
+    lcf, src, names, rows, li, passive = [], {}, [], [], 0, {}
     for l, kind, th in stack.sublayers():
         m = stack.materials[l.material]
         flp = f"L{li}.flp"
-        unit_names, watts = _flp(os.path.join(workdir, flp), stack, l, f"L{li}_", power[l.name] if kind == "src" else None)
+        P = power[l.name] if kind == "src" else None
+        if P is not None:
+            rects = _units(stack, l, P)
+        else:                                                    # a layer's passive sublayers share one floorplan
+            if l.name not in passive:
+                passive[l.name] = _units(stack, l)
+            rects = passive[l.name]
+        unit_names, watts = _flp(os.path.join(workdir, flp), stack, l, f"L{li}_", rects, P)
         lcf += [f"# {l.name} {kind}".rstrip(), str(li), "Y", "Y" if kind == "src" else "N",
-                f"{m.cv / C_FACTOR:.6e}", f"{1 / m.k:.6e}", f"{th * 1e-6:.9e}", flp, ""]
+                *_props(m).split("\t"), f"{th * 1e-6:.9e}", flp, ""]
         if kind == "src":
             src[l.name] = li
             names += unit_names
             rows.append(watts)
         li += 1
     if len(names) > MAX_UNITS:
-        raise ValueError(f"{len(names)} power units exceed HotSpot's MAX_UNITS ({MAX_UNITS}); use a coarser grid")
+        raise ValueError(f"{len(names)} power units in the trace exceed HotSpot's MAX_UNITS ({MAX_UNITS}); "
+                         "use a coarser grid")
     cfg = {
         "ambient": f"{stack.ambient_K:.3f}", "init_temp": f"{stack.ambient_K:.3f}",
         "grid_rows": ny, "grid_cols": nx, "grid_map_mode": "avg",
