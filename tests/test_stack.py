@@ -88,9 +88,13 @@ def test_writers_with_regions(tmp_path):
     lab = to_pact.label_map(s)
     assert flp.count("," + lab["silicon"] + "\n") == 20 and flp.count("," + lab["mould"] + "\n") == s.grid[0] * s.grid[1] - 20
     paths, hsrc = to_hotspot.write(s, P, tmp_path / "hs")
-    lines = [l for l in open(tmp_path / "hs" / f"L{hsrc['die0']}.flp") if not l.startswith("#")]
-    assert len(lines) == s.grid[0] * s.grid[1]
-    assert sum(1 for l in lines if abs(float(l.split()[6]) - 1 / 130) < 1e-9) == 20     # silicon resistivity on 20 units
+    units = [l.split() for l in open(tmp_path / "hs" / f"L{hsrc['die0']}.flp") if not l.startswith("#")]
+    cell = s.size_um[0] * s.size_um[1] * 1e-12 / (s.grid[0] * s.grid[1])
+    area = lambda us: sum(float(u[1]) * float(u[2]) for u in us) / cell  # noqa: E731  (in cells)
+    assert len(units) < 10 and abs(area(units) - s.grid[0] * s.grid[1]) < 1e-6      # rectangles, not one unit per cell
+    assert abs(area([u for u in units if abs(float(u[6]) - 1 / 130) < 1e-9]) - 20) < 1e-6   # silicon on 20 cells
+    trace = open(paths["ptrace"]).read().split("\n")
+    assert abs(sum(map(float, trace[1].split())) - P["die0"].sum()) < 1e-12
 
 
 def test_bottom_sink_order(tmp_path):

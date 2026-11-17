@@ -16,10 +16,14 @@ from (side - chip size), and an exactly chip-sized spreader makes the system sin
 vector in place, and the grid dump prints power, not temperature). The side is 1.001 x the chip's longer side; with
 1 nm layers the result moved by < 1e-3 K between 1.0001x and 1.1x (G93a dry run).
 
-Every layer's floorplan is our grid of cells (one unit per cell), so HotSpot's grid (grid_rows x grid_cols) maps one
-cell to one unit. With regions, each unit carries its own volumetric heat capacity and resistivity, which needs
--detailed_3D on (used always, for one code path). Dies: bulk sublayers carry no power, the source layer does.
-The power trace is one line of names and one line of values per slot over every source cell; the image's HotSpot
+Every layer's floorplan covers our grid with rectangles of whole cells, one unit per rectangle of equal material (and,
+on a source layer, equal power per cell in every slot); HotSpot's grid (grid_rows x grid_cols) is our grid, so with
+grid_map_mode avg each cell gets exactly its own material and power, as with one unit per cell. Per-cell units hit
+HotSpot's limits on large stacks: MAX_UNITS = 8192 per floorplan and trace, and an n_units^2 wire-density matrix per
+floorplan (flp.c), about 620 MB per layer at 8800 cells (G93 S3). Block floorplans and regions need a few dozen.
+With regions, each unit carries its own volumetric heat capacity and resistivity, which needs -detailed_3D on (used
+always, for one code path). Dies: bulk sublayers carry no power, the source layer does.
+The power trace is one line of names and one line of values per slot over every source unit; the image's HotSpot
 reads lines of up to LINE_SIZE - 1 characters (raised to 1048576 by the image patch, G93a amendment 1; stock: 65536).
 
 Transient (G94): power maps are (n_slots, ny, nx), one trace row per slot, sampling_intvl = the slot. HotSpot picks
@@ -36,20 +40,49 @@ import os
 import numpy as np
 
 LINE_SIZE = 1048576
+MAX_UNITS = 8192  # units per floorplan and per power trace (flp.h, hotspot.c)
 C_FACTOR = 0.333
 
 
-def _flp(path, stack, layer, prefix):
+def rectangles(labels):
+    """Cover an (ny, nx) label array with rectangles of one label each: [(i0, j0, h, w)], greedy, rows first."""
+    ny, nx = labels.shape
+    free = np.ones((ny, nx), bool)
+    out = []
+    for i0 in range(ny):
+        for j0 in range(nx):
+            if not free[i0, j0]:
+                continue
+            v, w = labels[i0, j0], 1
+            while j0 + w < nx and free[i0, j0 + w] and labels[i0, j0 + w] == v:
+                w += 1
+            h = 1
+            while i0 + h < ny and free[i0 + h, j0:j0 + w].all() and (labels[i0 + h, j0:j0 + w] == v).all():
+                h += 1
+            free[i0:i0 + h, j0:j0 + w] = False
+            out.append((i0, j0, h, w))
+    return out
+
+
+def _flp(path, stack, layer, prefix, P=None):
+    """One unit per rectangle of equal material (and, on a source layer, equal power in every slot, P: (n, ny, nx)).
+    Returns (unit names, (n_slots, n_units) unit powers) for a source layer."""
     nx, ny = stack.grid
-    L, W = stack.size_um[0] * 1e-6, stack.size_um[1] * 1e-6
-    cx, cy = L / nx, W / ny
+    cx, cy = stack.size_um[0] * 1e-6 / nx, stack.size_um[1] * 1e-6 / ny
     M = stack.material_map(layer)
-    out = ["# <unit> <width> <height> <left-x> <bottom-y> <volumetric heat capacity> <resistivity>"]
-    for i in range(ny):
-        for j in range(nx):
-            m = stack.materials[M[i, j]]
-            out.append(f"{prefix}{i}_{j}\t{cx:.9e}\t{cy:.9e}\t{j * cx:.9e}\t{i * cy:.9e}\t{m.cv / C_FACTOR:.6e}\t{1 / m.k:.6e}")
+    key = np.unique(M, return_inverse=True)[1].reshape(ny, nx)[None]
+    if P is not None:
+        key = np.concatenate([key, P])
+    labels = np.unique(key.reshape(len(key), -1).T, axis=0, return_inverse=True)[1].reshape(ny, nx)
+    out, names, watts = ["# <unit> <width> <height> <left-x> <bottom-y> <volumetric heat capacity> <resistivity>"], [], []
+    for i0, j0, h, w in rectangles(labels):
+        m, name = stack.materials[M[i0, j0]], f"{prefix}{i0}_{j0}"
+        out.append(f"{name}\t{w * cx:.9e}\t{h * cy:.9e}\t{j0 * cx:.9e}\t{i0 * cy:.9e}\t{m.cv / C_FACTOR:.6e}\t{1 / m.k:.6e}")
+        names.append(name)
+        if P is not None:
+            watts.append(P[:, i0:i0 + h, j0:j0 + w].sum((1, 2)))
     open(path, "w", newline="\n").write("\n".join(out) + "\n")
+    return names, (np.array(watts).T if P is not None else None)
 
 
 def write(stack, power, workdir, transient=None):
@@ -70,15 +103,16 @@ def write(stack, power, workdir, transient=None):
     for l, kind, th in stack.sublayers():
         m = stack.materials[l.material]
         flp = f"L{li}.flp"
-        prefix = f"L{li}_"
-        _flp(os.path.join(workdir, flp), stack, l, prefix)
+        unit_names, watts = _flp(os.path.join(workdir, flp), stack, l, f"L{li}_", power[l.name] if kind == "src" else None)
         lcf += [f"# {l.name} {kind}".rstrip(), str(li), "Y", "Y" if kind == "src" else "N",
                 f"{m.cv / C_FACTOR:.6e}", f"{1 / m.k:.6e}", f"{th * 1e-6:.9e}", flp, ""]
         if kind == "src":
             src[l.name] = li
-            names += [f"{prefix}{i}_{j}" for i in range(ny) for j in range(nx)]
-            rows.append(power[l.name].reshape(len(power[l.name]), -1))
+            names += unit_names
+            rows.append(watts)
         li += 1
+    if len(names) > MAX_UNITS:
+        raise ValueError(f"{len(names)} power units exceed HotSpot's MAX_UNITS ({MAX_UNITS}); use a coarser grid")
     cfg = {
         "ambient": f"{stack.ambient_K:.3f}", "init_temp": f"{stack.ambient_K:.3f}",
         "grid_rows": ny, "grid_cols": nx, "grid_map_mode": "avg",
