@@ -175,10 +175,10 @@ def test_3dice_rejects_mismatched_modes_and_fractional_slots(tmp_path):
     P3 = {d.name: np.zeros((2, ny, nx)) for d in s.dies}
     with pytest.raises(ValueError, match="steady"):
         to_3dice.write(s, P3, tmp_path)
-    with pytest.raises(ValueError, match="whole number"):
-        to_3dice.write(s, P3, tmp_path, transient=(0.1, 0.3))
-    with pytest.raises(ValueError, match="whole number"):
-        to_3dice.write(s, P3, tmp_path, transient=(3e-3, 1e-2))
+    for step, slot in ((3e-3, 1e-2), (3e-4, 1.5e-3), (1e-4, 7e-4)):   # not whole; the last two overflow uint32
+        with pytest.raises(ValueError, match="whole number"):
+            to_3dice.write(s, P3, tmp_path, transient=(step, slot))
+    assert [to_3dice.steps_per_slot(*p) for p in ((1e-3, 1e-2), (0.1, 0.3), (5e-4, 1.5e-3))] == [10, 3, 3]
 
 
 def test_pact_and_hotspot_refuse_non_steady_maps(tmp_path):

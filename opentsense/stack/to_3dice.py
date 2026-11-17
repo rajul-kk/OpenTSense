@@ -30,6 +30,22 @@ def write_flp(path, P, cell_x, cell_y):
     open(path, "w", newline="\n").write("\n".join(out))
 
 
+def steps_per_slot(step, slot):
+    """Steps per slot as 3D-ICE's parser computes it from the values we write (%.6e): both are multiplied by 10
+    until whole, then divided as uint32 (stack_description_parser.y, types.h). Checked in the image (G94 probe,
+    16 Nov): step 3e-4, slot 1.5e-3 needs 10^20 as floats, overflows uint32, and runs with a wrong slot length and no
+    error. So refuse any pair that is not exact in that arithmetic."""
+    st, sl = float(f"{step:.6e}"), float(f"{slot:.6e}")
+    for _ in range(10):
+        if st.is_integer() and sl.is_integer():
+            break
+        st, sl = st * 10.0, sl * 10.0
+    if not (st.is_integer() and sl.is_integer() and sl < 2 ** 32 and int(sl) % int(st) == 0):
+        raise ValueError(f"step {step:g} s, slot {slot:g} s: 3D-ICE needs both whole after the same power of 10 "
+                         f"(below 2^32) and slot a whole number of steps")
+    return int(sl) // int(st)
+
+
 def read_tmaps(path, ny, nx):
     """All maps in a Tmap file as (n, ny, nx): numeric rows of nx values, comment lines (%) skipped, ny rows per map."""
     rows = [list(map(float, l.split())) for l in open(path) if l.strip() and not l.lstrip().startswith("%")]
@@ -59,11 +75,7 @@ def write(stack, power, workdir, transient=None):
         step, slot = transient
         if not 0 < step <= slot:
             raise ValueError("transient needs 0 < step <= slot")
-        # the slot must be a whole number of steps as written (the review reads 3D-ICE as truncating slot / step;
-        # to confirm in the image in G94's dry run)
-        ratio = float(f"{slot:.6e}") / float(f"{step:.6e}")
-        if math.floor(ratio) != round(ratio) or abs(ratio - round(ratio)) > 1e-9 * ratio:
-            raise ValueError(f"slot / step = {ratio!r} must be a whole number")
+        steps_per_slot(step, slot)
         if any(np.ndim(power[d.name]) != 3 for d in stack.dies):
             raise ValueError("transient power maps must be (n_slots, ny, nx)")
         if len({len(power[d.name]) for d in stack.dies}) != 1:
