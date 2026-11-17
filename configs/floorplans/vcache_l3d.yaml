@@ -1,0 +1,14 @@
+# G93 S1 top die layer: the V-Cache L3D (41 mm2, AMD ISSCC 2022 26.4 slide 11) over the CCD's L3, with structural
+# silicon over the cores (slide 14: "structural silicon" for "thermal dissipation for CPU cores"). Same outline as
+# zen3_ccd; the L3D spans the CCD's width, centred on its L3 band (2762 to 6190 um): 41 mm2 / 10.5 mm = 3905 um high.
+name: vcache_l3d
+size_um: [10500, 7714]
+total_W: 3                      # assumption: "a few W" for 64 MB of SRAM (draft)
+background_W_mm2: 0.0
+sources:
+  isscc22_vcache: "AMD, 3D V-Cache, ISSCC 2022 paper 26.4 slides: L3D 41 mm2 (s11); L3D hybrid-bonded, structural dies oxide-bonded (s14)"
+  assumed: "stated in this file, to sweep in G93"
+blocks:
+  - {name: structural_south, rect_um: [0, 0, 10500, 2524], W_mm2: 0.0, kind: structural, source: isscc22_vcache, grade: secondary}
+  - {name: l3d, rect_um: [0, 2524, 10500, 3905], W_mm2: 0.07, kind: sram, source: isscc22_vcache, grade: secondary}
+  - {name: structural_north, rect_um: [0, 6429, 10500, 1285], W_mm2: 0.0, kind: structural, source: isscc22_vcache, grade: secondary}
