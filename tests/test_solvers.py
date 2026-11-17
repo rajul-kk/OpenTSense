@@ -162,7 +162,7 @@ def test_transients_follow_3dice_and_end_at_their_steady(tmp_path):
     assert np.unravel_index(B[0].argmax(), B[0].shape) == np.unravel_index(A[0].argmax(), A[0].shape)
     assert np.all(np.diff(B.max((1, 2))) > -0.01)
     assert np.abs(B - A).max() < 0.6                                   # 0.30 K measured (probe, 16 Nov)
-    assert np.abs(B[-1] - steady).max() < 0.02                         # 0.01 K print step before the image patch
+    assert np.abs(B[-1] - steady).max() < 0.01                         # needs g94a (6-decimal transient dump)
     C = run_pact(s, Pt, tmp_path / "pact", transient=(1e-3, 1e-2))[d]
     pact_steady = run_pact(s, {d: P}, tmp_path / "pact_steady")[d]
     assert C.shape == A.shape and np.abs(C - A).max() < 0.6
