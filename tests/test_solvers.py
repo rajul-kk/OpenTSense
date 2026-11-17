@@ -143,3 +143,23 @@ def test_kT_loop_runs_in_all_three_and_heats_the_die(tmp_path):
         assert 2 <= it < 20
     assert got["run_3dice"].max() > base.max() + 0.01             # hotter silicon conducts worse
     assert np.abs(got["run_hotspot"] - got["run_3dice"]).max() < 0.01   # as in test_three_solvers_regions
+
+
+@need
+def test_hotspot_transient_follows_3dice_and_ends_at_its_steady(tmp_path):
+    """Plumbing for G94, not its bars: one map per slot, rows the right way up, HotSpot's capacitance fitting factor
+    undone (without it HotSpot rose about 40% faster), and a long constant run ending at the steady solve."""
+    s = small(regions=False)
+    nx, ny = s.grid
+    P = np.full((ny, nx), 0.5 / (nx * ny))
+    P[3:6, 4:8] *= 4
+    d = s.dies[0].name
+    Pt = {d: np.repeat(P[None], 40, 0)}
+    A = run_3dice(s, Pt, tmp_path / "ice", transient=(1e-3, 1e-2))[d]
+    B = run_hotspot(s, Pt, tmp_path / "hs", transient=(1e-3, 1e-2))[d]
+    steady = run_hotspot(s, {d: P}, tmp_path / "hs_steady")[d]
+    assert A.shape == B.shape == (40, ny, nx)
+    assert np.unravel_index(B[0].argmax(), B[0].shape) == np.unravel_index(A[0].argmax(), A[0].shape)
+    assert np.all(np.diff(B.max((1, 2))) > -0.01)
+    assert np.abs(B - A).max() < 0.6                                   # 0.30 K measured (probe, 16 Nov)
+    assert np.abs(B[-1] - steady).max() < 0.02                         # 0.01 K print step before the image patch

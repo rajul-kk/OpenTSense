@@ -19,12 +19,24 @@ vector in place, and the grid dump prints power, not temperature). The side is 1
 Every layer's floorplan is our grid of cells (one unit per cell), so HotSpot's grid (grid_rows x grid_cols) maps one
 cell to one unit. With regions, each unit carries its own volumetric heat capacity and resistivity, which needs
 -detailed_3D on (used always, for one code path). Dies: bulk sublayers carry no power, the source layer does.
-The power trace is one line of names and one of values over every source cell; the image's HotSpot reads lines of up
-to LINE_SIZE - 1 characters (raised to 1048576 by the image patch, G93a amendment 1; stock HotSpot: 65536).
+The power trace is one line of names and one line of values per slot over every source cell; the image's HotSpot
+reads lines of up to LINE_SIZE - 1 characters (raised to 1048576 by the image patch, G93a amendment 1; stock: 65536).
+
+Transient (G94): power maps are (n_slots, ny, nx), one trace row per slot, sampling_intvl = the slot. HotSpot picks
+its own internal steps inside an interval, so the step of transient = (step, slot) is not used. It starts from
+init_temp (ambient here; HotSpot's default is 333.15 K) and dumps the grid after each row (-grid_transient_file,
+6 decimals with the image patch's amendment 2).
+HotSpot multiplies every capacitance by C_FACTOR = 0.333, "fitting factor to match floworks (due to lumping)"
+(temperature.h, RCutil.c getcap), so cv is written divided by it: the network then holds the physical heat capacity,
+as in 3D-ICE and PACT. Without it HotSpot heated about 3x too fast (G94 probe, 16 Nov: 7.77 against 5.60 K at 12 ms on
+a small stack; 5.58 K with it). Steady results do not depend on cv.
 """
 import os
 
+import numpy as np
+
 LINE_SIZE = 1048576
+C_FACTOR = 0.333
 
 
 def _flp(path, stack, layer, prefix):
@@ -36,34 +48,36 @@ def _flp(path, stack, layer, prefix):
     for i in range(ny):
         for j in range(nx):
             m = stack.materials[M[i, j]]
-            out.append(f"{prefix}{i}_{j}\t{cx:.9e}\t{cy:.9e}\t{j * cx:.9e}\t{i * cy:.9e}\t{m.cv:.6e}\t{1 / m.k:.6e}")
+            out.append(f"{prefix}{i}_{j}\t{cx:.9e}\t{cy:.9e}\t{j * cx:.9e}\t{i * cy:.9e}\t{m.cv / C_FACTOR:.6e}\t{1 / m.k:.6e}")
     open(path, "w", newline="\n").write("\n".join(out) + "\n")
 
 
-def write(stack, power, workdir):
-    """power: {die layer name: (ny, nx) array in W}. Returns (paths dict, {die: HotSpot layer index of its source})."""
-    stack.check_steady(power)
+def write(stack, power, workdir, transient=None):
+    """power: {die layer name: (ny, nx) array in W}, or (n_slots, ny, nx) with transient = (step_s, slot_s).
+    Returns (paths dict, {die: HotSpot layer index of its source})."""
+    if transient is None:
+        stack.check_steady(power)
+        power = {k: np.asarray(v)[None] for k, v in power.items()}
+    else:
+        stack.check_transient(power)
     stack.check_one_sink("HotSpot")
     workdir = os.path.abspath(workdir)
     os.makedirs(workdir, exist_ok=True)
     nx, ny = stack.grid
     L, W = stack.size_um[0] * 1e-6, stack.size_um[1] * 1e-6
     side = 1.001 * max(L, W)
-    lcf, src, names, values, li = [], {}, [], [], 0
+    lcf, src, names, rows, li = [], {}, [], [], 0
     for l, kind, th in stack.sublayers():
         m = stack.materials[l.material]
         flp = f"L{li}.flp"
         prefix = f"L{li}_"
         _flp(os.path.join(workdir, flp), stack, l, prefix)
         lcf += [f"# {l.name} {kind}".rstrip(), str(li), "Y", "Y" if kind == "src" else "N",
-                f"{m.cv:.6e}", f"{1 / m.k:.6e}", f"{th * 1e-6:.9e}", flp, ""]
+                f"{m.cv / C_FACTOR:.6e}", f"{1 / m.k:.6e}", f"{th * 1e-6:.9e}", flp, ""]
         if kind == "src":
             src[l.name] = li
-            P = power[l.name]
-            for i in range(ny):
-                for j in range(nx):
-                    names.append(f"{prefix}{i}_{j}")
-                    values.append(f"{P[i, j]:.9e}")
+            names += [f"{prefix}{i}_{j}" for i in range(ny) for j in range(nx)]
+            rows.append(power[l.name].reshape(len(power[l.name]), -1))
         li += 1
     cfg = {
         "ambient": f"{stack.ambient_K:.3f}", "init_temp": f"{stack.ambient_K:.3f}",
@@ -73,13 +87,15 @@ def write(stack, power, workdir):
         "r_convec": f"{(2 / 3) / (stack.htc * side * side):.9e}", "c_convec": "1e-12",
         "model_secondary": 0, "leakage_used": 0, "package_model_used": 0,
     }
+    if transient is not None:
+        cfg["sampling_intvl"] = f"{transient[1]:.9e}"
     paths = {k: os.path.join(workdir, f) for k, f in (("config", "hotspot.config"), ("lcf", "stack.lcf"), ("ptrace", "power.ptrace"))}
     open(paths["config"], "w", newline="\n").write("".join(f"\t\t-{k}\t{v}\n" for k, v in cfg.items()))
     open(paths["lcf"], "w", newline="\n").write("\n".join(lcf))
-    lines = ["\t".join(names), "\t".join(values)]
+    lines = ["\t".join(names)] + ["\t".join(f"{v:.9e}" for v in r) for r in np.hstack(rows)]
     longest = max(len(l) for l in lines)
     if longest + 1 >= LINE_SIZE:
         raise ValueError(f"HotSpot power trace line of {longest} characters exceeds HotSpot's LINE_SIZE ({LINE_SIZE}); "
                          "use a coarser grid or fewer source layers")
-    open(paths["ptrace"], "w", newline="\n").write(lines[0] + "\n" + lines[1] + "\n")
+    open(paths["ptrace"], "w", newline="\n").write("\n".join(lines) + "\n")
     return paths, src

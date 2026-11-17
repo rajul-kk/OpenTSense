@@ -147,6 +147,15 @@ class Stack:
             _need(np.shape(power[d.name]) == (ny, nx), f"die {d.name}: steady power map must be {(ny, nx)}, got "
                   f"{np.shape(power[d.name])}; transient (n_slots, ny, nx) maps need 3D-ICE with transient=(step, slot)")
 
+    def check_transient(self, power):
+        """Every die has an (n_slots, ny, nx) map, the same n_slots on all; returns n_slots."""
+        nx, ny = self.grid
+        shapes = {d.name: np.shape(power[d.name]) for d in self.dies}
+        _need(all(len(v) == 3 and v[1:] == (ny, nx) for v in shapes.values()),
+              f"transient power maps must be (n_slots, {ny}, {nx}), got {shapes}")
+        _need(len({v[0] for v in shapes.values()}) == 1, "transient power maps must have the same number of slots on every die")
+        return next(iter(shapes.values()))[0]
+
     def check_one_sink(self, solver):
         """For solvers with one convective face (HotSpot's secondary path is a fixed package model, not this)."""
         _need(self.opposite_htc == 0, f"{solver} has one heat sink; opposite_htc = {self.opposite_htc:g} needs 3D-ICE")

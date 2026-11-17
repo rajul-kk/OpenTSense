@@ -3,6 +3,8 @@ format only; no change to the model.
 Amendment 1 (7 Nov 2026): LINE_SIZE 65536 -> 1048576. The power trace is one line with one value per grid cell
 of every source layer; two 60 x 60 dies need ~115k characters and HotSpot stopped with "line too long".
 Buffer size only; no change to the model.
+Amendment 2 (16 Nov 2026, G94): the transient grid dump also prints 6 decimals (it printed 0.01 K, coarser than
+G94's bars). Output format only; no change to the model.
 --- a/temperature_grid.c
 +++ b/temperature_grid.c
 @@ -1284,7 +1284,7 @@
@@ -14,6 +16,15 @@ Buffer size only; no change to the model.
                    model->last_steady->cuboid[n][i][j]);
        }
      }
+@@ -1310,7 +1310,7 @@
+     fprintf(grid_transient_fp, "Layer %d:\n", l);
+     for(int i = 0; i < model->rows; i++) {
+       for(int j = 0; j < model->cols; j++) {
+-        fprintf(grid_transient_fp, "%d\t%.2f\n", i*model->cols + j, model->last_trans->cuboid[l][i][j]);
++        fprintf(grid_transient_fp, "%d\t%.6f\n", i*model->cols + j, model->last_trans->cuboid[l][i][j]);
+       }
+     }
+   }
 --- a/util.h
 +++ b/util.h
 @@ -26,7 +26,7 @@

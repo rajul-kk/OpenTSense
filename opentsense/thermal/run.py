@@ -18,7 +18,7 @@ HOTSPOT_EXE = os.environ.get("HOTSPOT_EXE", "hotspot")
 
 def run_3dice(stack, power, workdir, timeout=7200, transient=None):
     """Steady: {die: (ny, nx)}. With transient = (step_s, slot_s) and (n_slots, ny, nx) power: {die: (n_slots, ny,
-    nx)}, the map at the end of each slot (the Tmap file format is checked against the image in G94's dry run)."""
+    nx)}, the map at the end of each slot (one Tmap per slot, appended; checked in the image, G94, 16 Nov)."""
     stk = to_3dice.write(stack, power, workdir, transient=transient)
     r = subprocess.run([ICE_EXE, os.path.basename(stk)], cwd=workdir, capture_output=True, text=True, timeout=timeout)
     if r.returncode:
@@ -53,32 +53,40 @@ def run_pact(stack, power, workdir, timeout=7200, capture=False, return_src=Fals
 
 
 def read_hotspot(path, layers, nx, ny):
-    """HotSpot's grid steady file: "Layer n:" then one "index temperature" line per cell, row 0 at the top edge
-    (temperature_grid.c set_bgmap), so rows are flipped to ours. Returns {layer index: (ny, nx)}."""
-    out, cur, vals = {}, None, []
-    for line in open(path):
-        if line.startswith("Layer"):
+    """HotSpot's grid steady or transient file: per dump ("t = ..." opens each one in a transient file), "Layer n:"
+    then one "index temperature" line per cell, row 0 at the top edge (temperature_grid.c set_bgmap), so rows are
+    flipped to ours. Returns {layer index: (n_dumps, ny, nx)}."""
+    out, cur, vals = {l: [] for l in layers}, None, []
+    for line in list(open(path)) + ["t = end"]:
+        if line.startswith(("Layer", "t =")):
             if cur in layers:
-                out[cur] = np.array(vals).reshape(ny, nx)[::-1]
-            cur, vals = int(line.split()[1].rstrip(":")), []
+                out[cur].append(np.array(vals).reshape(ny, nx)[::-1])
+            cur, vals = (int(line.split()[1].rstrip(":")) if line.startswith("Layer") else None), []
         elif line.strip():
             vals.append(float(line.split()[1]))
-    if cur in layers:
-        out[cur] = np.array(vals).reshape(ny, nx)[::-1]
-    return out
+    return {l: np.array(v) for l, v in out.items()}
 
 
-def run_hotspot(stack, power, workdir, timeout=7200):
-    paths, src = to_hotspot.write(stack, power, workdir)
-    grid = os.path.join(os.path.abspath(workdir), "out.grid.steady")
+def run_hotspot(stack, power, workdir, timeout=7200, transient=None):
+    """As run_3dice: steady {die: (ny, nx)}, or {die: (n_slots, ny, nx)} at the end of each slot."""
+    paths, src = to_hotspot.write(stack, power, workdir, transient=transient)
+    wd = os.path.abspath(workdir)
+    grid = os.path.join(wd, "out.grid.steady" if transient is None else "out.grid.transient")
+    if os.path.exists(grid):
+        os.remove(grid)                                          # HotSpot appends to the transient file
     cmd = [HOTSPOT_EXE, "-c", paths["config"], "-p", paths["ptrace"], "-grid_layer_file", paths["lcf"], "-model_type", "grid",
-           "-detailed_3D", "on", "-steady_file", os.path.join(os.path.abspath(workdir), "out.steady"), "-grid_steady_file", grid]
-    r = subprocess.run(cmd, cwd=os.path.abspath(workdir), capture_output=True, text=True, timeout=timeout)
+           "-detailed_3D", "on"]
+    cmd += (["-steady_file", os.path.join(wd, "out.steady"), "-grid_steady_file", grid] if transient is None else
+            ["-o", os.path.join(wd, "out.ttrace"), "-grid_transient_file", grid])
+    r = subprocess.run(cmd, cwd=wd, capture_output=True, text=True, timeout=timeout)
     if r.returncode or not os.path.exists(grid):
         raise RuntimeError("HotSpot failed:\n" + r.stdout[-1500:] + r.stderr[-1500:])
     nx, ny = stack.grid
     T = read_hotspot(grid, set(src.values()), nx, ny)
-    return {d: T[li] for d, li in src.items()}
+    want = 1 if transient is None else stack.check_transient(power)
+    if any(len(v) != want for v in T.values()):
+        raise RuntimeError(f"HotSpot wrote {[len(v) for v in T.values()]} maps per die, expected {want}")
+    return {d: T[li][0] if transient is None else T[li] for d, li in src.items()}
 
 
 def solve_kT(run, stack, power, workdir, tol_K=0.01, max_it=20):
