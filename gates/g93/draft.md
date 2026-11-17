@@ -58,3 +58,21 @@ Yes on the four stacks. The HBM die area is flagged in the table until a primary
 Two figures need the student's library access (Choi et al. JSSC 2023 for the HBM die area; NVIDIA's datasheet is
 public). Everything else needed to register is in hand; the thickness is a stated, swept assumption.
 
+
+## Realism options (16 Nov 2026, task g93-realism; commit "stack realism")
+
+The stack model now has three options that package-level studies use. Which of them G93 uses is set in its
+registration; the proposal is all three on every stack, with each solver given what it can represent.
+
+| Option | Model key | 3D-ICE | PACT, HotSpot | Checked (image, `tests/test_solvers.py`) |
+|---|---|---|---|---|
+| Bump, TSV and hybrid-bond layers as columns in a fill | `bond_material(k_metal, k_fill, fraction, ...)` -> k (vertical, parallel rule), k_lateral (Maxwell-Garnett) | both directions | vertical k (isotropic) | direction order read right; k_lateral = k equals the isotropic material |
+| Silicon k falling with temperature | material `k_T_exp` (silicon about 1.3), `thermal.run.solve_kT` | yes | yes | settles in 3-4 solves in all three; HotSpot = 3D-ICE within 0.01 K; +0.4% peak on the small test stack, where TIM and sink hold most of the resistance |
+| Heat path down through package and board | heat_sink `opposite_htc` | yes | refused (one convective face) | equals the exact 1-D answer to 5e-6 |
+
+Consequences for G93: the three-solver bars apply to stacks without `opposite_htc`; with it, 3D-ICE alone, against
+its own run without it, reported as the bottom path's effect. The isotropic approximation that PACT and HotSpot make
+for bond layers is measured by 3D-ICE (directional against vertical-only k) and reported. S3's logic die should be a
+stated floorplan (TPU-tile compute blocks, low-power SRAM, PHY strips facing the HBM stacks) rather than a pure grid of
+the 97 um tile. Limits: one k per layer in the k(T) loop (a hotspot's own lower k is not modelled); effective bond
+values from fill fraction, not a resolved bump array.
