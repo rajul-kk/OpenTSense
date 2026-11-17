@@ -1,0 +1,9 @@
+# OpenTSense opentsense:g94a = opentsense:g93a with HotSpot rebuilt from its pinned commit and the current patch
+# (amendment 2: transient grid dump at 6 decimals, G94). Built locally, no network: /opt/hotspot is a git checkout.
+ARG BASE=opentsense:g93a
+FROM ${BASE}
+COPY patches/hotspot-f18831e.patch /tmp/
+RUN cd /opt/hotspot && test "$(cat COMMIT)" = "$(git rev-parse HEAD)" && git checkout -q -- . && \
+    patch -p1 < /tmp/hotspot-f18831e.patch && make clean > /dev/null && \
+    { make SUPERLU=1 hotspot > /tmp/hs.log 2>&1 || { tail -40 /tmp/hs.log; exit 1; }; } && \
+    grep -q 'grid_transient_fp, "%d.t%\.6f' temperature_grid.c && test -x hotspot
