@@ -3,6 +3,8 @@
 3D-ICE works in micrometres, so k is in W/(um K) and cv in J/(um^3 K). Power maps are (ny, nx) arrays in W,
 row i = y index i from the die's lower edge. Each grid cell becomes one floorplan element.
 Stack element names get an S_ prefix because some words (e.g. spreader) are 3D-ICE keywords.
+A material with k_lateral is written with three conductivities, and opposite_htc becomes a second heat sink on the
+other face (3D-ICE 4.0 grammar: `topsink bottomsink`); neither HotSpot nor PACT has them.
 A layer with regions gets a layout file: the layer's material is the base, and each rectangle of a layout overrides
 it (3D-ICE 4.0 `layout`, cells not covered keep the base material). A die with regions uses pre-declared layer types
 for its bulk and source, because only a declared layer can carry a layout.
@@ -74,8 +76,16 @@ def write(stack, power, workdir, transient=None):
     cx, cy = math.floor(L / nx * 1000) / 1000, math.floor(W / ny * 1000) / 1000
     s = []
     for m, v in stack.materials.items():
-        s += [f"material {m} :", f"   thermal conductivity {v.k * 1e-6:.6e} ;", f"   volumetric heat capacity {v.cv * 1e-18:.6e} ;"]
-    s += [f"{stack.sink_side} heat sink :", f"   heat transfer coefficient {stack.htc * 1e-12:.6e} ;", f"   temperature {stack.ambient_K:.3f} ;"]
+        # 3D-ICE takes x, y, z conductivities (include/layer.h): in-plane twice, then vertical
+        k = f"{v.k * 1e-6:.6e}" if v.k_lateral is None else f"{v.k_lateral * 1e-6:.6e}, {v.k_lateral * 1e-6:.6e}, {v.k * 1e-6:.6e}"
+        s += [f"material {m} :", f"   thermal conductivity {k} ;", f"   volumetric heat capacity {v.cv * 1e-18:.6e} ;"]
+    sinks = {stack.sink_side: stack.htc}
+    if stack.opposite_htc > 0:
+        sinks["bottom" if stack.sink_side == "top" else "top"] = stack.opposite_htc
+    for side in ("top", "bottom"):   # the grammar wants the top sink first
+        if side in sinks:
+            s += [f"{side} heat sink :", f"   heat transfer coefficient {sinks[side] * 1e-12:.6e} ;",
+                  f"   temperature {stack.ambient_K:.3f} ;"]
     s += ["dimensions :", f"  chip length {L:.6f} , width {W:.6f} ;", f"  cell length {cx:.6f} , width {cy:.6f} ;"]
     # 3D-ICE's grammar wants every layer definition before the first die definition
     for l in stack.layers:

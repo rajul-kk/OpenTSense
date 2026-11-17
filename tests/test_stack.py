@@ -187,3 +187,78 @@ def test_pact_and_hotspot_refuse_non_steady_maps(tmp_path):
     for write in (to_pact.write, to_hotspot.write):
         with pytest.raises(ValueError, match="steady"):
             write(s, {d.name: np.zeros((2, ny, nx)) for d in s.dies}, tmp_path / write.__module__)
+
+
+def test_bond_material_limits_and_anisotropy():
+    cu, fill = (400.0, 3.45e6), (0.7, 1.8e6)
+    assert model.bond_material(cu[0], fill[0], 0.0, cu[1], fill[1]).k == fill[0]
+    m = model.bond_material(cu[0], fill[0], 0.2, cu[1], fill[1])
+    assert abs(m.k - (0.2 * 400 + 0.8 * 0.7)) < 1e-12           # columns in parallel, vertically
+    assert fill[0] < m.k_lateral < 2 * fill[0] < m.k            # isolated columns barely help in-plane
+    full = model.bond_material(cu[0], fill[0], 1.0, cu[1], fill[1])
+    assert abs(full.k - 400) < 1e-9 and abs(full.k_lateral - 400) < 1e-9
+
+
+def test_material_at_temperature():
+    si = model.Material(130.0, 1.63566e6, None, 1.3)
+    assert si.at(300.0).k == 130.0
+    assert abs(si.at(390.0).k - 130.0 * 1.3 ** -1.3) < 1e-9
+    plain = model.Material(4.0, 2e6)
+    assert plain.at(390.0) is plain
+
+
+def test_load_refuses_unknown_optional_keys(tmp_path):
+    import yaml
+    for where, bad in (("heat_sink", {"oposite_htc": 100}), ("material", {"k_t_exp": 1.3})):
+        e = yaml.safe_load(open(CFG))
+        (e["heat_sink"] if where == "heat_sink" else e["materials"]["silicon"]).update(bad)
+        p = tmp_path / f"{where}.yaml"
+        yaml.safe_dump(e, open(p, "w"))
+        try:
+            model.load(p)
+        except ValueError as err:
+            assert "unknown key" in str(err)
+        else:
+            raise AssertionError(f"{where}: misspelt key accepted")
+
+
+def test_3dice_anisotropy_and_two_sinks(tmp_path):
+    s = model.load(CFG)
+    s.materials["bond"] = model.bond_material(400.0, 0.7, 0.2, 3.45e6, 1.8e6)
+    s.opposite_htc = 500.0
+    stk = open(to_3dice.write(s, {"die0": np.full(s.grid[::-1], 1e-3)}, tmp_path / "ice")).read()
+    m = s.materials["bond"]
+    assert f"thermal conductivity {m.k_lateral * 1e-6:.6e}, {m.k_lateral * 1e-6:.6e}, {m.k * 1e-6:.6e} ;" in stk
+    assert stk.index("top heat sink") < stk.index("bottom heat sink")
+    assert f"heat transfer coefficient {500.0 * 1e-12:.6e}" in stk
+
+
+def test_one_sink_solvers_refuse_an_opposite_sink(tmp_path):
+    from opentsense.stack import to_hotspot
+    s = model.load(CFG)
+    s.opposite_htc = 500.0
+    for w in (to_pact.write, to_hotspot.write):
+        try:
+            w(s, {"die0": np.full(s.grid[::-1], 1e-3)}, tmp_path / w.__module__)
+        except ValueError as err:
+            assert "3D-ICE" in str(err)
+        else:
+            raise AssertionError(f"{w.__module__} accepted opposite_htc")
+
+
+def test_solve_kT_fixed_point_on_a_1d_model(tmp_path):
+    """A fake one-node runner, T = T_amb + P t / k(T): the loop must reach the exact fixed point."""
+    from opentsense.thermal import run
+    s = model.load(CFG)
+    s.materials["silicon"] = model.Material(130.0, 1.63566e6, None, 1.3)
+    t, Pw = 1.0, 6000.0
+
+    def fake(st, power, workdir):
+        k = st.materials[st.dies[0].material].k
+        return {"die0": np.full(st.grid[::-1], st.ambient_K + Pw * t / k)}
+
+    maps, it = run.solve_kT(fake, s, None, str(tmp_path), tol_K=1e-9)
+    T = maps["die0"][0, 0]
+    assert 2 < it < 20 and abs(T - (300 + Pw * t / (130 * (T / 300) ** -1.3))) < 1e-6
+    lt = run.layer_temps(s, maps)                       # one die: every layer takes its temperature
+    assert set(lt) == {l.name for l in s.layers} and all(abs(v - T) < 1e-9 for v in lt.values())

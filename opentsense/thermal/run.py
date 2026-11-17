@@ -5,6 +5,7 @@ All three are expected inside the OpenTSense image: 3D-ICE-Emulator and hotspot 
 import os
 import subprocess
 import sys
+from dataclasses import replace
 
 import numpy as np
 
@@ -78,3 +79,49 @@ def run_hotspot(stack, power, workdir, timeout=7200):
     nx, ny = stack.grid
     T = read_hotspot(grid, set(src.values()), nx, ny)
     return {d: T[li] for d, li in src.items()}
+
+
+def solve_kT(run, stack, power, workdir, tol_K=0.01, max_it=20):
+    """Steady maps with temperature-dependent conductivity (materials with k_T_exp), for any of the three runners.
+    The solvers are linear, so this is a fixed-point loop: each layer gets its own copy of every such material at
+    the layer's temperature (a die: the mean over its T-dependent cells; a passive layer: the mean of its nearest
+    die or dies), until no map moves by more than tol_K. One k per layer, not per cell: a hotspot's own lower k is
+    not modelled. Returns (maps, iterations)."""
+    if not any(m.k_T_exp for m in stack.materials.values()):
+        return run(stack, power, workdir), 1
+    T = {l.name: stack.ambient_K for l in stack.layers}
+    prev = None
+    for it in range(1, max_it + 1):
+        maps = run(stack_at(stack, T), power, os.path.join(workdir, f"kT{it}"))
+        if prev is not None and max(float(np.abs(maps[d] - prev[d]).max()) for d in maps) < tol_K:
+            return maps, it
+        prev, T = maps, layer_temps(stack, maps)
+    raise RuntimeError(f"k(T) loop did not settle to {tol_K} K in {max_it} solves")
+
+
+def layer_temps(stack, maps):
+    """{layer: K} from the die maps, as solve_kT uses them."""
+    dep = {m for m, v in stack.materials.items() if v.k_T_exp}
+    die_T = {}
+    for d in stack.dies:
+        mask = np.isin(stack.material_map(d), list(dep))
+        die_T[d.name] = float(maps[d.name][mask].mean() if mask.any() else maps[d.name].mean())
+    at = [i for i, l in enumerate(stack.layers) if l.die]
+    out = {}
+    for i, l in enumerate(stack.layers):
+        gap = min(abs(i - j) for j in at)
+        out[l.name] = float(np.mean([die_T[stack.layers[j].name] for j in at if abs(i - j) == gap]))
+    return out
+
+
+def stack_at(stack, T):
+    """A copy of the stack whose layers use their own copy of each T-dependent material at T[layer] (K)."""
+    mats = dict(stack.materials)
+    layers = []
+    for l in stack.layers:
+        name = lambda m: f"{m}_at_{l.name}" if stack.materials[m].k_T_exp else m  # noqa: E731
+        for m in {l.material} | {r.material for r in l.regions}:
+            mats[name(m)] = stack.materials[m].at(T[l.name])
+        layers.append(replace(l, material=name(l.material),
+                              regions=[replace(r, material=name(r.material)) for r in l.regions]))
+    return replace(stack, materials=mats, layers=layers)

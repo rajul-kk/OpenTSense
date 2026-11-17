@@ -43,6 +43,7 @@ def _flp(path, stack, layer, prefix):
 def write(stack, power, workdir):
     """power: {die layer name: (ny, nx) array in W}. Returns (paths dict, {die: HotSpot layer index of its source})."""
     stack.check_steady(power)
+    stack.check_one_sink("HotSpot")
     workdir = os.path.abspath(workdir)
     os.makedirs(workdir, exist_ok=True)
     nx, ny = stack.grid

@@ -85,6 +85,7 @@ def label_map(stack):
 def write(stack, power, workdir):
     """power: {die layer name: (ny, nx) array in W}. Returns (args for PACT.py, {die: PACT layer index of its source})."""
     stack.check_steady(power)
+    stack.check_one_sink("PACT")
     workdir = os.path.abspath(workdir)  # PACT runs from its own source folder, so the layer CSV needs absolute paths
     os.makedirs(workdir, exist_ok=True)
     lab = label_map(stack)

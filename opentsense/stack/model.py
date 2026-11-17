@@ -24,6 +24,15 @@ Optional per layer:
   (for a die: bulk and source). Rectangles must lie on the cell grid and must not overlap. x runs along size_um[0]
   (grid columns), y along size_um[1] (grid rows), from the lower-left corner.
 
+Optional per material (package-level realism, 16 Nov):
+- k_lateral: in-plane conductivity when it differs from k, which is then the vertical one (bump, TSV and bond layers;
+  `bond_material` computes both). Only 3D-ICE models the difference; HotSpot and PACT are isotropic and use k.
+- k_T_exp: k (and k_lateral) scale as (T / 300 K)^-k_T_exp; k is the 300 K value. Silicon is about 1.3. Solvers are
+  linear, so `thermal.run.solve_kT` iterates on each layer's temperature.
+
+Optional heat_sink key opposite_htc: a second convective boundary on the face away from the sink (the path down
+through package and board), W/(m^2 K). Only 3D-ICE has it; HotSpot and PACT refuse such a stack.
+
 Power maps are (ny, nx) arrays over the whole stack footprint, one per die layer. `place` puts a die-local map into
 a rectangle of the footprint.
 """
@@ -35,8 +44,25 @@ import yaml
 
 @dataclass
 class Material:
-    k: float   # W/(m K)
+    k: float   # W/(m K); the vertical value when k_lateral is set
     cv: float  # J/(m^3 K)
+    k_lateral: float = None  # W/(m K) in-plane, if it differs from k
+    k_T_exp: float = None    # k(T) = k (T / 300 K)^-k_T_exp
+
+    def at(self, T_K):
+        """This material at temperature T_K (isotropy and cv unchanged); itself if k does not depend on T."""
+        if not self.k_T_exp:
+            return self
+        f = (T_K / 300.0) ** -self.k_T_exp
+        return Material(self.k * f, self.cv, None if self.k_lateral is None else self.k_lateral * f)
+
+
+def bond_material(k_metal, k_fill, fraction, cv_metal, cv_fill):
+    """Effective material of a layer of parallel metal columns (bumps, TSVs, hybrid-bond pads) at area `fraction` in
+    a fill: vertical k by the parallel rule, in-plane k by Maxwell-Garnett for aligned cylinders, cv by volume."""
+    f = fraction
+    k_lat = k_fill * ((1 + f) * k_metal + (1 - f) * k_fill) / ((1 - f) * k_metal + (1 + f) * k_fill)
+    return Material(f * k_metal + (1 - f) * k_fill, f * cv_metal + (1 - f) * cv_fill, k_lat)
 
 
 @dataclass
@@ -75,6 +101,7 @@ class Stack:
     materials: dict
     layers: list = field(default_factory=list)
     sink_side: str = "top"
+    opposite_htc: float = 0.0  # W/(m^2 K) on the face away from the sink; 0 = adiabatic
 
     @property
     def dies(self):
@@ -120,6 +147,10 @@ class Stack:
             _need(np.shape(power[d.name]) == (ny, nx), f"die {d.name}: steady power map must be {(ny, nx)}, got "
                   f"{np.shape(power[d.name])}; transient (n_slots, ny, nx) maps need 3D-ICE with transient=(step, slot)")
 
+    def check_one_sink(self, solver):
+        """For solvers with one convective face (HotSpot's secondary path is a fixed package model, not this)."""
+        _need(self.opposite_htc == 0, f"{solver} has one heat sink; opposite_htc = {self.opposite_htc:g} needs 3D-ICE")
+
     def sublayers(self):
         """(layer, kind, thickness um) for every solver sublayer, starting at the side away from the heat sink.
         kind is "src" for a die's source layer, "bulk" for its bulk sublayers and "" for a passive layer."""
@@ -138,6 +169,11 @@ class Stack:
         _need(self.layers, "stack has no layers")
         _need(self.dies, "stack has no die")
         _need(self.sink_side in ("top", "bottom"), "heat_sink side must be top or bottom")
+        _need(self.opposite_htc >= 0, "heat_sink opposite_htc must be >= 0")
+        for name, m in self.materials.items():
+            _need(m.k > 0 and m.cv > 0, f"material {name}: k and cv must be > 0")
+            _need(m.k_lateral is None or m.k_lateral > 0, f"material {name}: k_lateral must be > 0")
+            _need(m.k_T_exp is None or m.k_T_exp >= 0, f"material {name}: k_T_exp must be >= 0")
         nx, ny = self.grid
         for l in self.layers:
             _need(l.material in self.materials, f"layer {l.name}: unknown material {l.material}")
@@ -163,6 +199,18 @@ def _need(ok, msg):
         raise ValueError(msg)
 
 
+def _known(where, d, keys):
+    """d itself, after refusing any key outside `keys` (a misspelt optional key must not fall back to its default)."""
+    _need(not set(d) - keys, f"{where}: unknown key(s) {sorted(set(d) - keys)}")
+    return d
+
+
+def _material(name, v):
+    _known(f"material {name}", v, {"k", "cv", "k_lateral", "k_T_exp"})
+    opt = lambda key: None if v.get(key) is None else float(v[key])  # noqa: E731
+    return Material(float(v["k"]), float(v["cv"]), opt("k_lateral"), opt("k_T_exp"))
+
+
 def load(path):
     d = yaml.safe_load(open(path))
     hs = d["heat_sink"]
@@ -172,7 +220,8 @@ def load(path):
         grid=tuple(d["grid"]),
         ambient_K=float(d.get("ambient_K", 300.0)),
         htc=float(hs["htc"]),
-        materials={m: Material(float(v["k"]), float(v["cv"])) for m, v in d["materials"].items()},
+        materials={m: _material(m, v) for m, v in d["materials"].items()},
         layers=[Layer(**l) for l in d["layers"]],
         sink_side=hs.get("side", "top"),
+        opposite_htc=float(_known("heat_sink", hs, {"htc", "side", "opposite_htc"}).get("opposite_htc", 0.0)),
     ).validate()
