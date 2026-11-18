@@ -73,3 +73,21 @@ H1 is the gated hierarchy and H0 is reported only, as written. Bar numbers still
 `dry/fit_energy-rerun-20261116.json` beside the first (`dry/fit_energy.json`, kept as run): largest calibration
 residual 2e-15 relative, worst held-out total error 2.21e-4 (was 2.21e-4), worst per-bank error 3e-16. The model's
 numbers can be quoted as of this rerun.
+
+## Step 1, run 1 (16 Nov 2026; `step1/`, outputs in `runs/step1-main/`, gitignored)
+
+All 20 G81b programs ran in G81b's gate-level testbench with the request log added (`step1/build_sim.sh`; the
+testbench differs from G81b's by the 8 inserted lines only). Check (v1): each run ends with G81b's result and cycle
+count, and in each of G81b's 20 windows per program the trace holds exactly the requests the VCD shows.
+
+| | Programs |
+|---|---|
+| v1 passed (result, cycles and every window's requests equal) | 18 |
+| v1 failed | 2: md5sum, nettle-aes |
+
+Both failures are harness faults, not testbench ones: their traces were written during the first launch, which was
+interrupted (session memory guard), and the resume rule accepted them because each had a RESULT line and a gzipped
+trace. nettle-aes's trace starts at cycle 272951 instead of 6; md5sum's first windows match and later ones do not. Both
+ended with G81b's result and cycles. Fix: a program is skipped only with an `ok` marker written after simv exits 0 and
+its trace is gzipped (`step1/run.sh`); the 18 verified programs were marked from `v1-run1.json`, the two failed
+directories kept as `*.run1`, and only those two rerun. Run 1's check is kept as `v1-run1.json` and `job-run1.log`.
