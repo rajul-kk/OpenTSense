@@ -1,0 +1,7 @@
+mean rise of the source layer (K) at 1, 2, 4, 12 ms
+1-D reference            1.439  1.841  2.182  3.148   (steady 7.259)
+3D-ICE, step 0.1 ms      1.446  1.872  2.225  3.176
+HotSpot                  1.195  1.714  2.186  3.161
+PACT, step 0.1 ms        1.192  1.642  2.033  3.000
+PACT, step 0.01 ms       1.221  1.659  2.036  3.001
+PACT, step 0.001 ms      1.224  1.660  2.037  3.001

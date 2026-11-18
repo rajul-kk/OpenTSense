@@ -57,6 +57,8 @@ Two of the three transient paths are partly ours: HotSpot with its capacitance f
 
 ### Which side is right early on (16 Nov 2026, task g94-1d; `dry/one_d.py`, output `dry/one_d.txt`)
 
+*Note (16 Nov 2026, after review):* `one_d.txt` was made in `opentsense:g93a`, whose HotSpot transient dump has 2 decimals (its HotSpot row is rounded to 0.01 K). Rerun unchanged in `opentsense:g94a` (6 decimals): `dry/one_d-g94a.txt`. HotSpot moves by at most 0.005 K (1.195 against 1.190 K at 1 ms); the other rows are identical, and nothing below changes.
+
 Uniform 0.5 W on the small stack makes the problem 1-D, so a fine 1-D reference (each sublayer split 20 times,
 Crank-Nicolson, 1 us steps) stands for the truth. Mean source-layer rise at 1 / 2 / 4 / 12 ms: reference 1.439 /
 1.841 / 2.182 / 3.148 K; 3D-ICE 1.446 / 1.872 / 2.225 / 3.176 (within 2% throughout); HotSpot 1.190 / 1.710 / 2.190 /
