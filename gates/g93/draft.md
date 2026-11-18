@@ -114,3 +114,18 @@ it reuses `zen3_ccd` per tier unless the registration says otherwise. Densities 
 The probe was stopped during S3 by the session's low-memory guard (machine at about 3 GB free), not by the cap or an
 error. HotSpot's memory grows fastest (2 GB at 93k nodes), so S3 at 335k nodes likely needs a coarser HotSpot grid or
 more free RAM; S3 is to be probed alone when the machine has room.
+
+### S2 and S3 on a Kaggle CPU session (16 Nov 2026; `dry/kaggle_probe.py`, output `dry/size_probe_kaggle.jsonl`)
+
+Kaggle has no Docker, so the script builds 3D-ICE, HotSpot and PACT from the pinned commits and our patches (system
+libraries are Kaggle's, not the image's snapshot) and runs `tests/test_solvers.py` first: 11 passed. S2's peak memory
+matches the local image's to within 0.02 GB in every solver (times are about 2x the local ones).
+
+| Stack | Nodes | 3D-ICE | HotSpot | PACT |
+|---|---|---|---|---|
+| S2 HBM, 250 um | 93k | 39 s, 0.80 GB | 111 s, 2.03 GB | 66 s, 1.07 GB |
+| S3 2.5D, 500 um | 335k | 534 s, 5.1 GB | 2082 s, 15.6 GB | 614 s, 7.0 GB |
+
+S3 runs in all three solvers, but HotSpot needs 15.6 GB, more than this machine's 15.7 GB total: S3 runs on Kaggle
+(about 30 GB) or with a coarser HotSpot grid. Before any gated G93 result from Kaggle, one small stack is compared
+against the image's temperatures (architecture lint A18); this probe printed none.

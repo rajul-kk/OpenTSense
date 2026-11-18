@@ -1,0 +1,6 @@
+{"stack": "s2", "cell_um": 250.0, "solver": "ice", "grid": [44, 44], "sublayers": 48, "nodes": 92928, "ok": true, "wall_s": 38.5, "peak_rss_GB": 0.8, "error": ""}
+{"stack": "s2", "cell_um": 250.0, "solver": "hs", "grid": [44, 44], "sublayers": 48, "nodes": 92928, "ok": true, "wall_s": 111.1, "peak_rss_GB": 2.03, "error": ""}
+{"stack": "s2", "cell_um": 250.0, "solver": "pact", "grid": [44, 44], "sublayers": 48, "nodes": 92928, "ok": true, "wall_s": 65.6, "peak_rss_GB": 1.07, "error": ""}
+{"stack": "s3", "cell_um": 500.0, "solver": "ice", "grid": [107, 59], "sublayers": 53, "nodes": 334589, "ok": true, "wall_s": 533.6, "peak_rss_GB": 5.13, "error": ""}
+{"stack": "s3", "cell_um": 500.0, "solver": "hs", "grid": [107, 59], "sublayers": 53, "nodes": 334589, "ok": true, "wall_s": 2081.7, "peak_rss_GB": 15.63, "error": ""}
+{"stack": "s3", "cell_um": 500.0, "solver": "pact", "grid": [107, 59], "sublayers": 53, "nodes": 334589, "ok": true, "wall_s": 614.2, "peak_rss_GB": 7.04, "error": ""}
