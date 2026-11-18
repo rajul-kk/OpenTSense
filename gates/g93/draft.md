@@ -129,3 +129,39 @@ matches the local image's to within 0.02 GB in every solver (times are about 2x 
 S3 runs in all three solvers, but HotSpot needs 15.6 GB, more than this machine's 15.7 GB total: S3 runs on Kaggle
 (about 30 GB) or with a coarser HotSpot grid. Before any gated G93 result from Kaggle, one small stack is compared
 against the image's temperatures (architecture lint A18); this probe printed none.
+
+## Interface resistances (16 Nov 2026, goal 10; before registration)
+
+The parallel-rule bond layers left out contact resistance: they gave 0.05 mm2 K/W for the hybrid bond and 2.9 for a
+micro-bump layer. Bonded layers now take k = t / R'' from measured area resistances (`stacks.py`, cited via the SMTA
+2025 hybrid-bonding review), graded and swept:
+
+| Interface | R'' (mm2 K/W) | Source | Grade | Sweep |
+|---|---|---|---|---|
+| Hybrid Cu/oxide bond (S1, S4), 2 um | 1.2 | Oprins et al., ITherm 2016 (imec, measured); 2.49 simulated by Han and Kawano, EPTC 2021 | secondary | 1.2 to 2.5 |
+| Micro-bump layer, solder in underfill (S2, S3), 10 um | 10 | Colgan et al., SEMI-THERM 2012 (IBM, measured 8 to 15) | secondary | 8 to 15 |
+| TIM1, 50 um | 12.5 | assumed polymer TIM1 (as G93a, 4 W/m K) | assumption | 5 to 20 |
+
+By hand (flux x R''): about 1.3 K across S1's bond at 85 W (was 0.05 K), and about 1.7 K per micro-bump layer at
+S2's full flux, so several K over the HBM stack. TSV columns are not added: at about 1% of a silicon die's area they
+raise its vertical k by about 2%. All three solvers represent these (isotropic layers), so they stay in the gate.
+
+After review (16 Nov 2026): only the L3D is hybrid-bonded; the structural silicon over the cores is oxide-bonded
+(AMD slide 14), so S1's bond layer is `oxide_bond` (ASSUMED 1.43 mm2 K/W: 2 um of oxide at 1.4 W/m K, the bonded
+interface itself small by TDTR, arXiv 2601.03106; swept to 2.9) with a `hybrid_bond` region over the L3D, snapped to
+the grid. Interface thicknesses and R'' are build parameters (`stacks.build(name, cell, **interfaces)`), so a sweep
+keeps k = t / R'' in every bonded layer (tested at a sweep point).
+
+### Seen before registration (declared)
+
+- 16 Nov 2026, a solver-acceptance check of the oxide-bond region: S1 at 500 um cells, uniform-in-block nominal
+  power, all three solvers. Peak rise over ambient: 3D-ICE 59.22 K (CCD) / 55.34 K (L3D), HotSpot 58.86 / 54.98,
+  PACT 59.04 / 55.18 (spread 0.36 K, 0.6%). The registration's bars must be set without reference to these numbers;
+  the gated runs are at the registered cells and sweep points, not this one.
+
+### To settle in the registration
+
+- S3 places the 700 W logic die as silicon regions inside the HBM layer columns and its power on the `hbase` source
+  layer, so "die hbase" mixes the logic die with the four HBM base dies, and k(T) takes one temperature per layer
+  over all its silicon. Report S3 per region (logic, each HBM column), not per die, and give k(T) per region or
+  state the averaging (found by code review, 16 Nov).
