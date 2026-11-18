@@ -109,3 +109,15 @@ the TPU at 800 ps and G100 recorded its windows on 16 Nov.
 - Run: `bash gates/g97/run.sh tpu` into `runs/tpu`, scored by `evaluate.py runs/tpu tpu`. The runner and evaluator
   gained this design as a parameter only; re-scoring the Ibex main run with the changed evaluator reproduces
   `record/result.json` exactly.
+
+## Amendment 4 (16 Nov 2026, AFTER the TPU run; from /code-review of the runner and evaluator; scoring code only)
+
+- Inputs are hashed before anything is written, so a missing input stops scoring with no partial record; hashing is
+  chunked (`manifest.file_sha256`). G100's power maps now come from its tracked record (`record/<tag>/maps.npz`),
+  equal to the run's copy, instead of the gitignored run directory; the instance locations still come from the run.
+- V3's "voltage maps differ" compares the hash of each window's VDD FULL voltage file (one layout, so PDNSim writes
+  instances in the same order) instead of holding every map in memory. A missing report_power total now makes V3
+  false instead of stopping the scorer.
+- `run.sh` checks every window's VCD exists before deleting any output.
+Re-scoring both runs with this code reproduces `record/result.json` and `record/tpu-800/result.json` exactly; their
+manifests were rewritten by it. No bar, threshold or PDNSim run changed.
