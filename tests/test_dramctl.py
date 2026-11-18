@@ -147,3 +147,14 @@ def test_memspec_mismatches_names_each_differing_value():
     assert dramctl.memspec_mismatches(S, drsys) == []
     drsys["memspec"]["memtimingspec"]["WR"] = 30
     assert dramctl.memspec_mismatches(S, drsys) == ["t.WR: ours 29, memspec 30"]
+
+
+def test_every_salt_reshuffles_rows_over_banks():
+    """Nearby salts must give different row-to-bank maps (the noise-floor seeds), not one map relabelled."""
+    S = dramctl.LPDDR4_3200
+    _, row_bytes, nb = dramctl.geometry(S)
+    maps = [[dramctl.map_address(r * row_bytes * nb, S, salt)[0] for r in range(512)] for salt in (1, 2, 3)]
+    for a, b in ((0, 1), (1, 2)):
+        moved = sum(x != y for x, y in zip(maps[a], maps[b]))
+        assert moved > 256
+        assert len({(x - y) % nb for x, y in zip(maps[a], maps[b])}) > 1   # not a constant relabelling
