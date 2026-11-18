@@ -51,7 +51,10 @@
 
 Step response of `tests/test_solvers.small` (16 x 12 cells, one die, 0.5 W with a 4x hotspot), slot 1 ms, step 0.1 ms; peak rise at 1 / 2 / 4 / 12 ms: 3D-ICE 3.44 / 4.03 / 4.46 / 5.60 K, HotSpot 2.90 / 3.77 / 4.41 / 5.58 K, PACT 2.92 / 3.57 / 4.06 / 5.22 K. HotSpot and PACT agree early and 3D-ICE reads about 0.5 K higher at 1 ms; PACT ends 0.18 K below the others at steady (its steady offset, G93a). Wall time 0.1 / 0.4 / 2.9 s. These are known before the bars are fixed, and the registration must say so.
 
-### Student decision needed before registration
+### Student decision (16 Nov 2026): A, "three discretisations"
+
+The student chose A: G94 compares three discretisations (3D-ICE as shipped, HotSpot with C_FACTOR undone, PACT's network by our backward Euler); stock HotSpot and PACT's ngspice netlist are not run. The text below is the question as it was put.
+
 
 Two of the three transient paths are partly ours: HotSpot with its capacitance fitting factor undone (not stock HotSpot), and PACT's network integrated by our backward Euler with capacities computed as PACT's Solid.py does (not PACT's Xyce path; not yet compared with PACT's own C array). So "three solvers agree in time" means "three discretisations agree". Options: accept that wording; or also report stock HotSpot (C_FACTOR kept) and PACT's netlist run in ngspice beside them. Before any bar is fixed, a uniform-power 1-D transient against a fine 1-D reference must say which side the 0.5 K early gap is on. G94 is not run unattended.
 
