@@ -1,5 +1,6 @@
 """Version manifest written by every run: tool versions, Python packages, repo commit and image digests."""
 import datetime
+import hashlib
 import json
 import os
 import platform
@@ -17,6 +18,15 @@ TOOLS = {
     "ca_certificates": ["dpkg-query", "-W", "-f", "${Version}", "ca-certificates"],
 }
 PACKAGES = ["numpy", "scipy", "pandas", "PyYAML", "pytest"]
+
+
+def file_sha256(path, chunk=1 << 20):
+    """sha256 of a file, read in chunks (layouts and VCDs reach hundreds of MB)."""
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for b in iter(lambda: f.read(chunk), b""):
+            h.update(b)
+    return h.hexdigest()
 
 
 def _first_line(cmd):

@@ -1,13 +1,13 @@
 {
-  "time_utc": "2026-11-15T16:26:31+00:00",
+  "time_utc": "2026-11-16T10:31:30+00:00",
   "host": "Rajul",
   "python": "3.10.0",
   "repo": {
-    "commit": "628de24b4b8e2166bfb732ac5476e2db01bf542e",
+    "commit": "024a3b7c88c1284cc0c038ed1ec3e2e693fed0f0",
     "dirty": true
   },
   "image": null,
-  "orfs_image": "openroad/orfs@sha256:55266bc72fd67238407fa0c60da5a7f83c25ea14123829df769437d0dd0649ed",
+  "orfs_image": null,
   "tools": {
     "iverilog": null,
     "verilator": null,
@@ -26,15 +26,16 @@
     "pytest": "9.0.2"
   },
   "gate": "G97",
+  "design": "ibex",
   "inputs_sha256": {
-    "gates/g97/registration.md": "1cb8f022f5381d1e2c901692391b6af6e0465fdbe09ffcdafb4be5a70621c54d",
+    "gates/g97/registration.md": "784ff7a0be9eb4e9edd4fbaca0a839ba2ba422e10bcc865a9487184dc949de6d",
     "gates/g97/ir.tcl": "3f9d44e1a2ebe451c71faf516bf89ba7f2755930805adf4de37375771596a20a",
-    "gates/g97/run.sh": "b1deaf874bab566eac4c8bcda384be580c82930e4401826c64a11087abd4a783",
-    "gates/g97/evaluate.py": "4a5cb276c7b5d11636d27a397fe69b8db85ecd1db4939370b2f9c44bebfcd96a",
+    "gates/g97/run.sh": "6466f29da5bd56c3e443cd46d355f99850841cb49a725c7dea5477f1ddf384f5",
+    "gates/g97/evaluate.py": "38922cd02da136d45cede72fcb340c33d8f35af1844d29c5f85ce70a2f28f2e2",
     "gates/g96/dry/load_routed.tcl": "60fcbc899b7179038891cc8606dc8438d1a972cc1ef5a28329ef784f5526b6c4",
     "opentsense/power/maps.py": "eb279e9e478824262aceddbd6bb26b8868c7b2b4d104a550d55ce25049fb2ce1",
     "gates/g100/record/ibex-1400/result.json": "f2988c6171ffc2b3f0cb86be90b0d746c61a382e9ff219398cb3be3f22b2e268",
-    "gates/g100/runs/ibex-1400/maps.npz": "5e4001a12c2f1f72896c343037d32f8d90f6e6a64f6c4537ad335a00ada63be1",
+    "gates/g100/record/ibex-1400/maps.npz": "5e4001a12c2f1f72896c343037d32f8d90f6e6a64f6c4537ad335a00ada63be1",
     "gates/g100/runs/ibex-1400/power/ibex_loc.csv": "83037296bd59fdeb163088cc7494f2b40cd3d0c5caec19b16a0a83bf70bd0c33",
     "layout/6_final.odb": "8ceea97d0b61dda1b9e22051da047d9583c84d0d13467f7289fb949cd90593ef",
     "layout/6_final.sdc": "c4628a32ac3498f37574021e95480d0ff463d72c65e7061f4f4a95d86c4346d0",

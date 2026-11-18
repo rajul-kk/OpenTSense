@@ -1,5 +1,5 @@
 {
-  "time_utc": "2026-11-16T10:22:50+00:00",
+  "time_utc": "2026-11-16T10:31:38+00:00",
   "host": "Rajul",
   "python": "3.10.0",
   "repo": {
@@ -7,7 +7,7 @@
     "dirty": true
   },
   "image": null,
-  "orfs_image": "openroad/orfs@sha256:55266bc72fd67238407fa0c60da5a7f83c25ea14123829df769437d0dd0649ed",
+  "orfs_image": null,
   "tools": {
     "iverilog": null,
     "verilator": null,
@@ -30,12 +30,12 @@
   "inputs_sha256": {
     "gates/g97/registration.md": "784ff7a0be9eb4e9edd4fbaca0a839ba2ba422e10bcc865a9487184dc949de6d",
     "gates/g97/ir.tcl": "3f9d44e1a2ebe451c71faf516bf89ba7f2755930805adf4de37375771596a20a",
-    "gates/g97/run.sh": "cef777a4df4442c6dbaff98979343d948bb1c52bfc9e54a89a8f4c9b924a44f1",
-    "gates/g97/evaluate.py": "f6dacddaee9d402e4e8debefdc95282524e0c32a3d1e304667d005c76d626b1c",
+    "gates/g97/run.sh": "6466f29da5bd56c3e443cd46d355f99850841cb49a725c7dea5477f1ddf384f5",
+    "gates/g97/evaluate.py": "38922cd02da136d45cede72fcb340c33d8f35af1844d29c5f85ce70a2f28f2e2",
     "gates/g96/dry/load_routed.tcl": "60fcbc899b7179038891cc8606dc8438d1a972cc1ef5a28329ef784f5526b6c4",
     "opentsense/power/maps.py": "eb279e9e478824262aceddbd6bb26b8868c7b2b4d104a550d55ce25049fb2ce1",
     "gates/g100/record/tpu-800/result.json": "65a0b28cc3db307467efcc215a221a026f8a8aa13f0e2750f4958bd27c72540e",
-    "gates/g100/runs/tpu-800/maps.npz": "a5874e21557a6fdbf079a1200de9bf20af3990cfb13f5815912364cef28d24d0",
+    "gates/g100/record/tpu-800/maps.npz": "a5874e21557a6fdbf079a1200de9bf20af3990cfb13f5815912364cef28d24d0",
     "gates/g100/runs/tpu-800/power/tpu_loc.csv": "594e75f6140f21b1b742b124c8612b04cd4213bf27a370fca19140e641681eab",
     "layout/6_final.odb": "8a281bf9d37457b1627f5c36392e4ccd7b90c79704b8100fdea015c642e9b141",
     "layout/6_final.sdc": "476f0cba5263988bfb20b4893cd7b9c0df525d67ade6f8a4f51ffe6a3a647085",
