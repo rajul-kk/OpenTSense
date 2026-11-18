@@ -1,0 +1,1213 @@
+{
+ "case_set_sha256": "f5941ad74a0d62f256c052607607be24985eaaa3c43fffe3fa10514a677f6e7c",
+ "profiles": {
+  "ideal_gauss": [
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.06254558032814285,
+      "mean_group_p90": 0.10539511030830437,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.09296841006303552,
+      "mean_group_p90": 0.12330395457400581,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.2165727154077155,
+      "mean_group_p90": 1.3566903265992787,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.38861861973199757,
+      "mean_group_p90": 0.4422436997840078,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 6.975738142898488,
+      "mean_group_p90": 12.355375232381887,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.0711029673423464,
+      "mean_group_p90": 11.775163979714176,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.419557020580056,
+      -2.652806446338314
+     ],
+     "bot": [
+      -3.223490549601535,
+      -2.440621145990853
+     ]
+    }
+   },
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.06289558168946359,
+      "mean_group_p90": 0.09840149284671376,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.08795216211327767,
+      "mean_group_p90": 0.12783235233135218,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.2257094727930693,
+      "mean_group_p90": 1.3621254615395533,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.39079794516290994,
+      "mean_group_p90": 0.4380411337983552,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 6.974805251302936,
+      "mean_group_p90": 12.327813257191327,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.07923189035998,
+      "mean_group_p90": 11.735893036516185,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.421672549022067,
+      -2.6472691594651456
+     ],
+     "bot": [
+      -3.23511176402455,
+      -2.439949611432496
+     ]
+    }
+   },
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.06507686340264507,
+      "mean_group_p90": 0.10714710570055383,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.09457522735500447,
+      "mean_group_p90": 0.13375028078085566,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.2196001449788492,
+      "mean_group_p90": 1.3652525750909714,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.3992263488980569,
+      "mean_group_p90": 0.43935319047319327,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 6.96736294565732,
+      "mean_group_p90": 12.3423712442152,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.078702642489458,
+      "mean_group_p90": 11.765240618004865,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.4216687567877853,
+      -2.6464118470824083
+     ],
+     "bot": [
+      -3.243499689730835,
+      -2.4299393531806084
+     ]
+    }
+   },
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.06037443014132424,
+      "mean_group_p90": 0.1050545036259237,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.09034567281079389,
+      "mean_group_p90": 0.11959625267472215,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.2161993856257791,
+      "mean_group_p90": 1.3546692740034192,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.4040856140514103,
+      "mean_group_p90": 0.4574021048585003,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 6.955567640032655,
+      "mean_group_p90": 12.359414077093447,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.061188127713356,
+      "mean_group_p90": 11.760566002881081,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.4199495285407355,
+      -2.656959927693885
+     ],
+     "bot": [
+      -3.236865987052224,
+      -2.4372123357057776
+     ]
+    }
+   },
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.06252694949947779,
+      "mean_group_p90": 0.10432844912733628,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.09872823043145396,
+      "mean_group_p90": 0.14239569900157828,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.2180958908540065,
+      "mean_group_p90": 1.358488489830761,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.40126806012573546,
+      "mean_group_p90": 0.4594047982315529,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 6.966361181337709,
+      "mean_group_p90": 12.334895716004814,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.08968057666635,
+      "mean_group_p90": 11.741468855334398,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.4209998338405208,
+      -2.651015214738705
+     ],
+     "bot": [
+      -3.2183780648980598,
+      -2.434778465768023
+     ]
+    }
+   }
+  ],
+  "bjt_trimmed": [
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.05139359078262114,
+      "mean_group_p90": 0.09662178065174853,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.086083452796718,
+      "mean_group_p90": 0.10065842864872254,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.22080330806934,
+      "mean_group_p90": 1.3604444075441533,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.42306165942177487,
+      "mean_group_p90": 0.45366930273052486,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 6.98689258765207,
+      "mean_group_p90": 12.33091058335871,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.140808053829771,
+      "mean_group_p90": 11.722692026712053,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.435803561980222,
+      -2.660061099521023
+     ],
+     "bot": [
+      -3.2543261126660314,
+      -2.4277493719989534
+     ]
+    }
+   },
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.06414657154211376,
+      "mean_group_p90": 0.0960873331819688,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.12333454033636157,
+      "mean_group_p90": 0.1386542548717945,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.2262865592711911,
+      "mean_group_p90": 1.365420518180422,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.4439567829655866,
+      "mean_group_p90": 0.47390666112726026,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 6.9801238097188065,
+      "mean_group_p90": 12.325651855359215,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.173106951222666,
+      "mean_group_p90": 11.685740305013004,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.4219757886284814,
+      -2.648312701427036
+     ],
+     "bot": [
+      -3.209980475755735,
+      -2.3959336664065995
+     ]
+    }
+   },
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.18276014411848185,
+      "mean_group_p90": 0.23560864154414068,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.1688546349767816,
+      "mean_group_p90": 0.1925624918650316,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.2148341908454316,
+      "mean_group_p90": 1.355944738707958,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.4933311782852063,
+      "mean_group_p90": 0.5258745283566836,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 6.921843170059761,
+      "mean_group_p90": 12.36570396965724,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.134727990370564,
+      "mean_group_p90": 11.725658219672821,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.3042120288394514,
+      -2.5383444579424776
+     ],
+     "bot": [
+      -3.171836106428754,
+      -2.3301239258186976
+     ]
+    }
+   },
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.04989757229977216,
+      "mean_group_p90": 0.09218472447623992,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.0907246506071025,
+      "mean_group_p90": 0.10679775264160192,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.2136967116917736,
+      "mean_group_p90": 1.3538122575964044,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.3957038362122923,
+      "mean_group_p90": 0.42823298974998825,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 6.974852884274587,
+      "mean_group_p90": 12.32839400359305,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.105321516796359,
+      "mean_group_p90": 11.75497563063761,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.4317613576885533,
+      -2.6592477226193365
+     ],
+     "bot": [
+      -3.226169316412983,
+      -2.447216639079287
+     ]
+    }
+   },
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.05100137196402291,
+      "mean_group_p90": 0.09631988320620109,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.07902665552021183,
+      "mean_group_p90": 0.09287674334199414,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.220393116922187,
+      "mean_group_p90": 1.3606949945958453,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.4055227260907803,
+      "mean_group_p90": 0.435296287086715,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 6.984838578774661,
+      "mean_group_p90": 12.322699679070645,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.154698975614913,
+      "mean_group_p90": 11.701599960901358,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.4326204127292286,
+      -2.6601965339841986
+     ],
+     "bot": [
+      -3.2404214390369632,
+      -2.4586274212788783
+     ]
+    }
+   }
+  ],
+  "ring_osc": [
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.360482103275562,
+      "mean_group_p90": 0.41210890465505357,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.2723993131941024,
+      "mean_group_p90": 0.30729203603841726,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.3092003774305254,
+      "mean_group_p90": 1.454986085033484,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.43051849424178734,
+      "mean_group_p90": 0.4670469271875469,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 6.734428517200302,
+      "mean_group_p90": 12.527493034158876,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.22593057747936,
+      "mean_group_p90": 11.665856809366487,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.133405311681612,
+      -2.3538377419943757
+     ],
+     "bot": [
+      -3.093482236290125,
+      -2.248472078560494
+     ]
+    }
+   },
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.2143113622309987,
+      "mean_group_p90": 0.27413593489989285,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.20966245471700895,
+      "mean_group_p90": 0.23742896209598496,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.27216089929989,
+      "mean_group_p90": 1.4061316425014805,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.6154283792430546,
+      "mean_group_p90": 0.6537866818639214,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 7.229344957537897,
+      "mean_group_p90": 11.982197628890155,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.451516115669069,
+      "mean_group_p90": 11.448122789647584,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.2770114404789417,
+      -2.4949625008681715
+     ],
+     "bot": [
+      -3.1155389048247284,
+      -2.3294095307864557
+     ]
+    }
+   },
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.8011059190338652,
+      "mean_group_p90": 0.8671058394520271,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.6732554362166329,
+      "mean_group_p90": 0.7211167066865332,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.4732794846685373,
+      "mean_group_p90": 1.6165605408993888,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.5517273310119046,
+      "mean_group_p90": 0.5920537091039129,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 6.2797395297730905,
+      "mean_group_p90": 12.975604105096082,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 5.774340417576375,
+      "mean_group_p90": 12.192034629388766,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -2.6837347653545285,
+      -1.9129595856836679
+     ],
+     "bot": [
+      -2.682574503267932,
+      -1.8383654201738757
+     ]
+    }
+   },
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.42939973029772704,
+      "mean_group_p90": 0.4907488284799856,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.3899321778097538,
+      "mean_group_p90": 0.4311359132698718,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.3414185761228166,
+      "mean_group_p90": 1.4635958425480018,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.7872344337774808,
+      "mean_group_p90": 0.8184487793058898,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 7.458466682501344,
+      "mean_group_p90": 11.898329399759595,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.735094898145086,
+      "mean_group_p90": 11.332715393066902,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.0439976591880784,
+      -2.2854929467534686
+     ],
+     "bot": [
+      -2.9059073623634077,
+      -2.1566794348084364
+     ]
+    }
+   },
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.15041135335637795,
+      "mean_group_p90": 0.20189000993679967,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.24900883435330767,
+      "mean_group_p90": 0.28328717061595277,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.2576257510480324,
+      "mean_group_p90": 1.4020603271765786,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.5252212366411371,
+      "mean_group_p90": 0.5706221424741232,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 6.997161285650726,
+      "mean_group_p90": 12.268483547601688,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.287850380450882,
+      "mean_group_p90": 11.639546747001921,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.349659439439531,
+      -2.5597682194646283
+     ],
+     "bot": [
+      -3.149365503348943,
+      -2.2564004880132336
+     ]
+    }
+   }
+  ],
+  "dts_1c": [
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.9458583885579788,
+      "mean_group_p90": 1.0582522823340452,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.5592728809141118,
+      "mean_group_p90": 0.6362453962605457,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.538597405020318,
+      "mean_group_p90": 1.642787507844798,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.9863948156563599,
+      "mean_group_p90": 1.0626485763892703,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 7.823138071437601,
+      "mean_group_p90": 11.576257389310639,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.853525834888942,
+      "mean_group_p90": 11.241484867675219,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -2.542082743640133,
+      -1.7755298004679774
+     ],
+     "bot": [
+      -2.7525794742782965,
+      -1.9751069988229806
+     ]
+    }
+   },
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.1644271274340147,
+      "mean_group_p90": 0.2516068910264992,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.23576166932143072,
+      "mean_group_p90": 0.2735615420225299,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.2593703383193824,
+      "mean_group_p90": 1.4008466365010497,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.5856666123189737,
+      "mean_group_p90": 0.6436774534884715,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 7.135108365374039,
+      "mean_group_p90": 12.023533623885802,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.3600554420684166,
+      "mean_group_p90": 11.558439903131653,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.326848300933385,
+      -2.5486142519362027
+     ],
+     "bot": [
+      -3.1214335829552966,
+      -2.291700188860805
+     ]
+    }
+   },
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.2855460129667481,
+      "mean_group_p90": 0.38988096623407426,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.32485022198474645,
+      "mean_group_p90": 0.38211373496127027,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.2452120372160376,
+      "mean_group_p90": 1.3760636102006862,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.6454966804765979,
+      "mean_group_p90": 0.6882443907196252,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 7.215426459742092,
+      "mean_group_p90": 11.881377793001748,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.240836398592428,
+      "mean_group_p90": 11.625789571089857,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.2005573817545403,
+      -2.4375558529229773
+     ],
+     "bot": [
+      -3.017248755956426,
+      -2.1917213204908705
+     ]
+    }
+   },
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.4883316253266403,
+      "mean_group_p90": 0.5770693572084611,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.6424712086076532,
+      "mean_group_p90": 0.7324796617946486,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.4010089193206843,
+      "mean_group_p90": 1.5303040419894323,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.9654427438601388,
+      "mean_group_p90": 1.0520467032593386,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 7.522894394643041,
+      "mean_group_p90": 11.905760917762555,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 6.978215370041381,
+      "mean_group_p90": 11.28156641474123,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.0037692241017058,
+      -2.221588916411635
+     ],
+     "bot": [
+      -2.704453499093237,
+      -1.8799413363420194
+     ]
+    }
+   },
+   {
+    "average": {
+     "top": {
+      "mean_group_median": 3.2125818133354187,
+      "mean_group_p90": 6.360312581062317,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 2.9848204255104065,
+      "mean_group_p90": 5.934764266014099,
+      "groups": 4
+     }
+    },
+    "field_model": {
+     "top": {
+      "mean_group_median": 0.4198318743512823,
+      "mean_group_p90": 0.5426843295100123,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.6234904063267341,
+      "mean_group_p90": 0.7031804107750398,
+      "groups": 4
+     }
+    },
+    "bayes_power": {
+     "top": {
+      "mean_group_median": 1.2723955090934367,
+      "mean_group_p90": 1.4412591594442654,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 0.6438678841999128,
+      "mean_group_p90": 0.7043693954257848,
+      "groups": 4
+     }
+    },
+    "inverted": {
+     "top": {
+      "mean_group_median": 6.6213908975970215,
+      "mean_group_p90": 12.462782452913068,
+      "groups": 4
+     },
+     "bot": {
+      "mean_group_median": 5.782253128165296,
+      "mean_group_p90": 12.089172760064056,
+      "groups": 4
+     }
+    },
+    "field_minus_avg_ci": {
+     "top": [
+      -3.076306111352044,
+      -2.297443009760599
+     ],
+     "bot": [
+      -2.7111004297645778,
+      -1.902081747272051
+     ]
+    }
+   }
+  ]
+ }
+}
