@@ -1,0 +1,178 @@
+{
+ "windows": {
+  "W1": {
+   "sta_total_W": 0.0196642932,
+   "g100_total_W": 0.0196642932,
+   "psm": {
+    "VDD FULL": {
+     "total_W": 0.0197,
+     "supply_V": 0.7
+    },
+    "VDD BUMPS": {
+     "total_W": 0.0197,
+     "supply_V": 0.7
+    },
+    "VSS FULL": {
+     "total_W": 0.0197,
+     "supply_V": 0.0
+    },
+    "VSS BUMPS": {
+     "total_W": 0.0197,
+     "supply_V": 0.0
+    }
+   },
+   "FULL": {
+    "worst_vdd_drop_mV": 2.685999999999966,
+    "worst_vss_rise_mV": 2.612,
+    "worst_squeeze_mV": 5.019999999999967,
+    "worst_tile_squeeze_mV": 5.019999999999967,
+    "worst_vdd_drop_share_of_vdd": 0.003837142857142809,
+    "worst_vss_rise_share_of_vdd": 0.0037314285714285717,
+    "worst_squeeze_share_of_vdd": 0.007171428571428524,
+    "worst_tile_squeeze_share_of_vdd": 0.007171428571428524,
+    "mean_squeeze_mV": 0.9147436935113542,
+    "spearman_squeeze_vs_power": 0.6689806576477765,
+    "covered": true
+   },
+   "BUMPS": {
+    "worst_vdd_drop_mV": 2.685999999999966,
+    "worst_vss_rise_mV": 2.612,
+    "worst_squeeze_mV": 5.019999999999967,
+    "worst_tile_squeeze_mV": 5.019999999999967,
+    "worst_vdd_drop_share_of_vdd": 0.003837142857142809,
+    "worst_vss_rise_share_of_vdd": 0.0037314285714285717,
+    "worst_squeeze_share_of_vdd": 0.007171428571428524,
+    "worst_tile_squeeze_share_of_vdd": 0.007171428571428524,
+    "mean_squeeze_mV": 0.9147436935113542,
+    "spearman_squeeze_vs_power": 0.6689806576477765,
+    "covered": true
+   },
+   "valid": {
+    "V1_grid": true,
+    "V2_power": true,
+    "V3_psm_power": true,
+    "V4_covered": true,
+    "supply_is_vdd": true
+   },
+   "matters": false
+  },
+  "W2": {
+   "sta_total_W": 0.0175579078,
+   "g100_total_W": 0.0175579078,
+   "psm": {
+    "VDD FULL": {
+     "total_W": 0.0176,
+     "supply_V": 0.7
+    },
+    "VDD BUMPS": {
+     "total_W": 0.0176,
+     "supply_V": 0.7
+    },
+    "VSS FULL": {
+     "total_W": 0.0176,
+     "supply_V": 0.0
+    },
+    "VSS BUMPS": {
+     "total_W": 0.0176,
+     "supply_V": 0.0
+    }
+   },
+   "FULL": {
+    "worst_vdd_drop_mV": 2.6689999999999214,
+    "worst_vss_rise_mV": 2.555,
+    "worst_squeeze_mV": 4.978999999999921,
+    "worst_tile_squeeze_mV": 4.978999999999921,
+    "worst_vdd_drop_share_of_vdd": 0.0038128571428570307,
+    "worst_vss_rise_share_of_vdd": 0.00365,
+    "worst_squeeze_share_of_vdd": 0.00711285714285703,
+    "worst_tile_squeeze_share_of_vdd": 0.00711285714285703,
+    "mean_squeeze_mV": 0.8090089966690089,
+    "spearman_squeeze_vs_power": 0.6846721365736995,
+    "covered": true
+   },
+   "BUMPS": {
+    "worst_vdd_drop_mV": 2.6689999999999214,
+    "worst_vss_rise_mV": 2.555,
+    "worst_squeeze_mV": 4.978999999999921,
+    "worst_tile_squeeze_mV": 4.978999999999921,
+    "worst_vdd_drop_share_of_vdd": 0.0038128571428570307,
+    "worst_vss_rise_share_of_vdd": 0.00365,
+    "worst_squeeze_share_of_vdd": 0.00711285714285703,
+    "worst_tile_squeeze_share_of_vdd": 0.00711285714285703,
+    "mean_squeeze_mV": 0.8090089966690089,
+    "spearman_squeeze_vs_power": 0.6846721365736995,
+    "covered": true
+   },
+   "valid": {
+    "V1_grid": true,
+    "V2_power": true,
+    "V3_psm_power": true,
+    "V4_covered": true,
+    "supply_is_vdd": true
+   },
+   "matters": false
+  },
+  "W3": {
+   "sta_total_W": 0.0129024722,
+   "g100_total_W": 0.0129024722,
+   "psm": {
+    "VDD FULL": {
+     "total_W": 0.0129,
+     "supply_V": 0.7
+    },
+    "VDD BUMPS": {
+     "total_W": 0.0129,
+     "supply_V": 0.7
+    },
+    "VSS FULL": {
+     "total_W": 0.0129,
+     "supply_V": 0.0
+    },
+    "VSS BUMPS": {
+     "total_W": 0.0129,
+     "supply_V": 0.0
+    }
+   },
+   "FULL": {
+    "worst_vdd_drop_mV": 2.5409999999999044,
+    "worst_vss_rise_mV": 2.447,
+    "worst_squeeze_mV": 4.702999999999904,
+    "worst_tile_squeeze_mV": 4.702999999999904,
+    "worst_vdd_drop_share_of_vdd": 0.003629999999999864,
+    "worst_vss_rise_share_of_vdd": 0.003495714285714286,
+    "worst_squeeze_share_of_vdd": 0.006718571428571293,
+    "worst_tile_squeeze_share_of_vdd": 0.006718571428571293,
+    "mean_squeeze_mV": 0.5808185308553138,
+    "spearman_squeeze_vs_power": 0.6845215321532495,
+    "covered": true
+   },
+   "BUMPS": {
+    "worst_vdd_drop_mV": 2.5409999999999044,
+    "worst_vss_rise_mV": 2.447,
+    "worst_squeeze_mV": 4.702999999999904,
+    "worst_tile_squeeze_mV": 4.702999999999904,
+    "worst_vdd_drop_share_of_vdd": 0.003629999999999864,
+    "worst_vss_rise_share_of_vdd": 0.003495714285714286,
+    "worst_squeeze_share_of_vdd": 0.006718571428571293,
+    "worst_tile_squeeze_share_of_vdd": 0.006718571428571293,
+    "mean_squeeze_mV": 0.5808185308553138,
+    "spearman_squeeze_vs_power": 0.6845215321532495,
+    "covered": true
+   },
+   "valid": {
+    "V1_grid": true,
+    "V2_power": true,
+    "V3_psm_power": true,
+    "V4_covered": true,
+    "supply_is_vdd": true
+   },
+   "matters": false
+  }
+ },
+ "maps_differ_across_windows": true,
+ "valid": true,
+ "worst_tile_squeeze_mV": 5.019999999999967,
+ "worst_tile_squeeze_share_of_vdd": 0.007171428571428524,
+ "threshold_mV": 17.5,
+ "decision": "nominal-VDD power maps stand; limit stated"
+}

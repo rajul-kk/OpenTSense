@@ -1,0 +1,47 @@
+{
+  "time_utc": "2026-11-16T10:22:50+00:00",
+  "host": "Rajul",
+  "python": "3.10.0",
+  "repo": {
+    "commit": "024a3b7c88c1284cc0c038ed1ec3e2e693fed0f0",
+    "dirty": true
+  },
+  "image": null,
+  "orfs_image": "openroad/orfs@sha256:55266bc72fd67238407fa0c60da5a7f83c25ea14123829df769437d0dd0649ed",
+  "tools": {
+    "iverilog": null,
+    "verilator": null,
+    "ngspice": null,
+    "3dice_commit": "cat: /opt/3d-ice/COMMIT: No such file or directory",
+    "superlu_mt_commit": "fatal: cannot change to '/opt/3d-ice/superlu_mt-4.0.0': No such file or directory",
+    "pact_commit": "cat: /opt/pact/COMMIT: No such file or directory",
+    "spice_models_checksum": "cat: /opt/spice/CHECKSUM: No such file or directory",
+    "ca_certificates": null
+  },
+  "packages": {
+    "numpy": "2.2.6",
+    "scipy": "1.15.3",
+    "pandas": "2.3.3",
+    "PyYAML": "6.0.3",
+    "pytest": "9.0.2"
+  },
+  "gate": "G97",
+  "design": "tpu",
+  "inputs_sha256": {
+    "gates/g97/registration.md": "784ff7a0be9eb4e9edd4fbaca0a839ba2ba422e10bcc865a9487184dc949de6d",
+    "gates/g97/ir.tcl": "3f9d44e1a2ebe451c71faf516bf89ba7f2755930805adf4de37375771596a20a",
+    "gates/g97/run.sh": "cef777a4df4442c6dbaff98979343d948bb1c52bfc9e54a89a8f4c9b924a44f1",
+    "gates/g97/evaluate.py": "f6dacddaee9d402e4e8debefdc95282524e0c32a3d1e304667d005c76d626b1c",
+    "gates/g96/dry/load_routed.tcl": "60fcbc899b7179038891cc8606dc8438d1a972cc1ef5a28329ef784f5526b6c4",
+    "opentsense/power/maps.py": "eb279e9e478824262aceddbd6bb26b8868c7b2b4d104a550d55ce25049fb2ce1",
+    "gates/g100/record/tpu-800/result.json": "65a0b28cc3db307467efcc215a221a026f8a8aa13f0e2750f4958bd27c72540e",
+    "gates/g100/runs/tpu-800/maps.npz": "a5874e21557a6fdbf079a1200de9bf20af3990cfb13f5815912364cef28d24d0",
+    "gates/g100/runs/tpu-800/power/tpu_loc.csv": "594e75f6140f21b1b742b124c8612b04cd4213bf27a370fca19140e641681eab",
+    "layout/6_final.odb": "8a281bf9d37457b1627f5c36392e4ccd7b90c79704b8100fdea015c642e9b141",
+    "layout/6_final.sdc": "476f0cba5263988bfb20b4893cd7b9c0df525d67ade6f8a4f51ffe6a3a647085",
+    "layout/6_final.spef": "2df645dd01af0a6555bd835adf5b94e4a1362807f2ba7d549d9d0f4a20f3a0af",
+    "vcd/W1.vcd": "ffe5e388c7058be6fcd9d5233430ef9c47bc4b468a33f0d4215a834dba83dbb5",
+    "vcd/W2.vcd": "83090495edcad40c5c249dd2186a03fc11ed168e3d3f65abff62a5803aa3b4f9",
+    "vcd/W3.vcd": "f0f2accc6c6939bd793b74fb71b7ee1524c6d2835adfeda687ea6d175cc92fcc"
+  }
+}

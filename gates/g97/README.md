@@ -28,4 +28,19 @@ the maps computed at nominal VDD stand; the limit is stated with this figure.
 - The BUMPS source model wrote the same voltages as FULL in this image (Amendment 1), so there is no package-level
   bracket; a chip-level grid above this block would add its own drop.
 - Limits: static only (no dynamic IR); grid resistance at the tech file's temperature; no feedback into power or
-  timing; one small block (76.7 um square). The TPU part waits for G100 on the TPU.
+  timing; one small block (76.7 um square).
+
+## TPU part (16 Nov 2026, Amendment 3) · valid; the nominal-VDD power maps stand
+
+G99's ASAP7 TPU at 800 ps with G100's windows W1-W3 (RVT, LVT, SLVT at TT), `bash gates/g97/run.sh tpu`, record
+`record/tpu-800/`. All validity bars hold in every window; the three windows' voltage maps differ.
+
+| Window | Power | Worst VDD drop | Worst VSS rise | Worst tile squeeze | Mean squeeze | Spearman (squeeze, power) |
+|---|---|---|---|---|---|---|
+| W1 | 19.66 mW | 2.69 mV | 2.61 mV | 5.02 mV | 0.92 mV | 0.67 |
+| W2 | 17.56 mW | 2.67 mV | 2.56 mV | 4.98 mV | 0.81 mV | 0.69 |
+| W3 (idle) | 12.90 mW | 2.54 mV | 2.45 mV | 4.70 mV | 0.58 mV | 0.69 |
+
+**Decision.** Worst tile squeeze 5.02 mV, 0.72% of VDD, against the registered 2.5% (17.5 mV): at most about a 1.4%
+local power change by the 2d/VDD scaling, so the TPU's nominal-VDD maps stand. About twice Ibex's squeeze at about
+four times its power. BUMPS again equals FULL. The idle window still draws 66% of W1's power (the clock tree runs) and keeps 94% of its squeeze.
