@@ -95,8 +95,9 @@ def map_address(addr, spec, bank_salt=None):
         raise ValueError(f"bank hash needs a power-of-two bank count, not {nb}")
     page = addr // row_bytes
     bank, row = page % nb, (page // nb) % a["nbrOfRows"]
-    if bank_salt is not None:
-        bank = bank ^ ((row * 2654435761 + bank_salt) >> 7) % nb
+    if bank_salt is not None:   # multiplicative hash of the salted row; its top bits pick the XOR (any salt counts)
+        mix = (bank_salt * 0x9E3779B97F4A7C15) & 0xFFFFFFFF
+        bank = bank ^ ((((row ^ mix) * 2654435761) & 0xFFFFFFFF) >> (32 - (nb.bit_length() - 1)))
     col = (addr % row_bytes) // (a["width"] // 8)
     return bank, row, col - col % a["burstLength"]
 

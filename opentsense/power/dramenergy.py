@@ -22,6 +22,9 @@ import numpy as np
 PER_BANK = {"ACT": "act", "PRE": "pre", "RD": "rd", "WR": "wr", "REF_AB": "refa", "BG_PRE": "closed"}
 # Interface terms, per window: coefficient -> feature (rd and wr summed over banks).
 IO = {"io_cycle": "length", "io_cmd": "ncmd", "io_rd": "rd", "io_wr": "wr"}
+# Workload-driven terms (commands and data bursts); the rest is background (banks closed or held open, refresh,
+# interface per cycle). Refresh's own commands (PREA, REFA) and the banks PREA closes are not dynamic.
+DYNAMIC = ("act", "pre", "rd", "wr", "io_cmd", "io_rd", "io_wr")
 
 
 @dataclass
@@ -42,8 +45,11 @@ class Model:
         return asdict(self)
 
 
+assert set(DYNAMIC) <= set(Model.__dataclass_fields__), "every DYNAMIC term must be a Model coefficient"
+
+
 def _open_intervals(tr, nb):
-    """Per bank, the (start, end) cycles it is open, and every precharge of an open bank as (time, bank). PRE and
+    """Per bank, the (start, end) cycles it is open, and every precharge of an open bank as (time, bank, by PREA). PRE and
     PREA both count once per bank they close; the trace's END closes anything still open without a precharge."""
     end = int(tr.time[tr.cmd == "END"][0]) if (tr.cmd == "END").any() else int(tr.time[-1])
     start = [None] * nb
@@ -56,7 +62,7 @@ def _open_intervals(tr, nb):
             for k in (range(nb) if c == "PREA" else [b]):
                 if start[k] is not None:
                     iv[k].append((start[k], t))
-                    closes.append((t, k))
+                    closes.append((t, k, c == "PREA"))
                     start[k] = None
     for k in range(nb):
         if start[k] is not None:
@@ -111,9 +117,11 @@ def features(tr, edges=None):
     for name, key in (("ACT", "act"), ("RD", "rd"), ("WR", "wr")):
         sel = tr.cmd == name
         np.add.at(f[key], (win[sel], tr.bank[sel]), 1)
+    f["pre_refresh"] = np.zeros((nw, nb))
     if closes:
-        ct, cb = np.array(closes, np.int64).T
+        ct, cb, by_prea = np.array(closes, np.int64).T
         np.add.at(f["pre"], (window_of(ct), cb), 1)
+        np.add.at(f["pre_refresh"], (window_of(ct[by_prea == 1]), cb[by_prea == 1]), 1)
     refa = np.zeros(nw)
     np.add.at(refa, win[tr.cmd == "REFA"], 1)
     for k in range(nb):
@@ -121,9 +129,11 @@ def features(tr, edges=None):
     open_union = _overlap(_union(iv), edges)
     any_open = _overlap(_union(iv + [refresh]), edges)
     length = np.diff(edges)
-    ncmd = np.zeros(nw)
+    ncmd, ncmd_refresh = np.zeros(nw), np.zeros(nw)
     np.add.at(ncmd, win[tr.cmd != "END"], 1)
-    return {**f, "refa": refa, "any_open": any_open, "open_union": open_union, "closed": length - any_open, "length": length, "ncmd": ncmd}
+    np.add.at(ncmd_refresh, win[np.isin(tr.cmd, ("PREA", "REFA"))], 1)
+    return {**f, "refa": refa, "any_open": any_open, "open_union": open_union, "closed": length - any_open, "length": length, "ncmd": ncmd,
+            "ncmd_refresh": ncmd_refresh}
 
 
 def _per_bank(f, key):
@@ -174,17 +184,22 @@ def fit(runs):
 
 def windows(tr, model, edges):
     """Energy (J) per window: 'bank' (nw, nb) core energy booked to each bank, 'io' (nw,) interface energy, 'total'
-    (nw,). Shared active background: the time some bank is open is split by each bank's open time; the time only a
-    refresh holds the device active is split evenly over all banks (an all-bank refresh works every bank)."""
+    (nw,), and their DYNAMIC parts 'dyn_bank' (nw, nb) and 'dyn_io' (nw,). Shared active background: the time some
+    bank is open is split by each bank's open time; the time only a refresh holds the device active is split evenly
+    over all banks (an all-bank refresh works every bank)."""
     nb = tr.banks
     f = features(tr, edges)
     core, _, io = _energy(f, model)
+    dyn = Model(**{k: (v if k in DYNAMIC else 0.0) for k, v in model.as_dict().items()})
+    dyn_bank, _, dyn_io = _energy(f, dyn)
+    dyn_bank = dyn_bank - model.pre * f["pre_refresh"]           # refresh's commands are background
+    dyn_io = dyn_io - model.io_cmd * f["ncmd_refresh"]
     by_open = model.any_open * f["open_union"]
     refresh_only = model.any_open * (f["any_open"] - f["open_union"])
     share = np.divide(f["open"], f["open"].sum(1, keepdims=True), out=np.full_like(f["open"], 1.0 / nb),
                       where=f["open"].sum(1, keepdims=True) > 0)
     bank = core + by_open[:, None] * share + refresh_only[:, None] / nb
-    return {"bank": bank, "io": io, "total": bank.sum(1) + io}
+    return {"bank": bank, "io": io, "total": bank.sum(1) + io, "dyn_bank": dyn_bank, "dyn_io": dyn_io}
 
 
 def predict_totals(tr, model):
