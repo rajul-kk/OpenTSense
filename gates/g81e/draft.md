@@ -91,3 +91,9 @@ trace. nettle-aes's trace starts at cycle 272951 instead of 6; md5sum's first wi
 ended with G81b's result and cycles. Fix: a program is skipped only with an `ok` marker written after simv exits 0 and
 its trace is gzipped (`step1/run.sh`); the 18 verified programs were marked from `v1-run1.json`, the two failed
 directories kept as `*.run1`, and only those two rerun. Run 1's check is kept as `v1-run1.json` and `job-run1.log`.
+
+### Step 1, run 2 (16 Nov 2026): the two cut traces rerun
+
+md5sum and nettle-aes reran alone with the fixed runner (`ok` marker); the other 18 were not rerun. Check (v1) over
+all 20 programs: **passed** (`runs/step1-main/v1.json`): every run ends with G81b's result and cycle count, and every
+one of G81b's windows holds exactly the requests its gate-level VCD shows. The traces are the input of step 2.
