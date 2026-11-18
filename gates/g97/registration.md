@@ -95,3 +95,17 @@ threshold (17.5 mV) was fixed before this. No bar changed.
 - Manifest: the ORFS image digest and the hashes of this file, G100's result, maps and locations. run.sh clears
   each window's folder, caps the container at 2 GB and calls the evaluator. Tile indexing is shared with G100
   (`maps.tile_index`; G100's maps reproduce exactly). Decision unchanged: worst tile squeeze 2.55 mV, 0.36% of VDD.
+
+## Amendment 3 (16 Nov 2026, the TPU part, written before any TPU IR number exists)
+
+As registered ("TPU: only after G99 and G100 close for the TPU, as an amendment naming its windows"). G99 passed for
+the TPU at 800 ps and G100 recorded its windows on 16 Nov.
+- Layout: G99's ASAP7 TPU at 800 ps (`_build/g99/asap7-tpu-800`, checksums in `gates/g99/record/tpu-800`).
+- Activity: G100's TPU windows W1, W2, W3 (`gates/g100/runs/tpu-800/sim/tpu/W*.vcd`, scope `tb/dut`); W3 is the idle
+  window. Libraries RVT, LVT and SLVT at TT, as G100 used for the TPU; VDD 0.7 V from Liberty as before.
+- Bars V1 to V4, the supply check, the measured quantities, the 0.1%-of-power tile rule and the decision threshold
+  (squeeze >= 2.5% of VDD, 17.5 mV) are unchanged; V2 compares with G100's TPU record, and "the windows' voltage
+  maps are not all identical" applies to the three TPU windows.
+- Run: `bash gates/g97/run.sh tpu` into `runs/tpu`, scored by `evaluate.py runs/tpu tpu`. The runner and evaluator
+  gained this design as a parameter only; re-scoring the Ibex main run with the changed evaluator reproduces
+  `record/result.json` exactly.
