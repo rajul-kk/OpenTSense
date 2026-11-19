@@ -1,0 +1,12 @@
+{
+ "note": "Filled from the convergence dry run (dry/convergence.json) before registration. step_slots covers >= 10 slowest time constants so the step ends within a_K of steady (5 would leave e^-5 of the rise, ~0.15 K). Tolerance terms are the student's.",
+ "slot_s": 0.005,
+ "step_slots": null,
+ "pulse_slots": null,
+ "pulse_on_slots": 2,
+ "dwell_slots": 4,
+ "level": {"ice": null, "pact": null, "hs": null},
+ "a_K": 0.01,
+ "tol_b_rel": null,
+ "tol_c_K": null
+}
