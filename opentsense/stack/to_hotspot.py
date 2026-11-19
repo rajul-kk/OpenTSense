@@ -26,8 +26,10 @@ always, for one code path). Dies: bulk sublayers carry no power, the source laye
 The power trace is one line of names and one line of values per slot over every source unit; the image's HotSpot
 reads lines of up to LINE_SIZE - 1 characters (raised to 1048576 by the image patch, G93a amendment 1; stock: 65536).
 
-Transient (G94): power maps are (n_slots, ny, nx), one trace row per slot, sampling_intvl = the slot. HotSpot picks
-its own internal steps inside an interval, so the step of transient = (step, slot) is not used. It starts from
+Transient (G94): power maps are (n_slots, ny, nx), one trace row per slot, sampling_intvl = the slot. Built with
+SuperLU (as the image is), HotSpot advances each interval by ONE backward-Euler step of the whole interval (its
+adaptive loop is commented out: RCutil.c backward_euler, temperature_grid.c compute_temp_grid), so its time step is
+the slot, and the step of transient = (step, slot) is not used: refine by splitting slots into rows. It starts from
 init_temp (ambient here; HotSpot's default is 333.15 K) and dumps the grid after each row (-grid_transient_file,
 6 decimals with the image patch's amendment 2).
 HotSpot multiplies every capacitance by C_FACTOR = 0.333, "fitting factor to match floworks (due to lumping)"
