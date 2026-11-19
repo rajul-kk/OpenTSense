@@ -1,0 +1,86 @@
+{
+ "model": {
+  "act": 7.968750000000001e-10,
+  "pre": 4.0781250000000003e-10,
+  "rd": 1.3475000000000008e-09,
+  "wr": 9.9e-10,
+  "refa": 2.7982500000000003e-09,
+  "closed": 2.6015625000000003e-12,
+  "any_open": 2.3156250000000004e-11,
+  "io_cycle": 2.0044564059442213e-12,
+  "io_cmd": 1.7577829621493125e-12,
+  "io_rd": 3.485568630961521e-11,
+  "io_wr": 3.522364710171798e-11
+ },
+ "fit_max_rel_residual": {
+  "ACT": 5.62999632605052e-16,
+  "PRE": 3.004941632092735e-16,
+  "RD": 4.1794938778189523e-16,
+  "WR": 0.0,
+  "REF_AB": 1.968146651322459e-16,
+  "BG_PRE": 2.0961787414517872e-16,
+  "bg_act": 2.3023375308470396e-16,
+  "io": 0.003806066766067271
+ },
+ "calibration_traces": 16,
+ "calibration_max_bursts_per_Mcycle": 58932.0,
+ "io_condition_number": 10.025601762507204,
+ "held_out": {
+  "dense_seq_1M": {
+   "total_rel_err": 0.00018393572844573194,
+   "io_rel_err": 0.0034328723078556555,
+   "io_share": 0.04788877006565272,
+   "cycles": 1000000,
+   "bursts": 37500,
+   "bursts_per_Mcycle": 37500.0,
+   "acts": 645
+  },
+  "dense_seq_rw_1M": {
+   "total_rel_err": 0.0001877688808864691,
+   "io_rel_err": 0.0037236382149994736,
+   "io_share": 0.04532041984580065,
+   "cycles": 1000000,
+   "bursts": 62366,
+   "bursts_per_Mcycle": 62366.0,
+   "acts": 1186
+  },
+  "short_mixed_0p3M": {
+   "total_rel_err": 0.00012135277807938795,
+   "io_rel_err": 0.0024519145492341247,
+   "io_share": 0.042397250147571015,
+   "cycles": 300000,
+   "bursts": 12728,
+   "bursts_per_Mcycle": 42426.66666666667,
+   "acts": 4344
+  },
+  "long_mixed_6M": {
+   "total_rel_err": 6.448632450262657e-05,
+   "io_rel_err": 0.0008510976575788905,
+   "io_share": 0.0514028939121983,
+   "cycles": 6000000,
+   "bursts": 191088,
+   "bursts_per_Mcycle": 31848.0,
+   "acts": 7604
+  },
+  "interleaved_2M": {
+   "total_rel_err": 0.00017346672983784123,
+   "io_rel_err": 0.004031823250270732,
+   "io_share": 0.038976098519568764,
+   "cycles": 2000000,
+   "bursts": 117102,
+   "bursts_per_Mcycle": 58551.0,
+   "acts": 35484
+  },
+  "dense_stride_1M": {
+   "total_rel_err": 3.9624692578365445e-05,
+   "io_rel_err": 0.0006374696054955237,
+   "io_share": 0.03739398784488735,
+   "cycles": 1000000,
+   "bursts": 131992,
+   "bursts_per_Mcycle": 131992.0,
+   "acts": 8081
+  }
+ },
+ "held_out_worst_total_rel_err": 0.0001877688808864691,
+ "held_out_worst_io_rel_err": 0.004031823250270732
+}
