@@ -1,0 +1,71 @@
+{
+  "time_utc": "2026-11-16T13:15:17+00:00",
+  "host": "Rajul",
+  "python": "3.10.0",
+  "repo": {
+    "commit": "81866e9ff60677778c902bc0eb9a8eb72d429493",
+    "dirty": true
+  },
+  "image": null,
+  "orfs_image": null,
+  "tools": {
+    "iverilog": null,
+    "verilator": null,
+    "ngspice": null,
+    "3dice_commit": "cat: /opt/3d-ice/COMMIT: No such file or directory",
+    "superlu_mt_commit": "fatal: cannot change to '/opt/3d-ice/superlu_mt-4.0.0': No such file or directory",
+    "pact_commit": "cat: /opt/pact/COMMIT: No such file or directory",
+    "spice_models_checksum": "cat: /opt/spice/CHECKSUM: No such file or directory",
+    "ca_certificates": null
+  },
+  "packages": {
+    "numpy": "2.2.6",
+    "scipy": "1.15.3",
+    "pandas": "2.3.3",
+    "PyYAML": "6.0.3",
+    "pytest": "9.0.2"
+  },
+  "gate": "G81f (G81e step 2 with the refitted energy model)",
+  "cpu_ghz": 1.0,
+  "window_cpu_cycles": 1000,
+  "floor_seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "inputs_sha256": {
+    "gates/g81e/step2/run.py": "197f21e113f1b98d6ff9d1a9aaf5f355704b208a8f058c3cd29f663dfbdd867d",
+    "gates/g81f/dry/fit_energy2.json": "38a33c1e3ec3aa75e18c76f44997d968950151fba243088293afa9123a7c6a1b",
+    "gates/g81e/dry/fit_energy.py": "82b3b7a7ff425e17aede2555c4543fa5a4bc95e151ad35d3d55b929cf0d408f3",
+    "opentsense/power/cache.py": "cc2fc1bfd66a437a8d823f01de788dc0c36e85137f96ffa146730edd65f487f4",
+    "opentsense/power/dramctl.py": "d1aa1f00ae9a87a66e181ab03a3ffcaa0d0c585ceef6e671d1efc253e726cf30",
+    "opentsense/power/dramenergy.py": "c8c40ac9adae501824c1b5403c30b494250c4558731dd95d91a28643727bf60b",
+    "gates/g81b/record/result.json": "19c6a9e13fac915d29fb3c1035eca91a95bba1198d9c74b29cd409cba516751d",
+    "gates/g81f/run.py": "2a200ecbe9af8a8e1d962a6c13c1e9c8f9480bd896dae1704c6ef9ff7324cc6c",
+    "gates/g81f/dry/fit_energy2.py": "cc4661188516e73ed77215fcf6f6ef3e0ee30f42e227805f0a71b1c9dcad3b38",
+    "wsl/cli": "60562de7e648f897646be5d946877d1e90a99fb43d9fd4753d594aaf0bf81e78",
+    "wsl/JEDEC_8Gb_LPDDR4-3200_16bit.json": "b94bfe5f23fa650d66e19ff77150d3fa8f9095783d34fa76826626153e00a758",
+    "trace/aha-mont64": "32c6f5297db44974981bc385c91912d4c60781bc68982c651b1e7b5549d4f96f",
+    "trace/crc32": "5ceb9315e1920fc645a57077e34c853f3605d953a3036436d38bfcfab7c963d4",
+    "trace/depthconv": "1796adc38d1b8f05993184e65d3d43f3b47ae54dc9f86f157536793234500ee4",
+    "trace/edn": "c0ce3b0e6febc238141e81f6c75c0849f6c888466015a51481f895cb958dc525",
+    "trace/huffbench": "dd1db347d51a0a28c31b01d9693e48be232d26d986e755522c3359b61191d638",
+    "trace/idle": "608b2d6f593d8f0ffc4282292fecee19f9f66d2687678c2d31ced7bcd1abcc43",
+    "trace/matmult-int": "8ad631da3794afe3c74997df130543e1f510c5c335f0cc0c455d01bbf3cd0ea2",
+    "trace/md5sum": "9ccf18a516ab74f706d5446579b9cbd93d78ef9ccb178c8f4001082999fcd2c2",
+    "trace/nettle-aes": "dfb906dd2c1e1f8109161a2ad6e8a373c4bf6e0b94206dbd7f09f8a49ec79f89",
+    "trace/nettle-sha256": "0cd022a19d74d171ac6076a1151e6a9ab800793daef2eabaa03f6df62d05ba4f",
+    "trace/nsichneu": "f2d2f2d08bed63754796dba4f80b3d93dd92e47d8cfe52ca64a54248aedd48ae",
+    "trace/picojpeg": "a6406f8a3d941977d754813648b96bd57572478218b99a304ca8dd380d953c6f",
+    "trace/qrduino": "dc7af24deb660ead84de7c4ff1b1fe8e053b61c420adfd77f34fbd56e41efa23",
+    "trace/sglib-combined": "36cdc4decc499dbabc5aec655563b12be829f85c7dcdd8cb6ffa70d41b662ccc",
+    "trace/slre": "3132e1a9e6672a0bb9156b962772fe4f24371499e5abbb2a864ca9fee49ca820",
+    "trace/statemate": "221230ff6ca862bb60ce1becb0e614a7a9f60854dcc6e2bf0abbe0e4f6381027",
+    "trace/tarfind": "66eb39e3fc5895ee8ac6ae6352667667422a17d927b0b740aed30e5800a230a5",
+    "trace/ud": "4631cbcc6a260f5ce1f40a111d63cb5e1b80e50ef4e02da84b1734d6f2a48baf",
+    "trace/wikisort": "8b116426572c8ca88504fcc8c1b5f8dd07b7bd439bc2ac75383519470fd3fda1",
+    "trace/xgboost": "2763daca2d4df26c81c097ab3259a07de4936c9f387bf99aaa229ebb89ac06b7"
+  }
+}
