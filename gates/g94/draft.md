@@ -69,3 +69,21 @@ Crank-Nicolson, 1 us steps) stands for the truth. Mean source-layer rise at 1 / 
 still 5% low at 12 ms). PACT's step does not explain it (0.1, 0.01 and 0.001 ms agree to 0.03 K), so the early gap is
 in HotSpot's and PACT's networks (node placement in thin layers), not in the integrators. 3D-ICE is the reference side
 for G94's early-time bars; the registration states this before any run.
+
+### Student decision (16 Nov 2026, evening): bars pairwise throughout
+
+Asked, before any floor or G94 case was measured, whether the bars compare every solver pair at all times or compare
+against 3D-ICE with early time reported only (the 1-D check above had shown HotSpot and PACT 15-17% low at 1 ms): the
+student chose **every pair, throughout**. The tolerance terms of (b) and (c) are fixed after the convergence dry run
+(`dry/convergence.py`, seed 1), from the floors, before the gated run (seed 0).
+
+### Correction (16 Nov 2026, late, from code review; before any G94 case was run)
+
+The 1-D check above attributed HotSpot's early gap (17% low at 1 ms) to its network. That reading is wrong for
+HotSpot: built with SuperLU (as in the image), HotSpot advances each sampling interval by **one** backward-Euler step
+of the whole interval (its adaptive step loop is commented out: `RCutil.c` `backward_euler`, `temperature_grid.c`
+`compute_temp_grid`), so in `one_d.py` it took one 1 ms step where 3D-ICE took ten of 0.1 ms. Its early gap is at
+least partly time step. PACT's gap stands (its step was refined to 0.001 ms). On the small test stack, with every
+solver given the same rows (`solve.py`'s rule: one step per row), HotSpot's row-end peaks equal 3D-ICE's to 1e-4 K
+at two levels (seen before registration, a plumbing stack, not a G94 case). G94 therefore refines all three solvers
+by one rule (2^L rows per slot, one step per row), and the convergence dry run sets each solver's level.
