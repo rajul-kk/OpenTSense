@@ -1,5 +1,6 @@
 """G81e step 2: per-window dynamic energy is a part of the total that sums to the whole-trace model, and the
 scorer's statistics behave as registered (sorted shares ignore bank labels; constant series do not count)."""
+import importlib.util
 import json
 import os
 import sys
@@ -7,10 +8,19 @@ import sys
 import numpy as np
 
 HERE = os.path.dirname(__file__)
-sys.path.insert(0, os.path.join(HERE, "..", "gates", "g81e", "step2"))
-sys.path.insert(0, os.path.join(HERE, "..", "gates", "g81e", "dry"))
-import evaluate  # noqa: E402
-import run  # noqa: E402
+sys.path.insert(0, os.path.join(HERE, "..", "gates", "g81e", "dry"))    # run.py imports fit_energy from there
+
+
+def _gate_module(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+STEP2 = os.path.join(HERE, "..", "gates", "g81e", "step2")
+evaluate = _gate_module("g81e_evaluate", os.path.join(STEP2, "evaluate.py"))
+run = _gate_module("g81e_run", os.path.join(STEP2, "run.py"))
 from opentsense.power import cache, dramctl, dramenergy  # noqa: E402
 
 MODEL = dramenergy.Model(**json.load(open(os.path.join(HERE, "..", run.FIT)))["model"])
