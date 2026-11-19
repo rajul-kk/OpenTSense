@@ -15,7 +15,7 @@ refitted (`dry/fit_energy2.json`). Run: `run.py runs/main`. Output `runs/main/` 
 |---|---|---|
 | (a1) memory power differs by program | 15 of 19 | 17 of 19 (wikisort, sglib-combined near the median) |
 | (a2) dynamic power follows the fills, Pearson >= 0.9 in every seed | 15 of 19 | **12 of 19** |
-| (b) the sorted bank shares are structured | 15 of 19 | 18 of 19 (xgboost flat) |
+| (b) the sorted bank shares are structured | 15 of 19 | 18 of 19 (xgboost: shares not flat, top bank 0.20, but they move with the bank hash, seed range 0.095) |
 
 The values of G81e's bars, seen before this registration (declared there), were the same: 17, 12 and 18.
 
@@ -33,7 +33,8 @@ The values of G81e's bars, seen before this registration (declared there), were 
 
 - **nsichneu:** it misses in every window at an almost constant rate (coefficient of variation 3%), so misses carry
   no window-to-window signal. Its dynamic energy still varies by 16%, set by row-buffer hits against activates.
-- **The others:** the energy per miss varies between windows by 25% (xgboost) to 83% (huffbench), because a miss
+- **The others:** the energy per miss varies between windows (coefficient of variation 0.25 in xgboost, 0.63 in
+  tarfind, 0.83 in huffbench; the other three not computed), because a miss
   costs an activate or rides an open row, and write-backs (up to 48% of transactions in tarfind) add energy the
   fills do not count. Pairing with all transactions moves Pearson by at most 0.02. Shifting the series by up to 5
   windows (controller backlog) does not help.
