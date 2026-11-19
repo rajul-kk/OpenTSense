@@ -1,0 +1,10 @@
+# OpenTSense opentsense:g103 = opentsense:g75spice (the image G92e and G95 ran in) with ASAP7's SS and FF BSIM-CMG
+# cards converted as the TT card was (docker/asap7_osdi.py). IHP's corners are already in its PDK. Built locally.
+ARG BASE=opentsense:g75spice
+FROM ${BASE}
+COPY docker/models/7nm_SS.pm docker/models/7nm_FF.pm docker/models/7nm_TT.pm docker/asap7_osdi.py /tmp/
+RUN cd /tmp && python3 asap7_osdi.py 7nm_SS.pm --corner ss /opt/spice/asap7 && \
+    python3 asap7_osdi.py 7nm_FF.pm --corner ff /opt/spice/asap7 && \
+    python3 asap7_osdi.py 7nm_TT.pm --corner tt /tmp && cmp /tmp/asap7_tt_osdi.lib /opt/spice/asap7/asap7_tt_osdi.lib && \
+    sha256sum /opt/spice/asap7/asap7_ss_osdi.lib /opt/spice/asap7/asap7_ff_osdi.lib > /opt/spice/CORNERS && \n    sha256sum /opt/spice/osdi/*.osdi /opt/spice/asap7/*.* /opt/spice/ihp/models/cornerMOSlv.lib /opt/spice/ihp/models/cornerDIO.lib | sha256sum | cut -d' ' -f1 > /opt/spice/CHECKSUM
+# CHECKSUM recomputed as the base image computes it, now over the corner cards too (manifest.TOOLS reads it).

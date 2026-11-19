@@ -1,10 +1,12 @@
-"""Convert the ASAP7 HSPICE model card and LVS CDL netlists to ngspice OSDI syntax. Usage: asap7_osdi.py <card> <cdl dir> <out dir>
-BSIM-CMG 107 cards run on the 110 Verilog-A code (G41): coremod and capmod no longer exist and are dropped."""
+"""Convert the ASAP7 HSPICE model card and LVS CDL netlists to ngspice OSDI syntax.
+Usage: asap7_osdi.py <card> <cdl dir> <out dir>          (the TT card and the cells, as the image is built)
+       asap7_osdi.py <card> --corner <tt|ss|ff> <out dir>   (one card: asap7_<corner>_osdi.lib; G103)
+BSIM-CMG 107 cards run on the 110 Verilog-A code (G41): coremod and capmod no longer exist and are dropped.
+Cards: docker/models/7nm_{TT,SS,FF}.pm = asap7_pdk_r1p7 models/hspice/7nm_{TT,SS,FF}_160803.pm (BSD-3)."""
 import os
 import re
 import sys
 
-CARD, CDL, OUT = sys.argv[1:4]
 DROP = re.compile(r"\b(coremod|capmod|version)\s*=\s*\S+", re.I)
 
 
@@ -29,6 +31,14 @@ def cells(text):
     return "\n".join(out) + "\n"
 
 
-open(os.path.join(OUT, "asap7_tt_osdi.lib"), "w").write(card(open(CARD).read()))
-for vt in ("R", "L", "SL"):
-    open(os.path.join(OUT, f"cells_{vt}.sp"), "w").write(cells(open(os.path.join(CDL, f"asap7sc7p5t_28_{vt}.cdl")).read()))
+if __name__ == "__main__":
+    corner = len(sys.argv) == 5 and sys.argv[2] == "--corner" and sys.argv[3] in ("tt", "ss", "ff")
+    if not (corner or len(sys.argv) == 4):
+        raise SystemExit(__doc__)
+    CARD, CDL, OUT = sys.argv[1], sys.argv[2], sys.argv[-1]
+    if corner:
+        open(os.path.join(OUT, f"asap7_{sys.argv[3]}_osdi.lib"), "w").write(card(open(CARD).read()))
+    else:
+        open(os.path.join(OUT, "asap7_tt_osdi.lib"), "w").write(card(open(CARD).read()))
+        for vt in ("R", "L", "SL"):
+            open(os.path.join(OUT, f"cells_{vt}.sp"), "w").write(cells(open(os.path.join(CDL, f"asap7sc7p5t_28_{vt}.cdl")).read()))
