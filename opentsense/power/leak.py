@@ -1,5 +1,5 @@
 """Cell leakage against temperature from ngspice and the models in the image, as in G53 (IHP PSP103) and G41 (ASAP7 BSIM-CMG).
-Usage: leak.py <ihp|asap7> <out.json>"""
+Usage: leak.py <ihp|asap7> <out.json> [tt|ss|ff]   (process corner; tt as G53/G41, ss and ff for G103)"""
 import json
 import os
 import re
@@ -9,6 +9,7 @@ import tempfile
 from concurrent.futures import ThreadPoolExecutor
 
 SPICE = os.environ.get("SPICE_ROOT", "/opt/spice")
+CORNERS = ("tt", "ss", "ff")      # process corners the image has models for (G103: opentsense:g103)
 PW = "VDD VSS"
 IHP_T, ASAP7_T = (25, 50, 75, 100), (25, 50, 75, 100, 125)
 IV, AV = 1.2, 0.7
@@ -41,11 +42,11 @@ def ngspice(name, deck, osdi):
         return subprocess.run(["ngspice", "-b", name + ".cir"], cwd=d, capture_output=True, text=True).stdout
 
 
-def ihp(name):
+def ihp(name, corner="tt"):
     src, dut = IHP[name]
     te = (150, 140) if name.startswith("dfr") else (8, 7)        # flip-flop internal nodes settle only through leakage
     ctl = "\n".join(f"option temp={t}\ntran 20p {te[0]}n\nmeas tran il{t} avg i(vdd) from={te[1]}n to={te[0]}n" for t in IHP_T)
-    deck = f"* {name}\n.lib cornerMOSlv.lib mos_tt\n.include {SPICE}/ihp/sg13g2_stdcell.spice\nVDD VDD 0 {IV}\nVSS VSS 0 0\n{src}\n{dut}\n.control\n{ctl}\n.endc\n.end\n"
+    deck = f"* {name}\n.lib cornerMOSlv.lib mos_{corner}\n.include {SPICE}/ihp/sg13g2_stdcell.spice\nVDD VDD 0 {IV}\nVSS VSS 0 0\n{src}\n{dut}\n.control\n{ctl}\n.endc\n.end\n"
     out = ngspice(name, deck, ("psp103", "psp103_nqs", "r3_cmc", "mosvar"))
     v = {int(t): abs(float(x)) * IV for t, x in re.findall(r"^il(\d+)\s*=\s*([-+0-9.eE]+)", out, re.M)}
     if ABORT.search(out) or TRAN_STOPPED.search(out):
@@ -53,10 +54,10 @@ def ihp(name):
     return name, {t: p * 1e12 for t, p in v.items()} if len(v) == len(IHP_T) else _failed("missing", out)
 
 
-def asap7(cv):
+def asap7(cv, corner="tt"):
     cell, vt = cv
     pins, states = ASAP7[cell]
-    L = [f"* {cell} {vt}", f".include {SPICE}/asap7/asap7_tt_osdi.lib", f".include {SPICE}/asap7/cells_{vt}.sp"]
+    L = [f"* {cell} {vt}", f".include {SPICE}/asap7/asap7_{corner}_osdi.lib", f".include {SPICE}/asap7/cells_{vt}.sp"]
     for si, (inp, v) in enumerate(states):
         nodes = [f"vdd{si}" if p == "VDD" else "0" if p in ("VSS", "CLK") else f"o{si}" if p in ("Y", "QN") else "hi" if v else "0" for p in pins.split()]
         L += [f"V{si} vdd{si} 0 {AV}", f"X{si} {' '.join(nodes)} {cell}_ASAP7_75t_{vt}"]
@@ -72,8 +73,11 @@ def asap7(cv):
 
 if __name__ == "__main__":
     kit, path = sys.argv[1:3]
+    corner = sys.argv[3] if len(sys.argv) > 3 else "tt"
+    if kit not in ("ihp", "asap7") or corner not in CORNERS:
+        raise SystemExit(f"usage: leak.py <ihp|asap7> <out.json> [tt|ss|ff]; got {kit!r} {corner!r}")
     fn, jobs = (ihp, list(IHP)) if kit == "ihp" else (asap7, [(c, v) for c in ASAP7 for v in ("R", "L", "SL")])
     with ThreadPoolExecutor(2) as ex:
-        res = dict(ex.map(fn, jobs))
+        res = dict(ex.map(lambda j: fn(j, corner), jobs))
     json.dump(res, open(path, "w"), indent=1)
     print(sum("failed" not in v for v in res.values()), "of", len(res), "cases solved")
