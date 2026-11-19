@@ -26,7 +26,7 @@ import sys
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
 
-from opentsense.power.leak import SPICE
+from opentsense.power.leak import CORNERS, SPICE
 
 TEMPS = (25, 50, 75, 100, 125)
 KITS = {
@@ -38,6 +38,20 @@ KITS = {
     # 25 C (deep stacks: the 25 C solve is ill-conditioned), so it is kept at 10 fF and G92d's regression is against G92c.
 }
 KITS["asap7_lvt"] = dict(KITS["asap7"], cells=f"{SPICE}/asap7/cells_L.sp")      # G92c: the same kit with LVT cells
+
+
+# Process corners (G103): "<kit>@ss" and "<kit>@ff" change only the device models. IHP: its PDK's MOS and diode
+# corner sections. ASAP7: the SS/FF BSIM-CMG cards of asap7_pdk_r1p7 (image opentsense:g103, docker/Dockerfile.g103).
+def _at_corner(models, c):
+    """The TT models line at corner c: only the three corner tokens change (section names, ASAP7 card file)."""
+    for tok in ("mos_tt", "dio_tt", "asap7_tt_osdi"):
+        models = models.replace(tok, tok.replace("_tt", f"_{c}"))
+    return models
+
+
+KITS.update({f"{b}@{c}": dict(KITS[b], models=_at_corner(KITS[b]["models"], c))
+             for b in ("ihp", "asap7", "asap7_lvt") for c in CORNERS if c != "tt"})
+
 COMB, SEQ = (8, 7), (150, 140)            # tran end and measurement start, ns (as G53 / leak.py)
 EDGE = 0.05                               # input edge time in capture sequences, ns (G92/G92b value)
 SETTLE = True                             # captured states are settled (G92c: DC seeded from a continuation; G92d: staged continuation)
