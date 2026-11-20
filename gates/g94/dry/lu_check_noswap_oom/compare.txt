@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "D:\Work\FYP-search\fyp\opentsense\gates\g94\dry\lu_reuse_check.py", line 70, in <module>
+    {"run": run, "compare": compare}[sys.argv[1]](*sys.argv[2:])
+  File "D:\Work\FYP-search\fyp\opentsense\gates\g94\dry\lu_reuse_check.py", line 55, in compare
+    A, B = np.load(a), np.load(b)
+  File "C:\Users\rajul\AppData\Local\Programs\Python\Python310\lib\site-packages\numpy\lib\_npyio_impl.py", line 451, in load
+    fid = stack.enter_context(open(os.fspath(file), "rb"))
+FileNotFoundError: [Errno 2] No such file or directory: 'gates/g94/dry/lu_check/g94b.npz'
+compare rc=1

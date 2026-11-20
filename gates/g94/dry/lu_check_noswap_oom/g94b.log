@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/work/gates/g94/dry/lu_reuse_check.py", line 70, in <module>
+    {"run": run, "compare": compare}[sys.argv[1]](*sys.argv[2:])
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/work/gates/g94/dry/lu_reuse_check.py", line 43, in run
+    for d, v in solve.rise("hs", stack, cases.step("3d", 1, int(n3d)), 0.005, 0).items():
+                ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/gates/g94/solve.py", line 29, in rise
+    T = SOLVERS[solver](stack, {d: np.repeat(v, r, 0) for d, v in P.items()}, wd, transient=(slot / r, slot / r))
+  File "/work/opentsense/thermal/run.py", line 127, in run_hotspot
+    raise RuntimeError("HotSpot failed:\n" + r.stdout[-1500:] + r.stderr[-1500:])
+RuntimeError: HotSpot failed:
+
+run rc=1

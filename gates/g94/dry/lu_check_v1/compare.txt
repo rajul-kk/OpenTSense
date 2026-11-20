@@ -1,0 +1,3 @@
+3d_bot (4, 60, 60) identical
+3d_top (4, 60, 60) identical
+small_die0 (48, 12, 16) identical
