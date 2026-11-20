@@ -1,0 +1,22 @@
+{
+ "key": "7c93f5c6d274ff12",
+ "stack": "s1",
+ "variant": "board_hi",
+ "cell_um": 500.0,
+ "grid": [
+  61,
+  59
+ ],
+ "wall_s": 49.9,
+ "kT_iterations": 4,
+ "dies": {
+  "l3d": {
+   "peak_rise_K": 58.740999999999985,
+   "max_gradient_K_per_mm": 17.866217267306173
+  },
+  "ccd": {
+   "peak_rise_K": 62.625,
+   "max_gradient_K_per_mm": 23.015296862846686
+  }
+ }
+}
