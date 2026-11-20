@@ -1,0 +1,50 @@
+{
+ "key": "7c93f5c6d274ff12",
+ "stack": "s2",
+ "variant": "board_hi",
+ "cell_um": 500.0,
+ "grid": [
+  30,
+  30
+ ],
+ "wall_s": 7.8,
+ "kT_iterations": 3,
+ "dies": {
+  "d0": {
+   "peak_rise_K": 13.793000000000006,
+   "max_gradient_K_per_mm": 1.0960000000000036
+  },
+  "d1": {
+   "peak_rise_K": 16.396000000000015,
+   "max_gradient_K_per_mm": 1.90199999999993
+  },
+  "d2": {
+   "peak_rise_K": 18.69999999999999,
+   "max_gradient_K_per_mm": 2.480000000000018
+  },
+  "d3": {
+   "peak_rise_K": 20.625999999999976,
+   "max_gradient_K_per_mm": 2.6720000000000255
+  },
+  "d4": {
+   "peak_rise_K": 22.50200000000001,
+   "max_gradient_K_per_mm": 3.1259999999999764
+  },
+  "d5": {
+   "peak_rise_K": 24.406000000000006,
+   "max_gradient_K_per_mm": 3.5519999999999072
+  },
+  "d6": {
+   "peak_rise_K": 25.875,
+   "max_gradient_K_per_mm": 3.9080000000000155
+  },
+  "d7": {
+   "peak_rise_K": 27.35899999999998,
+   "max_gradient_K_per_mm": 4.655999999999949
+  },
+  "base": {
+   "peak_rise_K": 28.769999999999982,
+   "max_gradient_K_per_mm": 6.253999999999905
+  }
+ }
+}
