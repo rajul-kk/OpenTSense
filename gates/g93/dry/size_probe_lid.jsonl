@@ -1,0 +1,9 @@
+{"stack": "s1", "cell_um": 500.0, "solver": "ice", "grid": [61, 59], "sublayers": 26, "nodes": 93574, "ok": true, "wall_s": 11.4, "peak_rss_GB": 0.72, "error": ""}
+{"stack": "s1", "cell_um": 500.0, "solver": "hs", "grid": [61, 59], "sublayers": 26, "nodes": 93574, "ok": true, "wall_s": 55.0, "peak_rss_GB": 2.52, "error": ""}
+{"stack": "s1", "cell_um": 500.0, "solver": "pact", "grid": [61, 59], "sublayers": 26, "nodes": 93574, "ok": true, "wall_s": 26.5, "peak_rss_GB": 1.05, "error": ""}
+{"stack": "s2", "cell_um": 500.0, "solver": "ice", "grid": [30, 30], "sublayers": 48, "nodes": 43200, "ok": true, "wall_s": 2.5, "peak_rss_GB": 0.24, "error": ""}
+{"stack": "s2", "cell_um": 500.0, "solver": "hs", "grid": [30, 30], "sublayers": 48, "nodes": 43200, "ok": true, "wall_s": 10.1, "peak_rss_GB": 0.76, "error": ""}
+{"stack": "s2", "cell_um": 500.0, "solver": "pact", "grid": [30, 30], "sublayers": 48, "nodes": 43200, "ok": true, "wall_s": 8.9, "peak_rss_GB": 0.4, "error": ""}
+{"stack": "s4", "cell_um": 500.0, "solver": "ice", "grid": [61, 59], "sublayers": 27, "nodes": 97173, "ok": true, "wall_s": 14.0, "peak_rss_GB": 0.77, "error": ""}
+{"stack": "s4", "cell_um": 500.0, "solver": "hs", "grid": [61, 59], "sublayers": 27, "nodes": 97173, "ok": true, "wall_s": 55.8, "peak_rss_GB": 2.72, "error": ""}
+{"stack": "s4", "cell_um": 500.0, "solver": "pact", "grid": [61, 59], "sublayers": 27, "nodes": 97173, "ok": true, "wall_s": 34.2, "peak_rss_GB": 1.1, "error": ""}
