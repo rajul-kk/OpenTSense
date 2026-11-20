@@ -165,3 +165,87 @@ keeps k = t / R'' in every bonded layer (tested at a sweep point).
   layer, so "die hbase" mixes the logic die with the four HBM base dies, and k(T) takes one temperature per layer
   over all its silicon. Report S3 per region (logic, each HBM column), not per die, and give k(T) per region or
   state the averaging (found by code review, 16 Nov).
+
+## Package: lid and cooler (17 Nov 2026; before registration)
+
+Until today the spreader was exactly die-sized under h = 5e4 W/(m2 K), so heat could spread sideways only within the
+die outline: a large weakness against package-level papers (student's question, 17 Nov). `stacks.py` now builds
+S1, S2 and S4 under a square lid wider than the dies, with the dies centred, air beside them under the lid, and the
+cooler as a stated thermal resistance spread over the lid top, h = 1 / (r_sink x lid area). S3 is lidless (an
+SXM-class module, cold plate on the dies), so its spreader stays the interposer outline with r_sink set.
+
+| Stack | lid_um | r_sink (K/W) | Status |
+|---|---|---|---|
+| S1 V-Cache, S4 3-tier | 30,000 | 0.12 (large tower or AIO cooler) | ASSUMED, not sourced: for the student to fix or sweep |
+| S2 HBM (stand-alone) | 15,000 | 0.5 (its share of a shared plate) | ASSUMED |
+| S3 2.5D | none (interposer outline) | 0.03 (liquid cold plate) | ASSUMED |
+
+Both are build parameters (`stacks.build(name, cell, lid_um=..., r_sink=...)`), so a sweep keeps one code path.
+Consequences:
+- **Size.** At 250 um cells S1 and S4 grow to about 380k nodes (34k before), above S3's 335k, where PACT needed
+  15.6 GB, more than the machine has; at 500 um they are about 95k (S2 43k). The registration's cell size must be
+  chosen against a new size probe, written beside the old one (`dry/size_probe_lid.jsonl`), not over it.
+- **Superseded.** The size-probe table above and the "Seen before registration" S1 numbers describe the die-sized
+  stacks; they stay as the record of what was seen, and do not describe the stacks that will be registered.
+- **Air.** No solver has yet run a layer with a k = 0.026 region beside silicon; the new probe runs all three.
+
+### Size probe, lidded stacks (17 Nov 2026, `dry/size_probe_lid.jsonl`)
+
+500 um cells, uniform power, opentsense:g94b, each solver alone in a 3 GB container (`dry/size_probe_lid.sh`):
+
+| Stack | Nodes | 3D-ICE s / GB | HotSpot s / GB | PACT s / GB |
+|---|---|---|---|---|
+| S1 | 93,574 | 11.4 / 0.72 | 55.0 / 2.52 | 26.5 / 1.05 |
+| S2 | 43,200 | 2.5 / 0.24 | 10.1 / 0.76 | 8.9 / 0.40 |
+| S4 | 97,173 | 14.0 / 0.77 | 55.8 / 2.72 | 34.2 / 1.10 |
+
+All nine finished, so all three solvers accept the air regions (this probe reads no temperatures, so whether they
+treat air alike is the gate's own comparison). HotSpot is the binding cost: 2.72 GB at 97k nodes, close to a 3 GB cap,
+so 500 um is the largest of the tried cell sizes that fits; 250 um (about 380k nodes) does not.
+
+## Sensitivity outside the gate: BEOL and a board path (goal 11, 17 Nov 2026; 3D-ICE only, not gated)
+
+`sens/beol_board.py` via `sens/run.sh` (opentsense:g94b, 500 um cells, steady, nominal power, silicon k(T));
+outputs `sens/runs/<stack>_500um_<variant>.json`. Change of each die's peak rise (inside its powered silicon) against
+the stack as G93 built it before 17 Nov (no BEOL layer; now `stacks.build(..., beol_um=0)`), in K; the base column is the base peak rise. BEOL: 10 um on each die's source face under
+its powered silicon, vertical k 2 W/(m K) (range 1 to 6), lateral 15; board: h = 1 / (R_jb x die footprint), R_jb 2
+(lo) or 8 (hi) K/W. All BEOL and R_jb values ASSUMED from secondary sources (`beol_board.py` docstring).
+
+| Stack, die | Base | BEOL iso | BEOL aniso | BEOL k_v 1 | BEOL k_v 6 | Board R_jb 2 | Board R_jb 8 |
+|---|---|---|---|---|---|---|---|
+| S1 L3D (top) | 62.38 | -0.21 | -0.25 | -0.46 | -0.11 | -12.06 | -3.64 |
+| S1 CCD (buried) | 66.49 | +10.48 | +10.43 | +20.83 | +3.44 | -12.75 | -3.86 |
+| S2 die 0 (top) | 15.53 | -0.21 | -0.23 | -0.40 | -0.10 | -4.86 | -1.74 |
+| S2 die 7 | 31.09 | +6.51 | +6.40 | +12.61 | +2.11 | -10.67 | -3.73 |
+| S2 HBM base (bottom) | 32.81 | +7.29 | +7.18 | +14.24 | +2.37 | -11.56 | -4.04 |
+| S4 top | 30.78 | -0.21 | -0.24 | -0.42 | -0.10 | -5.33 | -1.61 |
+| S4 mid | 31.78 | +2.78 | +2.74 | +5.41 | +0.91 | -5.60 | -1.69 |
+| S4 bottom | 32.18 | +3.94 | +3.89 | +7.64 | +1.30 | -5.86 | -1.77 |
+
+- **Vertical BEOL resistance is first order for buried dies:** +3 to +21 K on S1's CCD across the published k_v
+  range, growing with depth in S2 (+1 K at die 1 to +7 K at the base, k_v 2). A die whose heat leaves without
+  crossing its own BEOL (the top die of each stack) barely moves (-0.1 to -0.5 K).
+- **Lateral anisotropy does not matter at this resolution:** isotropic and anisotropic BEOL differ by at most 0.11 K
+  (S2 base), so a three-solver gate with isotropic BEOL would lose almost nothing at 500 um cells. Finer cells, where
+  lateral spreading near hotspots matters, were not tested.
+- **A board path cools every die:** -1.6 to -4.0 K at R_jb 8 K/W and -4.9 to -12.8 K at 2 K/W, so the adiabatic bottom
+  overstates rises by up to about 20% (S1 CCD at 2 K/W: 12.75 of 66.49 K). Part of this is the air beside the dies
+  (the coefficient covers the whole bottom face, `beol_board.py`, a stated limit of about +10% on 1 / R_jb in S1).
+- **Gradients** move with the peak (S1 CCD 23.5 to 34.8 K/mm with BEOL); per-die values are in the JSON files.
+- **What this means for G93.** Leaving BEOL out makes buried dies read several K cool, which is larger than the
+  three-solver agreement G93 tests (G93a: 0.41 K), so the gated stacks should carry an isotropic BEOL layer (every
+  solver can represent it) or state the bias. That is the student's call before registration. S3 (2.5D, 335k
+  nodes) was not run: it needs a larger container than this machine gives 3D-ICE beside other jobs.
+- **Possible overlap:** G93's hybrid-bond and micro-bump layers already carry their own conductivities; whether the
+  sources behind them include BEOL was not checked, so part of the BEOL effect may be counted twice.
+
+## BEOL in the gated stacks (17 Nov 2026, student's decision after goal 11)
+
+`stacks.build` now gives every die an isotropic BEOL layer (10 um, k 2 W/(m K), cv 2e6; all ASSUMED, `stacks.BEOL`)
+on its source face (over its powered silicon where the layer is made of regions); `beol_um=0` builds the stacks
+without it (goal 11's base). The recorded `sens/runs/` JSONs carry cache key 7c93f5c6d274ff12, from stacks.py
+before this change; the key now differs (it hashes stacks.py), so `sens/run.sh` would recompute them rather than
+skip. The stacks are the same: re-solving S2's and S4's base with the new code (17 Nov) gave every die's peak rise
+and gradient identical to the recorded JSONs. One more sublayer per die: +7.2k nodes on S1, +8.1k on S2, +10.8k on S4 and
++56.8k on S3 (nine dies on a 107 x 59 grid) at 500 um cells, so S3 needs its own size probe, and HotSpot's 2.72 GB on S4 (`dry/size_probe_lid.jsonl`) may pass a 3 GB cap; the size probe is to be
+repeated with BEOL before the cell size is registered.
