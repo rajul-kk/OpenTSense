@@ -1,0 +1,135 @@
+OpenTSense (G94, 17 Nov 2026): HotSpot's SuperLU backward Euler, applied on top of hotspot-f18831e.patch in the
+opentsense:g94b image only.
+1. Reuse the LU factors of A = C/h + G between calls while G, C and h are unchanged (dgstrs), instead of a full
+   dgssv factorisation every step; dgssv itself factorises and then solves with dgstrs, so each step's arithmetic is
+   unchanged (equivalence against opentsense:g94a: gates/g94/dry/lu_check/compare.txt). On the 3d stack the unpatched
+   build took about 90 s per 5 ms step at a 2.9 GB container cap (lu_check/hs1.sh); the G94 dry run's level 0 ran
+   27+ min before it was stopped.
+2. Free what each step allocated and never freed: the right-hand side's values and the two SuperMatrix structs in
+   backward_euler, and the power vector in compute_temp_grid (two n-vectors per step, about 1 MB each on the 3d
+   stack: about 20 GB at 10,000 steps).
+3. Stop with an error when SuperLU reports one (the return code was ignored).
+4. Free the cached factors before the steady-state solve that HotSpot always runs after a transient trace
+   (steady_state_temp_grid), so two factorisations are never held at once: without this the 3d stack's run went over
+   a 2.9 GB container cap that the unpatched build stays under.
+The model is unchanged.
+--- a/RCutil.c	2026-11-17 06:13:41.291611000 +0800
++++ b/RCutil.c	2026-11-17 06:13:41.323899500 +0800
+@@ -265,12 +265,33 @@
+ #define BACKWARD_EULER_MAXUP     5.0
+ #define BACKWARD_EULER_MAXDOWN   10.0
+ #define BACKWARD_EULER_PRECISION 0.01
++/* OpenTSense (G94, patch hotspot-lu-reuse): the LU factors of A = C/h + G are kept between calls and reused while
++ * G, C and h are the same (dgstrs), instead of a full dgssv factorisation every step. dgssv factorises and then
++ * solves with dgstrs itself, so each step's arithmetic is unchanged. Also frees the right-hand side's values,
++ * which leaked one n-vector per step. */
++static SuperMatrix be_L, be_U;
++static int *be_perm_r = NULL, *be_perm_c = NULL;
++static SuperMatrix *be_G = NULL;
++static diagonal_matrix_t *be_C = NULL;
++static double be_h = -1.0;
++
++/* Free the cached factors (called before another large solve, so two factorisations are never held at once). */
++void backward_euler_release(void)
++{
++  if(be_perm_r == NULL)
++    return;
++  SUPERLU_FREE (be_perm_r);
++  SUPERLU_FREE (be_perm_c);
++  Destroy_SuperNode_Matrix(&be_L);
++  Destroy_CompCol_Matrix(&be_U);
++  be_perm_r = be_perm_c = NULL;
++  be_G = NULL;
++  be_C = NULL;
++}
++
+ double backward_euler(SuperMatrix *G, diagonal_matrix_t *C, double *T, double *P, double *h, double *Tout)
+ {
+   ////////////////// Set Options and Statistics //////////////////////////
+-  SuperMatrix L, U;
+-  int *perm_r; // row permutations from partial pivoting
+-  int *perm_c; // column permutation vector
+   int info, n = C->n;
+   double max, new_h = (*h);
+   superlu_options_t options;
+@@ -278,10 +299,6 @@
+   DNformat     *Bstore;
+   double       *dp;
+ 
+-  // TODO: Implement re-use of perm_c
+-  if ( !(perm_r = intMalloc(n)) ) fatal("Malloc fails for perm_r[].\n");
+-  if ( !(perm_c = intMalloc(n)) ) fatal("Malloc fails for perm_c[].\n");
+-
+   set_default_options(&options);
+ 
+   // Initialize the statistics variables.
+@@ -299,13 +316,25 @@
+ 
+   int flag = 1;
+ 
+-  if(build_A_matrix(G, C, *h, A) != 1)
+-    fatal("error\n");
+-
+   if(build_B_matrix(C, T, P, *h, B) != 1)
+     fatal("error\n");
+ 
+-  dgssv(&options, A, perm_c, perm_r, &L, &U, B, &stat, &info);
++  if(be_perm_r == NULL || G != be_G || C != be_C || *h != be_h) {
++    backward_euler_release();
++    if ( !(be_perm_r = intMalloc(n)) ) fatal("Malloc fails for perm_r[].\n");
++    if ( !(be_perm_c = intMalloc(n)) ) fatal("Malloc fails for perm_c[].\n");
++    if(build_A_matrix(G, C, *h, A) != 1)
++      fatal("error\n");
++    dgssv(&options, A, be_perm_c, be_perm_r, &be_L, &be_U, B, &stat, &info);
++    Destroy_CompCol_Matrix(A);
++    be_G = G;
++    be_C = C;
++    be_h = *h;
++  } else {
++    dgstrs(NOTRANS, &be_L, &be_U, be_perm_c, be_perm_r, B, &stat, &info);
++  }
++  if(info != 0)
++    fatal("In backward_euler(): SuperLU returned an error\n");
+ 
+   // Copy results into Ttemp
+   Bstore = (DNformat *) B->Store;
+@@ -416,12 +445,10 @@
+   free_dvector(Ttemp);
+   free_dvector(T1);
+   free_dvector(T2);
+-  SUPERLU_FREE (perm_r);
+-  SUPERLU_FREE (perm_c);
+-  Destroy_CompCol_Matrix(A);
++  free_dvector(((DNformat *) B->Store)->nzval);
+   Destroy_SuperMatrix_Store(B);
+-  Destroy_SuperNode_Matrix(&L);
+-  Destroy_CompCol_Matrix(&U);
++  free(A);
++  free(B);
+   StatFree(&stat);
+ 
+   return new_h;
+--- a/temperature_grid.c	2026-11-17 06:13:41.313976000 +0800
++++ b/temperature_grid.c	2026-11-17 06:13:41.355641200 +0800
+@@ -2808,6 +2808,13 @@
+   if (!model->r_ready)
+     fatal("R model not ready\n");
+ 
++#if SUPERLU > 0
++  {
++    void backward_euler_release(void);   /* RCutil.c (OpenTSense); declared here to leave the CRLF temperature.h alone */
++    backward_euler_release();   /* OpenTSense: free the cached transient LU before this solve allocates its own */
++  }
++#endif
++
+   p = new_grid_model_vector(model);
+ 
+   /* package nodes' power numbers	*/
+@@ -3660,6 +3667,7 @@
+   }
+ 
+   backward_euler(G, C, T, P, &h, T);
++  SUPERLU_FREE(P);            /* OpenTSense: the power vector is built anew each step (doubleMalloc) and was leaked */
+ 
+ #else
+ 

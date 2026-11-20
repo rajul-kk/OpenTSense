@@ -1,0 +1,12 @@
+# OpenTSense opentsense:g94b = opentsense:g94a with HotSpot's backward Euler reusing its LU factors between steps and
+# freeing what each step leaked (patches/hotspot-lu-reuse.patch; same arithmetic: gates/g94/dry/lu_check/compare.txt).
+# Built locally, no network: /opt/hotspot is HotSpot at COMMIT plus hotspot-f18831e.patch, re-applied here on a clean
+# tree so the result does not depend on the base image's working copy; no hunk may apply with fuzz.
+ARG BASE=opentsense:g94a
+FROM ${BASE}
+COPY patches/hotspot-f18831e.patch patches/hotspot-lu-reuse.patch /tmp/
+RUN cd /opt/hotspot && test "$(cat COMMIT)" = "$(git rev-parse HEAD)" && git checkout -q -- . && \
+    patch -p1 --fuzz=0 < /tmp/hotspot-f18831e.patch && patch -p1 --fuzz=0 < /tmp/hotspot-lu-reuse.patch && \
+    make clean > /dev/null && { make SUPERLU=1 hotspot > /tmp/hs.log 2>&1 || { tail -40 /tmp/hs.log; exit 1; }; } && \
+    grep -q "dgstrs(NOTRANS, &be_L" RCutil.c && grep -q "backward_euler_release();" temperature_grid.c && \
+    grep -q "SUPERLU_FREE(P);" temperature_grid.c && test -x hotspot
