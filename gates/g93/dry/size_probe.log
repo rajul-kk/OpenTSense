@@ -1,0 +1,12 @@
+{"stack": "s1", "cell_um": 250.0, "solver": "ice", "grid": [42, 31], "sublayers": 26, "nodes": 33852, "ok": true, "wall_s": 1.9, "peak_rss_GB": 0.17, "error": ""}
+{"stack": "s1", "cell_um": 250.0, "solver": "hs", "grid": [42, 31], "sublayers": 26, "nodes": 33852, "ok": true, "wall_s": 7.8, "peak_rss_GB": 0.53, "error": ""}
+{"stack": "s1", "cell_um": 250.0, "solver": "pact", "grid": [42, 31], "sublayers": 26, "nodes": 33852, "ok": true, "wall_s": 8.0, "peak_rss_GB": 0.33, "error": ""}
+{"stack": "s4", "cell_um": 250.0, "solver": "ice", "grid": [42, 31], "sublayers": 27, "nodes": 35154, "ok": true, "wall_s": 2.3, "peak_rss_GB": 0.18, "error": ""}
+{"stack": "s4", "cell_um": 250.0, "solver": "hs", "grid": [42, 31], "sublayers": 27, "nodes": 35154, "ok": true, "wall_s": 8.1, "peak_rss_GB": 0.54, "error": ""}
+{"stack": "s4", "cell_um": 250.0, "solver": "pact", "grid": [42, 31], "sublayers": 27, "nodes": 35154, "ok": true, "wall_s": 8.7, "peak_rss_GB": 0.34, "error": ""}
+{"stack": "s2", "cell_um": 250.0, "solver": "ice", "grid": [44, 44], "sublayers": 48, "nodes": 92928, "ok": true, "wall_s": 21.4, "peak_rss_GB": 0.8, "error": ""}
+{"stack": "s2", "cell_um": 250.0, "solver": "hs", "grid": [44, 44], "sublayers": 48, "nodes": 92928, "ok": true, "wall_s": 55.1, "peak_rss_GB": 2.03, "error": ""}
+{"stack": "s2", "cell_um": 250.0, "solver": "pact", "grid": [44, 44], "sublayers": 48, "nodes": 92928, "ok": true, "wall_s": 36.1, "peak_rss_GB": 1.05, "error": ""}
+{"stack": "s3", "cell_um": 500, "solver": "ice", "ok": false, "exit": 0, "mem_cap": "2.5g"}
+{"stack": "s3", "cell_um": 500.0, "solver": "hs", "grid": [107, 59], "sublayers": 53, "nodes": 334589, "ok": false, "wall_s": 114.7, "peak_rss_GB": 2.5, "error": "HotSpot failed:\nComputing steady-state temperatures...\n"}
+{"stack": "s3", "cell_um": 500.0, "solver": "pact", "grid": [107, 59], "sublayers": 53, "nodes": 334589, "ok": false, "wall_s": 292.4, "peak_rss_GB": 2.53, "error": "ng: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '/tmp/probe/stack.config' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.\n  self.flp_df[\"ConfigFile\"].fillna(defaultConfigFile, inplace=True)\n"}
