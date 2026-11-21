@@ -1,0 +1,40 @@
+{
+  "time_utc": "2026-11-17T09:20:11+00:00",
+  "host": "Rajul",
+  "python": "3.10.0",
+  "repo": {
+    "commit": "69fc46a576ff36290dc81bdf881bd6fcbc503f69",
+    "dirty": true
+  },
+  "image": null,
+  "orfs_image": null,
+  "tools": {
+    "iverilog": null,
+    "verilator": null,
+    "ngspice": null,
+    "3dice_commit": "cat: /opt/3d-ice/COMMIT: No such file or directory",
+    "superlu_mt_commit": "fatal: cannot change to '/opt/3d-ice/superlu_mt-4.0.0': No such file or directory",
+    "pact_commit": "cat: /opt/pact/COMMIT: No such file or directory",
+    "spice_models_checksum": "cat: /opt/spice/CHECKSUM: No such file or directory",
+    "ca_certificates": null
+  },
+  "packages": {
+    "numpy": "2.2.6",
+    "scipy": "1.15.3",
+    "pandas": "2.3.3",
+    "PyYAML": "6.0.3",
+    "pytest": "9.0.2"
+  },
+  "gate": "G86",
+  "inputs_sha256": {
+    "gates/g86/run.py": "244b82797cb5103adfbf34465741f0e6111fe56ea9cfb130cdd4060784a360e1",
+    "gates/g86/registration.md": "4ae83925bf244b7065f0b58285bbec7b17faf40cb97fb6277d04877bfa3137fa",
+    "gates/g102/readings.py": "f40034b3a4ff58882e8ecfa3181064e15643bc63f3794fff39e397daee983401",
+    "gates/g84/make_cases.py": "4f90c91bb738506ca3365b0b2841f397425ba2af86f3c02b69230dea12b6a683",
+    "opentsense/estimate/fault.py": "7e5e71b00c6d19313db4f8654d22d193eb83b89f5f8c8791c4984ffe643c3266",
+    "opentsense/estimate/field_model.py": "6ef969702a49b21ea9f46a7cd32456715995cdc5f54ac982a0f78d0c75beb300",
+    "opentsense/estimate/sensor.py": "eba10619acc1eb00f420f7ca6b8588d62355666ec424d52506a34916f302e15d",
+    "opentsense/bench/metrics.py": "9b5717afc9794079fde9db35021104b02bb6cffef8eea4ff478be16176e2c501",
+    "opentsense/bench/cases.py": "c5b0963fbfce35463c09ee700008fbaf4ad65cc66473014a32340038f2921951"
+  }
+}
