@@ -1,0 +1,94 @@
+OpenROAD unknown 
+Features included (+) or not (-): -GPU +GUI -Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0012] Hierarchical flow (-hier) is currently in development and may cause multiple issues. Do not use in production environments.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock vclk_core_clock can not be propagated.
+SETUP:
+worst slack max -64.512
+HOLD:
+worst slack min 55.278
+tns max -19807.031
+max_delay/setup group asynchronous
+
+                                     Required   Actual
+Endpoint                                Delay    Delay    Slack
+---------------------------------------------------------------
+gen_regfile_ff.register_file_i.rf_reg[656]$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R) 1588.893  915.730  673.163 (MET)
+gen_regfile_ff.register_file_i.rf_reg[749]$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R) 1589.538  916.155  673.383 (MET)
+gen_regfile_ff.register_file_i.rf_reg[717]$_DFFE_PN0P_/RESETN (DFFASRHQNx1_ASAP7_75t_R) 1589.010  915.606  673.404 (MET)
+
+max_delay/setup group gated clock
+
+                                     Required   Actual
+Endpoint                                Delay    Delay    Slack
+---------------------------------------------------------------
+_22114_/B (AND2x2_ASAP7_75t_R)       1446.483  959.907  486.576 (MET)
+
+max_delay/setup group core_clock
+
+                                     Required   Actual
+Endpoint                                Delay    Delay    Slack
+---------------------------------------------------------------
+gen_regfile_ff.register_file_i.rf_reg[408]$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R) 1561.093 1625.604  -64.512 (VIOLATED)
+gen_regfile_ff.register_file_i.rf_reg[536]$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R) 1561.227 1625.572  -64.345 (VIOLATED)
+gen_regfile_ff.register_file_i.rf_reg[376]$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R) 1558.878 1623.027  -64.149 (VIOLATED)
+
+max_delay/setup group vclk_core_clock
+
+                                     Required   Actual
+Endpoint                                Delay    Delay    Slack
+---------------------------------------------------------------
+instr_addr_o[27] (output)            1281.775 1336.055  -54.280 (VIOLATED)
+instr_addr_o[29] (output)            1281.775 1321.871  -40.096 (VIOLATED)
+instr_addr_o[23] (output)            1281.775 1321.565  -39.790 (VIOLATED)
+
+SCALED_LAYERS 18 by 1.21361
+Annotated 68306 pin activities.
+Group                      Internal      Switching        Leakage          Total
+                              Power          Power          Power          Power (Watts)
+--------------------------------------------------------------------------------
+Sequential           1.75909500e-03 1.90082756e-05 5.47454476e-07 1.77865080e-03  40.5%
+Combinational        3.62531631e-04 6.86546846e-04 1.78027210e-06 1.05085876e-03  23.9%
+Clock                9.13749624e-04 6.47334091e-04 9.73329648e-08 1.56118104e-03  35.6%
+Macro                0.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00   0.0%
+Pad                  0.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00   0.0%
+--------------------------------------------------------------------------------
+Total                3.03537096e-03 1.35288795e-03 2.42505871e-06 4.39068396e-03 100.0%
+                              69.1%          30.8%           0.1%
+[INFO PSM-0040] All shapes on net VDD are connected.
+[INFO PSM-0040] All shapes on net VDD are connected.
+########## IR report #################
+Net              : VDD
+Corner           : default
+Total power      : 4.39e-03 W
+Supply voltage   : 7.00e-01 V
+Worstcase voltage: 6.98e-01 V
+Average voltage  : 7.00e-01 V
+Average IR drop  : 2.10e-04 V
+Worstcase IR drop: 1.75e-03 V
+Percentage drop  : 0.25 %
+######################################
+[INFO PSM-0040] All shapes on net VSS are connected.
+[INFO PSM-0040] All shapes on net VSS are connected.
+########## IR report #################
+Net              : VSS
+Corner           : default
+Total power      : 4.39e-03 W
+Supply voltage   : 0.00e+00 V
+Worstcase voltage: 1.51e-03 V
+Average voltage  : 2.09e-04 V
+Average IR drop  : 2.09e-04 V
+Worstcase IR drop: 1.51e-03 V
+Percentage drop  : 0.22 %
+######################################
