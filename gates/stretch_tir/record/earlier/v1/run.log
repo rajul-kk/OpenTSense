@@ -1,0 +1,14 @@
+lib25 T=25.00 cell=1.00000 wire=1.00000 done
+wire_x2_control T=25.00 cell=1.00000 wire=2.00000 done
+stack_peak T=79.77 cell=1.05420 wire=1.21361 done
+stack_mean T=58.01 cell=1.03369 wire=1.12874 done
+peak_cell_only T=79.77 cell=1.05420 wire=1.00000 done
+peak_wire_only T=79.77 cell=1.00000 wire=1.21361 done
+lib25            T= 25.00C cell=1.0000 wire=1.0000 setup WNS    19.99 ps (d +0.00) hold   52.41 ps VDD drop 1.440 mV (x1.000) VSS rise 1.241 mV
+wire_x2_control  T= 25.00C cell=1.0000 wire=2.0000 setup WNS   -64.97 ps (d -84.96) hold   52.57 ps VDD drop 2.880 mV (x2.000) VSS rise 2.482 mV
+stack_peak       T= 79.77C cell=1.0542 wire=1.2136 setup WNS   -64.32 ps (d -84.31) hold   56.09 ps VDD drop 1.747 mV (x1.213) VSS rise 1.506 mV
+stack_mean       T= 58.01C cell=1.0337 wire=1.1287 setup WNS   -31.60 ps (d -51.59) hold   54.70 ps VDD drop 1.625 mV (x1.128) VSS rise 1.401 mV
+peak_cell_only   T= 79.77C cell=1.0542 wire=1.0000 setup WNS   -49.31 ps (d -69.30) hold   56.06 ps VDD drop 1.440 mV (x1.000) VSS rise 1.241 mV
+peak_wire_only   T= 79.77C cell=1.0000 wire=1.2136 setup WNS     6.40 ps (d -13.59) hold   52.45 ps VDD drop 1.747 mV (x1.213) VSS rise 1.506 mV
+CONTROL wire_x2_ratio_in_1.8_2.2 True
+CONTROL lib25_reproduces_g97 True
