@@ -2,6 +2,7 @@
 import os
 import sys
 
+import numpy as np
 import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "gates", "g93"))
@@ -75,7 +76,6 @@ def test_lid_and_sink_are_parameters():
 
 
 def test_subtract_covers_the_rectangle_once_without_the_holes():
-    import numpy as np
     rect, holes = [0, 0, 10, 8], [[2, 3, 4, 2], [7, 0, 3, 1]]
     A = np.zeros((8, 10), int)
     for x, y, w, h in stacks.subtract(rect, holes) + holes:
@@ -97,3 +97,11 @@ def test_gated_stacks_carry_an_isotropic_beol_layer_per_die(name):
     assert (m.k, m.k_lateral) == (stacks.BEOL["beol_k"], None)
     assert all(any(l.name == f"{d.name}_beol" for l in st.layers) for d in bare.dies)
     assert "beol" not in bare.materials
+
+
+def test_leakage_curve_is_normalised_at_the_reference_and_doubles_near_20_K():
+    P = {"d": np.full((2, 2), 1.0)}
+    dyn, leak = stacks.leakage(P, 0.25)
+    assert np.allclose(leak({"d": np.full((2, 2), stacks.LEAK_T_REF_K)})["d"], 0.25, rtol=1e-4)
+    hot = leak({"d": np.full((2, 2), stacks.LEAK_T_REF_K + 21.0)})["d"]
+    assert np.allclose(dyn["d"], 0.75) and 1.9 < hot[0, 0] / 0.25 < 2.1

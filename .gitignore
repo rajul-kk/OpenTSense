@@ -28,3 +28,8 @@ gates/stretch_tir/runs_v1/
 gates/stretch_tir/runs_v2_partial/
 gates/g84/dry/cases.npz
 gates/g84/dry/score/per_case.npz
+# ungated G93 sensitivity runs: summarised in gates/g93/sens/record/
+gates/g93/sens/*_runs*/
+gates/g93/sens/cooler.log
+gates/g93/sens/leak.log
+gates/g93/sens/coldplate*.log

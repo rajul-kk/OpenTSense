@@ -18,6 +18,7 @@ import numpy as np
 
 from opentsense.power import dram
 from opentsense.stack import floorplan, model
+from opentsense.thermal import electrothermal
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
 FLP = os.path.join(ROOT, "configs", "floorplans")
@@ -59,6 +60,21 @@ PACKAGE = {"s1": dict(lid_um=30000, r_sink=0.12), "s2": dict(lid_um=15000, r_sin
 # ASSUMED. beol_um=0 builds the stacks without it (goal 11's base).
 BEOL = dict(beol_um=10.0, beol_k=2.0)
 BEOL_CV = 2.0e6
+
+# Leakage against temperature (17 Nov 2026, goal 15): relative leakage of ASAP7 LVT cells re-solved in ngspice at five
+# temperatures (sum of the three LVT reference cells, INVx1_L, NAND2x1_L and the third in G92e's leak_ref.json,
+# gates/g92e/runs/main/asap7_lvt/leak_ref.json), normalised to 1 at LEAK_T_REF_K: about 3.3%/K near 85 C, doubling
+# every 21 K. The share of each block's power that is leakage at LEAK_T_REF_K is ASSUMED and swept (`sens/leak.py`);
+# DRAM dies take the same curve (their periphery is logic), also ASSUMED.
+LEAK_TEMPS_C = (25.0, 50.0, 75.0, 100.0, 125.0)
+LEAK_CURVE = (0.09452, 0.27768, 0.71606, 1.65036, 3.45940)
+LEAK_T_REF_K = 358.15
+
+
+def leakage(P, share):
+    """(dynamic maps, leak) for thermal.run.solve_kT: P is the nominal power at LEAK_T_REF_K, of which `share` (one
+    value or {die: value}) is leakage on LEAK_CURVE."""
+    return electrothermal.map_leakage(P, share, LEAK_T_REF_K, LEAK_TEMPS_C, LEAK_CURVE)
 
 
 def materials(p):
