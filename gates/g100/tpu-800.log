@@ -1,0 +1,19 @@
+tpu_W1 {'rc': 0, 'wall_s': 72.3, 'rows': 616, 'rows_match': 616}
+tpu_W2 {'rc': 0, 'wall_s': 72.3, 'rows': 616, 'rows_match': 616}
+tpu_W3 {'rc': 0, 'wall_s': 72.4, 'rows': 0, 'rows_match': 0}
+{
+ "criteria": {
+  "a_checksums": true,
+  "b_annotation": true,
+  "c_tiles": true
+ },
+ "verdict": "PASS",
+ "min_annotation": 1.0,
+ "max_tile_rel": 1.2864710607484059e-05,
+ "power_vs_g72": {
+  "def": 0.22005435772483176,
+  "W1": 0.233500249918369,
+  "W2": 0.23814577731261785,
+  "W3": 0.25594789372491306
+ }
+}

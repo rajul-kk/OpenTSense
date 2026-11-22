@@ -1,0 +1,19 @@
+outputs cut 55161 (SDF outputs 55234); inputs delayed 116315; SDF instances not in the netlist 0 []; outputs not parsed 0 []
+zero {'rc': 0, 'rows': 616, 'rows_match': 616, 'ok': True}
+delay {'rc': 0, 'rows': 616, 'rows_match': 616, 'ok': True}
+output pins re-pointed 55161 (vector bits 256); copies merged 7048
+{
+ "criteria": {
+  "a_reference": true,
+  "b_converter": true,
+  "c_annotation": true
+ },
+ "valid": true,
+ "glitch_share": 0.19104952256993346,
+ "below_decision_threshold": false,
+ "raw_glitch_share": 0.23080949930152572,
+ "toggle_ratio_sim": 3.3330778403754064,
+ "tile_share_median": 0.09157231617057093,
+ "tile_share_max": 0.7304312428446459,
+ "tiles_counted": 442
+}
