@@ -40,12 +40,24 @@ class FieldModel(Estimator):
     on the readings. Temperature only."""
     name = "field_model"
 
-    def __init__(self, energy=0.9999):
-        self.energy = energy
+    def __init__(self, energy=0.9999, gf=None):
+        """`gf`: a GaussianField already fitted on the same training fields, reused instead of refitting (the fit
+        reads only the training fields, not the sensors or readings); fit checks it against them."""
+        self.energy, self.prefit = energy, gf
 
     def fit(self, cs, idx):
         self.shape = cs.T.shape[1:]
-        self.gf = GaussianField(energy=self.energy).fit(cs.T[idx].reshape(len(idx), -1))
+        X = cs.T[idx].reshape(len(idx), -1)
+        if self.prefit is None:
+            self.gf = GaussianField(energy=self.energy).fit(X)
+            return self._sensors(cs)
+        g = self.prefit
+        if g.n != X.shape[1] or g.n_train != len(X) or not np.allclose(g.mu, X.mean(0, dtype=np.float64)):
+            raise ValueError("the given field was not fitted on this case set's training fields")
+        self.gf = g
+        return self._sensors(cs)
+
+    def _sensors(self, cs):
         self.S = cs.flat_sensors
         return self
 

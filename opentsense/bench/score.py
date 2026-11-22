@@ -40,7 +40,13 @@ def _compare(per, baseline, dies, groups, n_boot):
             for name in per if name != baseline}
 
 
-def score(cs, names, split="test", baseline="average", n_boot=10000):
+def score(cs, names, split="test", baseline="average", n_boot=10000, estimators=None):
+    """`estimators`: optional {name: Estimator} used instead of a fresh REGISTRY[name]() (e.g. one holding a fit
+    shared across case sets with the same training fields); fit is still called on this case set."""
+    estimators = estimators or {}
+    for k, e in estimators.items():
+        if k not in names or e.name != k:
+            raise ValueError(f"estimators[{k!r}] is a {e.name!r} estimator; keys must be names being scored")
     tr, te = cs.idx("train"), cs.idx(split)
     if not len(tr) or not len(te):
         raise ValueError("need train cases and cases in the scored split")
@@ -51,7 +57,7 @@ def score(cs, names, split="test", baseline="average", n_boot=10000):
            "estimators": {}}
     per = {}
     for name in names:
-        est = REGISTRY[name]()
+        est = estimators[name] if name in estimators else REGISTRY[name]()
         t0 = time.perf_counter(); est.fit(cs, tr); t1 = time.perf_counter()
         out = est.predict(cs.public(te)); t2 = time.perf_counter()
         per[name] = metrics.per_case(cs.T[te], out["T"], float(cs.cell_um), cs.P[te] if cs.has_power else None, out.get("P"))

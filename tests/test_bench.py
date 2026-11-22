@@ -79,6 +79,25 @@ def test_scorer_is_deterministic(tmp_path):
     assert r1 == r2
 
 
+def test_field_model_with_a_given_fit_scores_the_same():
+    from opentsense.bench.estimators import REGISTRY, FieldModel
+    from opentsense.estimate.field_model import GaussianField
+    cs = synthetic()
+    tr = cs.idx("train")
+    gf = GaussianField(energy=0.9999).fit(cs.T[tr].reshape(len(tr), -1))
+    r1, _ = score.score(cs, ["average", "field_model"], n_boot=200)
+    r2, _ = score.score(cs, ["average", "field_model"], n_boot=200, estimators={"field_model": FieldModel(gf=gf)})
+    for r in (r1, r2):
+        for e in r["estimators"].values():
+            e.pop("fit_s"); e.pop("predict_s")
+    assert r1 == r2
+    other = GaussianField(energy=0.9999).fit(cs.T[tr][1:].reshape(len(tr) - 1, -1))     # same grid, other fields
+    for bad in ({"field_model": FieldModel(gf=other)}, {"fieldmodel": FieldModel(gf=gf)},
+                {"field_model": REGISTRY["average"]()}):
+        with pytest.raises(ValueError):
+            score.score(cs, ["average", "field_model"], n_boot=200, estimators=bad)
+
+
 def test_tikhonov_rules_beat_the_average():
     cs = synthetic()
     names = ["average", "ridge_gcv", "ridge_upre", "ridge_dp", "ridge_lc"]
