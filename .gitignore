@@ -26,3 +26,5 @@ gates/g96/dry/*_delay.v
 docs/untangle-log.md
 gates/stretch_tir/runs_v1/
 gates/stretch_tir/runs_v2_partial/
+gates/g84/dry/cases.npz
+gates/g84/dry/score/per_case.npz
