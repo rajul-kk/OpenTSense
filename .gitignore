@@ -33,3 +33,4 @@ gates/g93/sens/*_runs*/
 gates/g93/sens/cooler.log
 gates/g93/sens/leak.log
 gates/g93/sens/coldplate*.log
+gates/g104/dry/*.log
