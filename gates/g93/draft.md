@@ -249,3 +249,89 @@ skip. The stacks are the same: re-solving S2's and S4's base with the new code (
 and gradient identical to the recorded JSONs. One more sublayer per die: +7.2k nodes on S1, +8.1k on S2, +10.8k on S4 and
 +56.8k on S3 (nine dies on a 107 x 59 grid) at 500 um cells, so S3 needs its own size probe, and HotSpot's 2.72 GB on S4 (`dry/size_probe_lid.jsonl`) may pass a 3 GB cap; the size probe is to be
 repeated with BEOL before the cell size is registered.
+
+### Size probe with BEOL: S3 and S2 on a Kaggle CPU session (17 Nov 2026; `dry/kaggle_probe_beol.py`, output `dry/size_probe_kaggle_beol.jsonl`, log `dry/size_probe_kaggle_beol.log`)
+
+Same build as the 16 Nov Kaggle probe (solver tests: 11 passed), stacks now with their BEOL layer, 500 um cells.
+
+| Stack | Nodes | 3D-ICE | HotSpot | PACT |
+|---|---|---|---|---|
+| S2 | 51,300 | 7.6 s / 0.30 GB | 40.2 s / 0.91 GB | 24.4 s / 0.48 GB |
+| S3 | 391,406 (334,589 without BEOL) | 740 s / 6.40 GB | 4,483 s / 25.55 GB | 817 s / 8.29 GB |
+
+S3's nine BEOL sublayers add 17% nodes but take HotSpot from 15.63 to 25.55 GB (+63%), close to a Kaggle CPU
+session's 30 GB: S3 at 500 um in HotSpot runs on Kaggle with little margin, and not at all on this machine. The
+S2 line is the parity check against this machine's `size_probe_beol.jsonl` (node count must match; RAM and time are
+the machine's).
+
+## Sensitivity: the cooler's resistance (17 Nov 2026, ungated, `sens/cooler.py`, `sens/cooler_runs/`)
+
+3D-ICE, 500 um cells, the gated stacks (BEOL included), steady, nominal power, k(T); r_sink at 0.5x, 1x and 2x its
+PACKAGE value. Per die: peak rise / spread inside the powered silicon (peak minus coolest cell) / largest gradient.
+
+| Stack, die | 0.5x | 1x | 2x |
+|---|---|---|---|
+| S1 ccd (88 W) | 67.4 K / 39.0 K / 34.6 K/mm | 77.0 / 40.1 / 35.0 | 91.1 / 41.2 / 35.7 |
+| S1 l3d | 52.7 / 26.2 / 16.5 | 62.2 / 27.2 / 16.8 | 76.2 / 28.3 / 17.3 |
+| S2 base (20 W) | 34.8 / 20.6 / 7.9 | 40.1 / 21.1 / 8.0 | 50.4 / 21.5 / 8.2 |
+| S4 bot (45 W) | 31.4 / 19.3 / 14.4 | 36.1 / 19.7 / 14.4 | 43.1 / 20.1 / 14.6 |
+
+From 0.5x to 2x (a 4x range in r_sink) the peaks move by 12 to 24 K (S4 bot 11.7, S1 ccd 23.7), but the spread by at
+most 2.3 K (S1 ccd; at most 8% relative, S1 l3d) and the gradient by at most 1.1 K/mm (S1 ccd; at most 5%
+relative, S1 l3d): a uniform cooler shifts the field, it
+barely reshapes it. The shape the sensors must reconstruct is set by the
+power map and the spreading path; the cooler sets the level (which matters for k(T), leakage and the limits). Not
+covered: a cold plate's inlet-to-outlet gradient or any non-uniform coefficient, which would reshape the field. The
+S4 2x solve took 2,745 s for the same 3 k(T) iterations as the others (machine contention, not a solver result).
+
+## Sensitivity: leakage that grows with temperature (goal 15, 18 Nov 2026, ungated, `sens/leak.py`, `sens/leak_runs/`)
+
+3D-ICE, 500 um cells, the gated stacks, steady, k(T). Each cell's nominal power is taken as its power at 85 C and
+split into dynamic (1 - share) and leakage (share), the leakage scaled by our own ASAP7 LVT curve (G92e
+`runs/main/asap7_lvt/leak_ref.json`, about 3.3 %/K, doubling every 21 K; `stacks.leakage`); solved to the joint
+k(T)-leakage fixed point (`run.solve_kT`, 0.01 K), stopped as a runaway once any cell passes ambient + 400 K.
+Ambient 26.85 C in every stack. Peak rise / spread, K; total power against nominal:
+
+| Stack, die | share 0 | 0.1 | 0.25 | 0.4 |
+|---|---|---|---|---|
+| S1 ccd (88 W nominal) | 77.0 / 40.1 | 83.8 / 46.1, 1.04x | runaway (5,052 K after 8 solves) | runaway (1,040 K after 5) |
+| S1 l3d | 62.2 / 27.2 | 67.2 / 31.3 | - | - |
+| S2 base (20 W) | 40.1 / 21.1 | 37.6 / 20.0, 0.93x | 33.4 / 18.0, 0.81x | 28.5 / 15.6, 0.69x |
+| S4 bot (45 W) | 36.1 / 19.7 | 33.8 / 18.5, 0.93x | 29.8 / 16.4, 0.82x | 25.4 / 14.1, 0.69x |
+
+Seen:
+- The sign depends on where a stack runs against the 85 C reference. S1's CCD peaks near 104 C (77 K over 26.85 C),
+  so leakage adds power where it is hottest: the peak rises 6.8 K and the spread 6.0 K at a 10% share, and at 25%
+  the loop runs away. S2 and S4 run below 85 C, so the same model takes power away and both level and spread fall.
+- Unlike the cooler, leakage reshapes the field in S1 (spread +15% at 10%). At a 25% or 40% share the
+  fixed-point loop diverged from the nominal start; the figures it stopped at (5,052 K, 1,040 K) only mark the
+  divergence, since they extend the curve far past its 125 C end. This is evidence of a thermal runaway, not a
+  proof: the spectral-radius test of `thermal/runaway.py` (from ambient) was not run here.
+- What is ASSUMED: nominal power stands for 85 C, and every cell has the same share. The student decides whether
+  the gated stacks carry leakage, at what share, and at what reference temperature.
+
+## Sensitivity: a liquid cold plate (goal 19, 18 Nov 2026, ungated, 3D-ICE only, `sens/coldplate.py`, `sens/coldplate_runs/`)
+
+3D-ICE's two-resistance microchannel model on the lid (under a 500 um cover), in place of the uniform cooler:
+copper, 1 mm tall, 100 um channels and walls, water at 1.5e4 W/(m2 K) top and bottom (laminar, Nu about 4.5; all
+ASSUMED), inlet at ambient, flows 1 L/min (a pump of an all-in-one cooler) and 0.25 L/min (weak). The same script
+runs the uniform cooler as the baseline (`*_uniform.json`), because a floorplan tilts the field by itself; tilt is
+the mean rise of the last third of the die minus the first third, along the flow (y). Plate minus baseline:
+
+| Stack, die | Coolant rise | Peak | Spread | Tilt from the coolant (baseline's own tilt) |
+|---|---|---|---|---|
+| S1 ccd, 1 L/min | 1.3 K | -16.1 K | -2.0 K | -0.1 K (+4.2) |
+| S1 ccd, 0.25 L/min | 5.1 | -12.5 | -1.0 | +0.9 |
+| S2 base, 1 L/min | 0.3 | -7.3 | -0.9 | +0.8 (-14.8) |
+| S2 base, 0.25 L/min | 1.2 | -7.0 | -1.1 | +0.9 |
+| S4 bot, 1 L/min | 0.6 | -8.0 | -0.9 | -0.0 (+1.8) |
+| S4 bot, 0.25 L/min | 2.6 | -6.1 | -0.4 | +0.5 |
+
+Seen:
+- The coolant's inlet-to-outlet warming tilts the dies by at most about 1 K, even at the weak flow: the water
+  takes up 0.3-5 K over the whole plate. The tilts seen in the plated runs (S2 base -14 K) are the floorplan's,
+  present with the uniform cooler too.
+- The plate acts as a stronger cooler (peaks 6-16 K lower) and, like a smaller r_sink, barely reshapes the field.
+  For the sensors the cooler's type is a level, not a shape: the uniform coefficient of the gated stacks is
+  adequate. The first plated runs (`sens/coldplate_runs_v1/`, no baseline) are kept as run.
+- HotSpot and PACT refuse a cold plate (`model.check_one_sink`); this is a 3D-ICE-only check.
