@@ -130,22 +130,42 @@ def run_hotspot(stack, power, workdir, timeout=7200, transient=None):
     return _per_die("HotSpot", stack, power, transient, {d: T[li] for d, li in src.items()})
 
 
-def solve_kT(run, stack, power, workdir, tol_K=0.01, max_it=20):
-    """Steady maps with temperature-dependent conductivity (materials with k_T_exp), for any of the three runners.
-    The solvers are linear, so this is a fixed-point loop: each layer gets its own copy of every such material at
-    the layer's temperature (a die: the mean over its T-dependent cells; a passive layer: the mean of its nearest
-    die or dies), until no map moves by more than tol_K. One k per layer, not per cell: a hotspot's own lower k is
-    not modelled. Returns (maps, iterations)."""
-    if not any(m.k_T_exp for m in stack.materials.values()):
+RUNAWAY_RISE_K = 400.0      # a die this far above ambient is past any junction limit: the leakage loop has run away
+
+
+class Runaway(RuntimeError):
+    """solve_kT's leakage loop diverged (a map rose past RUNAWAY_RISE_K or stopped being finite)."""
+
+
+def solve_kT(run, stack, power, workdir, tol_K=0.01, max_it=20, leak=None):
+    """Steady maps with temperature-dependent conductivity (materials with k_T_exp) and, if `leak` is given,
+    temperature-dependent power, for any of the three runners. The solvers are linear, so this is a fixed-point
+    loop: each layer gets its own copy of every such material at the layer's temperature (a die: the mean over its
+    T-dependent cells; a passive layer: the mean of its nearest die or dies), and each die's power is `power` plus
+    leak(maps) at the previous solve's maps (electrothermal.map_leakage; the first solve at leak(None), the
+    leakage at its reference temperature), until no map moves by more than tol_K. One k per layer, not per cell: a
+    hotspot's own lower k is not modelled. A leakage loop that runs away raises Runaway as soon as a map passes
+    RUNAWAY_RISE_K above ambient; one that is still moving after max_it solves raises RuntimeError.
+    Returns (maps, iterations)."""
+    if leak is None and not any(m.k_T_exp for m in stack.materials.values()):
         return run(stack, power, workdir), 1
     T = {l.name: stack.ambient_K for l in stack.layers}
     prev = None
     for it in range(1, max_it + 1):
-        maps = run(stack_at(stack, T), power, os.path.join(workdir, f"kT{it}"))
+        P = power
+        if leak is not None:
+            add = leak(prev)
+            P = {d: power[d] + add[d] for d in power}
+        maps = run(stack_at(stack, T), P, os.path.join(workdir, f"kT{it}"))
+        top = max(float(np.max(m)) for m in maps.values())
+        if not np.isfinite(top):          # a numerical failure of the solver or of `leak`, not a physical runaway
+            raise RuntimeError(f"solve {it} gave a non-finite temperature map")
+        if leak is not None and top >= stack.ambient_K + RUNAWAY_RISE_K:
+            raise Runaway(f"leakage loop ran away: {top:.1f} K after {it} solves")
         if prev is not None and max(float(np.abs(maps[d] - prev[d]).max()) for d in maps) < tol_K:
             return maps, it
         prev, T = maps, layer_temps(stack, maps)
-    raise RuntimeError(f"k(T) loop did not settle to {tol_K} K in {max_it} solves")
+    raise RuntimeError(f"k(T) and leakage loop did not settle to {tol_K} K in {max_it} solves")
 
 
 def layer_temps(stack, maps):

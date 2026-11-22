@@ -7,6 +7,13 @@ dynamic power plus the summed instance leakage, and the steady loop is T = T_amb
 import numpy as np
 
 
+def segment(t, x):
+    """Segment index k and weight w of each x on an ascending table t; outside it the end segments extend outwards
+    (w < 0 or > 1). The one log-linear rule of LeakModel and map_leakage."""
+    k = np.clip(np.searchsorted(t, x) - 1, 0, len(t) - 2)
+    return k, (x - t[k]) / (t[k + 1] - t[k])
+
+
 class LeakModel:
     def __init__(self, temps_C, leak_W, tile, n_tiles, scale=1.0):
         """temps_C: (m,) table temperatures; leak_W: (n_inst, m) leakage; tile: (n_inst,) tile index of each instance."""
@@ -17,9 +24,8 @@ class LeakModel:
         self.tile, self.n = np.asarray(tile), n_tiles
 
     def inst(self, T_inst_C):
-        t, ln = self.t, self.ln
-        k = np.clip(np.searchsorted(t, T_inst_C) - 1, 0, len(t) - 2)       # segment index; ends extend outwards
-        w = (T_inst_C - t[k]) / (t[k + 1] - t[k])
+        ln = self.ln
+        k, w = segment(self.t, T_inst_C)
         rows = np.arange(len(ln))
         y = ln[rows, k] + w * (ln[rows, k + 1] - ln[rows, k])
         return np.where(self.pos, np.exp(y), 0.0)
@@ -84,3 +90,34 @@ def amplification(R, dyn, leak, T_amb, T_star):
     T1 = T_amb + R @ (dyn + leak.tiles(Tu))
     p = int(np.argmax(T_star))
     return float((T_star[p] - Tu[p]) / (T1[p] - Tu[p])), Tu, T1, p
+
+
+def map_leakage(P_ref, share, T_ref_K, temps_C, curve):
+    """Per-cell leakage on die maps, for thermal.run.solve_kT's `leak`: each cell's power P_ref (W) at T_ref_K splits
+    into dynamic (1 - share) P_ref, fixed, and leakage share P_ref, which follows `curve` (relative leakage at
+    temps_C, log-linear between them and along the end segments beyond, as LeakModel) normalised to 1 at T_ref_K.
+    share: one value or {die: value}, each in [0, 1]. Returns (dynamic maps, leak) with leak(maps) -> {die: leakage
+    map (W)} at the maps' temperatures (K), and leak(None) -> the leakage at T_ref_K (share x P_ref)."""
+    t = np.asarray(temps_C, float)
+    if len(t) < 2 or np.any(np.diff(t) <= 0) or not t[0] <= T_ref_K - 273.15 <= t[-1]:
+        raise ValueError("temps_C must ascend and hold T_ref_K")
+    c = np.asarray(curve, float)
+    if c.shape != t.shape or not np.all(np.isfinite(c) & (c > 0)):
+        raise ValueError("curve must hold one finite value > 0 per temperature")
+    ln = np.log(c)
+    ln = ln - np.interp(T_ref_K - 273.15, t, ln)
+    dyn, ref = {}, {}
+    for d, P in P_ref.items():
+        s = share[d] if isinstance(share, dict) else share
+        if not 0 <= s <= 1:
+            raise ValueError(f"die {d}: leakage share {s} outside [0, 1]")
+        P = np.asarray(P, float)
+        dyn[d], ref[d] = (1 - s) * P, s * P
+
+    def rel(T_K):
+        k, w = segment(t, np.asarray(T_K, float) - 273.15)
+        return np.exp(ln[k] + w * (ln[k + 1] - ln[k]))
+
+    def leak(maps):
+        return dict(ref) if maps is None else {d: L * rel(maps[d]) for d, L in ref.items()}
+    return dyn, leak

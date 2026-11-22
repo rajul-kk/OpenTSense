@@ -272,3 +272,103 @@ def test_solve_kT_fixed_point_on_a_1d_model(tmp_path):
     assert 2 < it < 20 and abs(T - (300 + Pw * t / (130 * (T / 300) ** -1.3))) < 1e-6
     lt = run.layer_temps(s, maps)                       # one die: every layer takes its temperature
     assert set(lt) == {l.name for l in s.layers} and all(abs(v - T) < 1e-9 for v in lt.values())
+
+
+def test_solve_kT_with_leakage_reaches_the_electrothermal_fixed_point(tmp_path):
+    """A fake one-node runner with constant k, T = T_amb + r P, P = dyn + share P0 exp(a (T - T_ref)): the loop must
+    reach the scalar fixed point; share 0 leaves the power as given."""
+    from opentsense.thermal import electrothermal, run
+    s = model.load(CFG)
+    r, P0, T_ref, a = 0.5, 40.0, 358.15, 0.033
+    temps = np.array([25.0, 50, 75, 100, 125])
+    curve = np.exp(a * (temps - 85.0))
+    shape = s.grid[::-1]
+    P_ref = {"die0": np.full(shape, P0 / np.prod(shape))}
+
+    def fake(st, power, workdir):
+        return {"die0": np.full(shape, st.ambient_K + r * float(power["die0"].sum()))}
+
+    for share in (0.0, 0.3):
+        dyn, leak = electrothermal.map_leakage(P_ref, share, T_ref, temps, curve)
+        maps, it = run.solve_kT(fake, s, dyn, str(tmp_path / str(share)), tol_K=1e-10, max_it=200, leak=leak)
+        T = maps["die0"][0, 0]
+        assert abs(T - (s.ambient_K + r * ((1 - share) * P0 + share * P0 * np.exp(a * (T - T_ref))))) < 1e-8
+
+
+def test_map_leakage_is_the_share_at_the_reference_temperature():
+    from opentsense.thermal import electrothermal
+    P_ref = {"a": np.array([[1.0, 3.0]]), "b": np.array([[2.0]])}
+    dyn, leak = electrothermal.map_leakage(P_ref, {"a": 0.2, "b": 0.5}, 358.15, [25, 85, 125], [0.1, 1.0, 3.0])
+    at = leak({"a": np.full((1, 2), 358.15), "b": np.full((1, 1), 398.15)})
+    assert np.allclose(at["a"], [[0.2, 0.6]]) and np.allclose(at["b"], [[3.0]])
+    assert np.allclose(dyn["a"], [[0.8, 2.4]]) and np.allclose(dyn["b"], [[1.0]])
+
+
+COLDPLATE = model.ColdPlate(height_um=200.0, channel_um=50.0, wall_um=50.0, wall_material="copper", flow_ml_min=50.0,
+                            h_top=2.0e4, h_bottom=2.0e4)
+
+
+def test_3dice_writes_a_cold_plate_as_a_top_channel_without_a_sink(tmp_path):
+    s = model.load(CFG)
+    s.coldplate = COLDPLATE
+    stk = open(to_3dice.write(s.validate(), {"die0": np.full(s.grid[::-1], 1e-3)}, tmp_path / "ice")).read()
+    assert "heat sink" not in stk and "microchannel 2rm :" in stk
+    first = ["layer", "S_coldplate_cover", "L_coldplate_cover", ";", "channel", "S_coldplate"]
+    assert stk.split("stack:")[1].split()[:6] == first
+    assert f"coolant heat transfer coefficient top {2.0e4 * 1e-12:.6e} , bottom {2.0e4 * 1e-12:.6e} ;" in stk
+
+
+def test_one_sink_solvers_refuse_a_cold_plate(tmp_path):
+    from opentsense.stack import to_hotspot
+    s = model.load(CFG)
+    s.coldplate = COLDPLATE
+    for w in (to_pact.write, to_hotspot.write):
+        with pytest.raises(ValueError, match="3D-ICE"):
+            w(s, {"die0": np.full(s.grid[::-1], 1e-3)}, tmp_path / w.__module__)
+
+
+def test_solve_kT_stops_a_leakage_runaway_before_the_power_overflows(tmp_path):
+    from opentsense.thermal import electrothermal, run
+    s = model.load(CFG)
+    shape = s.grid[::-1]
+    temps = np.array([25.0, 50, 75, 100, 125])
+    dyn, leak = electrothermal.map_leakage({"die0": np.full(shape, 40.0 / np.prod(shape))}, 0.9, 358.15, temps,
+                                           np.exp(0.05 * (temps - 85.0)))
+
+    def fake(st, power, workdir):                    # r = 5 K/W: the loop gain is far above 1
+        return {"die0": np.full(shape, st.ambient_K + 5.0 * float(power["die0"].sum()))}
+
+    with pytest.raises(run.Runaway):
+        run.solve_kT(fake, s, dyn, str(tmp_path), max_it=200, leak=leak)
+
+
+def test_map_leakage_refuses_a_share_outside_0_1_and_an_unsorted_table():
+    from opentsense.thermal import electrothermal
+    P = {"a": np.ones((1, 1))}
+    with pytest.raises(ValueError):
+        electrothermal.map_leakage(P, 1.5, 358.15, [25, 85, 125], [0.1, 1, 3])
+    with pytest.raises(ValueError):
+        electrothermal.map_leakage(P, 0.2, 358.15, [125, 85, 25], [3, 1, 0.1])
+    assert np.allclose(electrothermal.map_leakage(P, 0.2, 358.15, [25, 85, 125], [0.1, 1, 3])[1](None)["a"], 0.2)
+
+
+def test_solve_kT_reports_a_non_finite_map_as_a_failure_not_a_runaway(tmp_path):
+    from opentsense.thermal import electrothermal, run
+    s = model.load(CFG)
+    shape = s.grid[::-1]
+    dyn, leak = electrothermal.map_leakage({"die0": np.full(shape, 1.0)}, 0.1, 358.15, [25, 85, 125], [0.1, 1, 3])
+
+    def broken(st, power, workdir):
+        return {"die0": np.full(shape, np.nan)}
+
+    with pytest.raises(RuntimeError) as e:
+        run.solve_kT(broken, s, dyn, str(tmp_path), leak=leak)
+    assert not isinstance(e.value, run.Runaway)
+
+
+def test_map_leakage_refuses_a_curve_with_a_zero_or_a_wrong_length():
+    from opentsense.thermal import electrothermal
+    P = {"a": np.ones((1, 1))}
+    for curve in ([0.0, 1, 3], [1, 3]):
+        with pytest.raises(ValueError):
+            electrothermal.map_leakage(P, 0.2, 358.15, [25, 85, 125], curve)
