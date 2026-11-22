@@ -33,6 +33,11 @@ Optional per material (package-level realism, 16 Nov):
 Optional heat_sink key opposite_htc: a second convective boundary on the face away from the sink (the path down
 through package and board), W/(m^2 K). Only 3D-ICE has it; HotSpot and PACT refuse such a stack.
 
+Optional `coldplate` (a ColdPlate, set in code, goal 19): a liquid cold plate of straight microchannels on the sink
+face in place of the uniform coefficient (htc is then unused). The coolant enters at ambient_K and warms along the
+channels, so the field tilts from inlet to outlet. Only 3D-ICE models channels (its 2-resistor model, 2RM);
+HotSpot and PACT refuse such a stack.
+
 Power maps are (ny, nx) arrays over the whole stack footprint, one per die layer. `place` puts a die-local map into
 a rectangle of the footprint.
 """
@@ -55,6 +60,19 @@ class Material:
             return self
         f = (T_K / 300.0) ** -self.k_T_exp
         return Material(self.k * f, self.cv, None if self.k_lateral is None else self.k_lateral * f)
+
+
+@dataclass(frozen=True)
+class ColdPlate:
+    height_um: float          # channel (and fin) height
+    channel_um: float         # channel width
+    wall_um: float            # fin width between channels
+    wall_material: str        # a material of the stack
+    flow_ml_min: float        # coolant flow through the whole plate
+    h_top: float              # coolant-to-wall heat transfer coefficients, W/(m^2 K), top and bottom of the channel
+    h_bottom: float
+    coolant_cv: float = 4.172638e6     # J/(m^3 K), water (3D-ICE's examples)
+    cover_um: float = 500.0            # the plate's cover over the channels (wall material, adiabatic top)
 
 
 def bond_material(k_metal, k_fill, fraction, cv_metal, cv_fill):
@@ -102,6 +120,7 @@ class Stack:
     layers: list = field(default_factory=list)
     sink_side: str = "top"
     opposite_htc: float = 0.0  # W/(m^2 K) on the face away from the sink; 0 = adiabatic
+    coldplate: ColdPlate = None  # microchannel cold plate on the sink face instead of htc (3D-ICE only)
 
     @property
     def dies(self):
@@ -159,6 +178,7 @@ class Stack:
     def check_one_sink(self, solver):
         """For solvers with one convective face (HotSpot's secondary path is a fixed package model, not this)."""
         _need(self.opposite_htc == 0, f"{solver} has one heat sink; opposite_htc = {self.opposite_htc:g} needs 3D-ICE")
+        _need(self.coldplate is None, f"{solver} has no channel model; a cold plate needs 3D-ICE")
 
     def sublayers(self):
         """(layer, kind, thickness um) for every solver sublayer, starting at the side away from the heat sink.
@@ -179,6 +199,17 @@ class Stack:
         _need(self.dies, "stack has no die")
         _need(self.sink_side in ("top", "bottom"), "heat_sink side must be top or bottom")
         _need(self.opposite_htc >= 0, "heat_sink opposite_htc must be >= 0")
+        if self.coldplate is not None:
+            c = self.coldplate
+            _need(self.sink_side == "top" and self.opposite_htc == 0, "a cold plate sits on a top sink face, alone")
+            _need(c.wall_material in self.materials, f"cold plate: unknown wall material {c.wall_material}")
+            # solve_kT re-materialises layer materials only, so a k(T) wall would stay at 300 K
+            _need(not self.materials[c.wall_material].k_T_exp, "cold plate: the wall material must not have k(T)")
+            _need(not {"coldplate", "coldplate_cover"} & {l.name for l in self.layers},
+                  "cold plate: layer names coldplate and coldplate_cover are taken (3D-ICE stack elements)")
+            _need(min(c.height_um, c.channel_um, c.wall_um, c.flow_ml_min, c.h_top, c.h_bottom, c.coolant_cv,
+                      c.cover_um) > 0,
+                  "cold plate: every dimension, the flow, the coefficients and cv must be > 0")
         for name, m in self.materials.items():
             _need(m.k > 0 and m.cv > 0, f"material {name}: k and cv must be > 0")
             _need(m.k_lateral is None or m.k_lateral > 0, f"material {name}: k_lateral must be > 0")

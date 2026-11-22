@@ -4,7 +4,10 @@
 row i = y index i from the die's lower edge. Each grid cell becomes one floorplan element.
 Stack element names get an S_ prefix because some words (e.g. spreader) are 3D-ICE keywords.
 A material with k_lateral is written with three conductivities, and opposite_htc becomes a second heat sink on the
-other face (3D-ICE 4.0 grammar: `topsink bottomsink`); neither HotSpot nor PACT has them.
+other face (3D-ICE 4.0 grammar: `topsink bottomsink`); neither HotSpot nor PACT has them. A cold plate becomes a
+`microchannel 2rm` definition and a channel element under a cover layer on top of the stack, with no heat sink
+(the coolant takes the heat; 3D-ICE refuses a channel as the top-most element; units um, ml/min and W/(um^2 K) as in
+its mc2rm tests).
 A layer with regions gets a layout file: the layer's material is the base, and each rectangle of a layout overrides
 it (3D-ICE 4.0 `layout`, cells not covered keep the base material). A die with regions uses pre-declared layer types
 for its bulk and source, because only a declared layer can carry a layout.
@@ -88,7 +91,15 @@ def write(stack, power, workdir, transient=None):
         # 3D-ICE takes x, y, z conductivities (include/layer.h): in-plane twice, then vertical
         k = f"{v.k * 1e-6:.6e}" if v.k_lateral is None else f"{v.k_lateral * 1e-6:.6e}, {v.k_lateral * 1e-6:.6e}, {v.k * 1e-6:.6e}"
         s += [f"material {m} :", f"   thermal conductivity {k} ;", f"   volumetric heat capacity {v.cv * 1e-18:.6e} ;"]
-    sinks = {stack.sink_side: stack.htc}
+    sinks = {} if stack.coldplate else {stack.sink_side: stack.htc}
+    if stack.coldplate:
+        c = stack.coldplate
+        s += ["microchannel 2rm :", f"   height {c.height_um:.6f} ;", f"   channel length {c.channel_um:.6f} ;",
+              f"   wall length {c.wall_um:.6f} ;", f"   wall material {c.wall_material} ;",
+              f"   coolant flow rate {c.flow_ml_min:.6f} ;",
+              f"   coolant heat transfer coefficient top {c.h_top * 1e-12:.6e} , bottom {c.h_bottom * 1e-12:.6e} ;",
+              f"   coolant volumetric heat capacity {c.coolant_cv * 1e-18:.6e} ;",
+              f"   coolant incoming temperature {stack.ambient_K:.3f} ;"]
     if stack.opposite_htc > 0:
         sinks["bottom" if stack.sink_side == "top" else "top"] = stack.opposite_htc
     for side in ("top", "bottom"):   # the grammar wants the top sink first
@@ -97,6 +108,9 @@ def write(stack, power, workdir, transient=None):
                   f"   temperature {stack.ambient_K:.3f} ;"]
     s += ["dimensions :", f"  chip length {L:.6f} , width {W:.6f} ;", f"  cell length {cx:.6f} , width {cy:.6f} ;"]
     # 3D-ICE's grammar wants every layer definition before the first die definition
+    if stack.coldplate:
+        c = stack.coldplate
+        s += ["layer L_coldplate_cover :", f"   height {c.cover_um:.6f} ;", f"   material {c.wall_material} ;"]
     for l in stack.layers:
         lyt = []
         if l.regions:
@@ -116,7 +130,8 @@ def write(stack, power, workdir, transient=None):
             bulk = [f"   layer {l.bulk_um / l.n_sub:.6f} {l.material} ;"] * l.n_sub
             src = [f"   source {l.source_um:.6f} {l.material} ;"]
         s += [f"die D_{l.name} :"] + (bulk + src if l.source_side == "bottom" else src + bulk)
-    s += ["stack:"]
+    s += ["stack:"] + (["   layer S_coldplate_cover L_coldplate_cover ;", "   channel S_coldplate ;"]
+                       if stack.coldplate else [])
     for l in stack.layers:
         if l.die:
             write_flp(os.path.join(workdir, f"{l.name}.flp"), power[l.name], cx, cy)

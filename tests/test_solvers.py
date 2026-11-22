@@ -167,3 +167,18 @@ def test_transients_follow_3dice_and_end_at_their_steady(tmp_path):
     pact_steady = run_pact(s, {d: P}, tmp_path / "pact_steady")[d]
     assert C.shape == A.shape and np.abs(C - A).max() < 0.6
     assert np.abs(C[-1] - pact_steady).max() < 0.01
+
+
+@need
+def test_3dice_cold_plate_tilts_the_die_along_the_flow_and_less_at_higher_flow(tmp_path):
+    """Uniform power under a 2RM cold plate: the coolant warms along its channels, so the die is hotter at the outlet
+    end; the tilt (outlet minus inlet column) shrinks as the flow rises."""
+    s = model.load(CFG)
+    P = {"die0": np.full(s.grid[::-1], 2.0 / np.prod(s.grid))}
+    tilt = {}
+    for q in (5.0, 50.0):
+        s.coldplate = model.ColdPlate(200.0, 50.0, 50.0, "copper", q, 2.0e4, 2.0e4)
+        T = run_3dice(s.validate(), P, str(tmp_path / f"q{q:g}"))["die0"]
+        cols, rows = T.mean(0), T.mean(1)
+        tilt[q] = max(abs(cols[-1] - cols[0]), abs(rows[-1] - rows[0]))
+    assert tilt[5.0] > 2 * tilt[50.0] > 0
