@@ -94,3 +94,34 @@ def test_sample_on_a_long_record():
     t = np.arange(0, 10_000_001) * 1e-6                               # 10 s at 1 us, sampled every 1 us
     y = sensor.sample(t[-20:], t[-20:], 1e-6, t0_s=t[-20])
     assert np.array_equal(y, t[-20:])
+
+
+def test_correlated_offsets_keep_the_profile_sigma_and_correlate_neighbours():
+    xy = np.array([[0.0, 0.0], [0.1, 0.0], [3.0, 0.0], [0.0, 0.0]])
+    corr = sensor.Correlation(xy, np.array([0, 0, 0, 1]), 0.8, 1.0)
+    rng = np.random.default_rng(0)
+    off = np.array([sensor.Chip.draw("ring_osc", 4, rng, corr).offset for _ in range(20000)])
+    assert np.allclose(off.std(0), 1.0, atol=0.03)
+    c = np.corrcoef(off.T)
+    assert c[0, 1] > 0.75 and abs(c[0, 2]) < 0.05 and abs(c[0, 3]) < 0.05   # near, far, other die
+
+
+def test_bench_readings_reproduce_g102_and_correlation_keeps_the_noise_stream():
+    """bench.readings is G102's readings.py moved: with the default salt it must give G102's case sets exactly; with
+    a correlation of share 0 the offsets and the per-reading noise must be unchanged too."""
+    import os
+    import sys
+    from opentsense.bench import readings as new
+    from opentsense.bench.cases import CaseSet
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "gates", "g102"))
+    import readings as old
+    rng = np.random.default_rng(0)
+    T = rng.uniform(0, 20, (12, 2, 6, 6)).astype(np.float32)
+    cs = CaseSet(dict(T=T, readings=np.zeros((12, 4)), sensors=np.array([[0, 1, 1], [0, 4, 4], [1, 2, 3], [1, 5, 0]]),
+                      noise_K=0.1, split=np.array(["train"] * 8 + ["test"] * 4), group=np.array(list("aaaabbbbcccc")),
+                      tag=np.array(["seen-group"] * 12), dies=np.array(["top", "bot"]), buried=np.array([False, True]),
+                      cell_um=50.0, stack_id="g71_3d"))
+    for prof, chip in (("ring_osc", 7), ("dts_1c", 9), ("bjt_trimmed", 1)):
+        assert new.with_sensor(cs, prof, chip).sha256() == old.with_sensor(cs, prof, chip).sha256()
+    a, b = new.with_sensor(cs, "ring_osc", 3, 105), new.with_sensor(cs, "ring_osc", 3, 105, (0.0, 1.0))
+    assert np.array_equal(a.readings, b.readings)

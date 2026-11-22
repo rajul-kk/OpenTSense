@@ -7,6 +7,13 @@ reading of that chip; `noise` is drawn per reading. Temperatures are absolute (K
 ambient first. Sampling: `sample` reads a transient field at every `period_s` (zero-order hold, the last sample
 until the next), which a steady case does not need.
 
+Correlated offsets (goal 17): process variation is smooth across a die, so neighbouring sensors share part of their
+offset. `Chip.draw(..., corr=Correlation(...))` splits each sensor's offset variance into an independent part and a
+share drawn from a zero-mean Gaussian field on the die with squared-exponential covariance of length `length_mm`;
+dies are independent (each comes from its own wafer). The total 1-sigma offset stays the profile's. The smooth
+field is drawn from a child generator (rng.spawn), so the chip's later per-reading noise is the same stream with or
+without `corr`; without it the draws are exactly those of the independent model.
+
 Profiles (offset and gain as 1-sigma; values graded B, from published sensors, not one product). offset_K is the
 cited whole-range figure and the gain term comes on top of it, so a profile is somewhat worse than its cited class
 (a conservative choice):
@@ -49,6 +56,19 @@ PROFILES = {
 
 
 @dataclass(frozen=True)
+class Correlation:
+    xy_mm: np.ndarray       # (n, 2) sensor positions on their die
+    die: np.ndarray         # (n,) die index; offsets on different dies are independent
+    share: float            # share of the offset variance that is the smooth field, 0..1
+    length_mm: float        # correlation length of the smooth field
+
+    def cov(self):
+        xy, die = np.asarray(self.xy_mm, float), np.asarray(self.die)
+        d2 = ((xy[:, None, :] - xy[None, :, :]) ** 2).sum(-1)
+        return np.exp(-d2 / (2 * self.length_mm ** 2)) * (die[:, None] == die[None, :])
+
+
+@dataclass(frozen=True)
 class Chip:
     """One chip's sensors: their fixed offsets and gain errors."""
     profile: Profile
@@ -56,9 +76,17 @@ class Chip:
     gain: np.ndarray
 
     @classmethod
-    def draw(cls, profile, n_sensors, rng):
+    def draw(cls, profile, n_sensors, rng, corr=None):
         p = PROFILES[profile] if isinstance(profile, str) else profile
-        return cls(p, rng.normal(0.0, p.offset_K, n_sensors), rng.normal(0.0, p.gain, n_sensors))
+        off, gain = rng.normal(0.0, p.offset_K, n_sensors), rng.normal(0.0, p.gain, n_sensors)
+        if corr is not None:
+            if not (0 <= corr.share <= 1 and corr.length_mm > 0 and np.shape(corr.xy_mm) == (n_sensors, 2)
+                    and len(corr.die) == n_sensors):
+                raise ValueError("need 0 <= share <= 1, length_mm > 0 and one (x, y) and die per sensor")
+            L = np.linalg.cholesky(corr.cov() + 1e-10 * np.eye(n_sensors))
+            smooth = L @ rng.spawn(1)[0].normal(0.0, p.offset_K, n_sensors)
+            off = np.sqrt(1 - corr.share) * off + np.sqrt(corr.share) * smooth
+        return cls(p, off, gain)
 
     def read(self, T, rng):
         """Readings (K) for true temperatures T (..., n_sensors), absolute."""
