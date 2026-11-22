@@ -1,5 +1,6 @@
 """Sensor placement on a fitted GaussianField. Every function returns flat pixel indices, best first, drawn from
-`allowed` (a boolean mask over pixels, default every pixel), with no repeats.
+`allowed` (a boolean mask over pixels, default every pixel), with no repeats. greedy_a can start from sites already
+placed (`start`, kept first as given, inside `allowed` or not); only the sites it adds come from `allowed`.
 
 - qdeim:    QR with column pivoting on the leading modes (Drmac and Gugercin, SIAM J. Sci. Comput. 2016); beyond the
             number of modes it continues with greedy_a.
@@ -16,19 +17,21 @@ from scipy.linalg import qr
 from .field_model import GaussianField
 
 
-def _mask(model: GaussianField, allowed):
-    a = np.ones(model.n, bool) if allowed is None else np.asarray(allowed, bool).ravel()
-    if a.shape != (model.n,):
-        raise ValueError(f"allowed mask has {a.size} pixels, the field has {model.n}")
+def _mask(n: int, allowed):
+    a = np.ones(n, bool) if allowed is None else np.asarray(allowed, bool).ravel()
+    if a.shape != (n,):
+        raise ValueError(f"allowed mask has {a.size} pixels, the field has {n}")
     return a
 
 
 def _greedy(model: GaussianField, m: int, noise: float, allowed, kind: str, start=()):
-    ok = _mask(model, allowed).copy()
+    ok = _mask(model.n, allowed).copy()
     chosen = [int(s) for s in start]
+    if len(set(chosen)) != len(chosen) or len(chosen) > m or not all(0 <= s < model.n for s in chosen):
+        raise ValueError(f"start must be at most m={m} distinct pixels of the field")
     ok[chosen] = False
     if m - len(chosen) > ok.sum():
-        raise ValueError(f"asked for {m} sensors, only {ok.sum() + len(chosen)} allowed pixels")
+        raise ValueError(f"asked for {m - len(chosen)} more sensors, only {ok.sum()} allowed pixels are free")
     Phi = model.Phi
     Sa = model.coef_cov(np.array(chosen, int), noise) if chosen else np.diag(model.lam)
     rho = noise ** 2 + model.resid
@@ -49,8 +52,9 @@ def _greedy(model: GaussianField, m: int, noise: float, allowed, kind: str, star
     return np.array(chosen, int)
 
 
-def greedy_a(model, m, noise, allowed=None):
-    return _greedy(model, m, noise, allowed, "a")
+def greedy_a(model, m, noise, allowed=None, start=()):
+    """m sites in all, `start` (already placed, kept first) included."""
+    return _greedy(model, m, noise, allowed, "a", start)
 
 
 def greedy_d(model, m, noise, allowed=None):
@@ -58,7 +62,7 @@ def greedy_d(model, m, noise, allowed=None):
 
 
 def qdeim(model, m, noise, allowed=None):
-    ok = _mask(model, allowed)
+    ok = _mask(model.n, allowed)
     k = min(m, model.r)
     idx = np.flatnonzero(ok)
     _, _, piv = qr(model.Phi[idx, :k].T, pivoting=True, mode="economic")
@@ -69,7 +73,9 @@ def qdeim(model, m, noise, allowed=None):
 def uniform_grid(shape, m, allowed=None, offset=0.5):
     """About m sites on a regular grid over an (ny, nx) field, nearest allowed pixel to each grid point."""
     ny, nx = shape
-    a = np.ones(ny * nx, bool) if allowed is None else np.asarray(allowed, bool).ravel()
+    a = _mask(ny * nx, allowed)
+    if m > a.sum():
+        raise ValueError(f"asked for {m} sites, only {a.sum()} allowed pixels")
     k = int(np.ceil(np.sqrt(m * nx / ny)))
     j = int(np.ceil(m / k))
     ys, xs = (np.arange(j) + offset) * ny / j, (np.arange(k) + offset) * nx / k
@@ -84,7 +90,7 @@ def uniform_grid(shape, m, allowed=None, offset=0.5):
 
 
 def random_sites(n, m, seed=0, allowed=None):
-    a = np.ones(n, bool) if allowed is None else np.asarray(allowed, bool).ravel()
+    a = _mask(n, allowed)
     return np.random.default_rng(seed).choice(np.flatnonzero(a), m, replace=False)
 
 

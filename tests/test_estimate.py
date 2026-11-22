@@ -58,6 +58,31 @@ def test_placements_distinct_and_allowed():
     assert len(set(placement.uniform_grid((NY, NX), 16))) == 16
 
 
+def test_uniform_grid_refuses_more_sites_than_allowed_pixels_or_a_wrong_mask():
+    mask = np.zeros(16, bool)
+    mask[:3] = True
+    with pytest.raises(ValueError):
+        placement.uniform_grid((4, 4), 4, mask)
+    with pytest.raises(ValueError):
+        placement.uniform_grid((4, 4), 2, np.ones(32, bool))
+
+
+def test_greedy_a_from_start_continues_the_search_and_checks_start():
+    """Starting from the first k sites of a search continues it as well (summed variance within 1e-9 relative;
+    a near-tie may swap sites); start may lie outside `allowed`."""
+    g = GaussianField(rank=20).fit(smooth_fields(1500))
+    tot = lambda S: (g.posterior(S, g.mu[S], 0.1).std ** 2).sum()
+    full = placement.greedy_a(g, 8, 0.1)
+    cont = placement.greedy_a(g, 8, 0.1, start=full[:3])
+    assert list(cont[:3]) == list(full[:3]) and tot(cont) == pytest.approx(tot(full), rel=1e-9)
+    half = np.zeros(NY * NX, bool); half[NY * NX // 2:] = True
+    S = placement.greedy_a(g, 6, 0.1, half, start=[0, 1])
+    assert list(S[:2]) == [0, 1] and half[S[2:]].all() and len(set(S)) == 6
+    for bad in ([0, 0], list(range(7)), [NY * NX]):
+        with pytest.raises(ValueError):
+            placement.greedy_a(g, 6, 0.1, start=bad)
+
+
 def test_greedy_beats_random():
     g = GaussianField(rank=NY * NX).fit(smooth_fields(3000))
     tot = lambda S: (g.posterior(S, g.mu[S], 0.1).std ** 2).sum()
