@@ -1,0 +1,55 @@
+{
+ "sha256": "f5941ad74a0d62f256c052607607be24985eaaa3c43fffe3fa10514a677f6e7c",
+ "cases": 400,
+ "split": {
+  "train": 240,
+  "cal": 80,
+  "test": 80
+ },
+ "programs_by_split": {
+  "train": [
+   "aha-mont64",
+   "crc32",
+   "edn",
+   "huffbench",
+   "idle",
+   "nettle-aes",
+   "nettle-sha256",
+   "picojpeg",
+   "sglib-combined",
+   "statemate",
+   "tarfind",
+   "ud"
+  ],
+  "cal": [
+   "depthconv",
+   "slre",
+   "wikisort",
+   "xgboost"
+  ],
+  "test": [
+   "matmult-int",
+   "md5sum",
+   "nsichneu",
+   "qrduino"
+  ]
+ },
+ "plumbing_max_dT_K": {
+  "top": 0.004996597333082775,
+  "bot": 0.004998536709450718
+ },
+ "seed": 84,
+ "noise_K": 0.1,
+ "sensors_per_die": 8,
+ "bins_per_die": 100,
+ "peak_rise_K": {
+  "top": [
+   39.64314464222393,
+   67.43685495544203
+  ],
+  "bot": [
+   26.3732328725569,
+   58.82140163691069
+  ]
+ }
+}
