@@ -1,0 +1,38 @@
+{
+  "time_utc": "2026-11-12T15:59:41+00:00",
+  "host": "Rajul",
+  "python": "3.10.0",
+  "repo": {
+    "commit": "cdae2788b23f832bb08145e0f1bf6fcb19c54b10",
+    "dirty": true
+  },
+  "image": null,
+  "orfs_image": null,
+  "tools": {
+    "iverilog": null,
+    "verilator": null,
+    "ngspice": null,
+    "3dice_commit": "cat: /opt/3d-ice/COMMIT: No such file or directory",
+    "superlu_mt_commit": "fatal: cannot change to '/opt/3d-ice/superlu_mt-4.0.0': No such file or directory",
+    "pact_commit": "cat: /opt/pact/COMMIT: No such file or directory",
+    "spice_models_checksum": "cat: /opt/spice/CHECKSUM: No such file or directory",
+    "ca_certificates": null
+  },
+  "packages": {
+    "numpy": "2.2.6",
+    "scipy": "1.15.3",
+    "pandas": "2.3.3",
+    "PyYAML": "6.0.3",
+    "pytest": "9.0.2"
+  },
+  "cases_dir": "D:\\Work\\FYP-search\\fyp\\opentsense\\gates\\g77\\runs\\floor\\seed80",
+  "factor": null,
+  "case_sets": {
+    "cases_25d_noise0.01.npz": "f12fb2d1473d5651d15e2b7f7a4f7ba33aebcea7b1689cb90f295b638a4c07c0",
+    "cases_25d_noise0.05.npz": "2e2a1c3b0248f8f0141d230a975b6d16daca57b0ce5efc31998f07dd1e4e3023",
+    "cases_25d_noise0.1.npz": "e12df070109ea511c1e88f0383500888c9a503e6fc001d40c9deda1f68ad4f18",
+    "cases_3d_noise0.01.npz": "f18f009a25f524332f38172ce7e5de8a439e67d0b8b41387b5a708d42742b36d",
+    "cases_3d_noise0.05.npz": "1d4f07ce5adcd11f593a79776e7bf4d266d438fbd732283707cb2f747ff40655",
+    "cases_3d_noise0.1.npz": "0f402380601e21adc715adb3957cd57035146667b5d902d849323afaf113c2c4"
+  }
+}
