@@ -29,8 +29,9 @@ TRAN_STOPPED = re.compile(r"No\. of Data Rows\s*:\s*[01]\s*$", re.M)
 
 
 def _failed(why, out):
-    """A failed case: {'failed': text, 'outcome': why}. `why` is 'aborted' (abort text or a stopped transient) or 'missing'
-    (too few measurements); every consumer tests only for the 'failed' key."""
+    """A failed case: {'failed': text, 'outcome': why}. `why` is 'aborted' (abort text or a stopped transient), 'missing'
+    (too few measurements) or, from estimate.sensor_spice.ring, 'unsettled' (an oscillation whose period is still
+    changing); every consumer tests only for the 'failed' key. Shared with estimate.sensor_spice."""
     return {"failed": f"{why}: " + out[-600:], "outcome": why}
 
 
