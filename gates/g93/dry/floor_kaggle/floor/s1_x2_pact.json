@@ -1,0 +1,25 @@
+{
+ "inputs": "9105997a166a32ae",
+ "image": "kaggle-build",
+ "stack": "s1",
+ "factor": 2,
+ "solver": "pact",
+ "grid": [
+  122,
+  118
+ ],
+ "nodes": 403088,
+ "wall_s": 627.6,
+ "dies": {
+  "l3d": {
+   "peak_rise_K": 62.160000000000025,
+   "spread_K": 27.350000000000023,
+   "max_gradient_K_per_mm": 16.761731915996897
+  },
+  "ccd": {
+   "peak_rise_K": 77.0,
+   "spread_K": 40.25,
+   "max_gradient_K_per_mm": 42.70158154005689
+  }
+ }
+}
