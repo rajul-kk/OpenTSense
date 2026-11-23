@@ -70,9 +70,16 @@ def collect(extra=None):
     return m
 
 
+def write_json(obj, path):
+    """Whole or not at all: write to path.tmp, then rename (a cut-off write never leaves a partial record)."""
+    with open(path + ".tmp", "w") as fh:
+        json.dump(obj, fh, indent=1)
+    os.replace(path + ".tmp", path)
+
+
 def write(path, extra=None):
     m = collect(extra)
-    json.dump(m, open(path, "w"), indent=2)
+    write_json(m, path)
     return m
 
 

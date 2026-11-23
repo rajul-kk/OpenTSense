@@ -125,3 +125,47 @@ def test_bench_readings_reproduce_g102_and_correlation_keeps_the_noise_stream():
         assert new.with_sensor(cs, prof, chip).sha256() == old.with_sensor(cs, prof, chip).sha256()
     a, b = new.with_sensor(cs, "ring_osc", 3, 105), new.with_sensor(cs, "ring_osc", 3, 105, (0.0, 1.0))
     assert np.array_equal(a.readings, b.readings)
+
+
+def _derive():
+    temps = ("0", "25", "50", "75", "85", "100", "125")
+    err = {"tt": [0.0] * 7, "ss": [-3.0, -2.0, -1.0, -0.2, 0.0, 0.2, -0.2], "ff": [2.0, 1.0, 0.2, 0.0, 0.0, 0.2, 1.2]}
+    ring = {"corner_error_K": {c: dict(zip(temps, v)) for c, v in err.items()},
+            "droop_K_per_mV": {"tt": 4.0, "ss": 4.1, "ff": 3.8}}
+    one = dict(zip(temps, [-3.6, -2.8, -1.8, -0.6, 0.0, 0.9, 2.6]))
+    return {"ring": {"asap7": ring}, "dvbe": {c: {"error_one_point_K": one, "error_two_point_K": one} for c in err}}
+
+
+def test_circuit_profile_reads_the_corner_error_and_the_squeeze():
+    from opentsense.estimate import sensor_circuit as sc
+    p = sc.CircuitProfile.ring(_derive(), "asap7", step_K=0.0, noise_K=0.0)
+    rng = np.random.default_rng(0)
+    T = np.array([273.15, 310.65, 358.15])                              # 0, 37.5 (between 25 and 50) and 85 C
+    assert np.allclose(sc.read(p, "ss", T, rng) - T, [-3.0, -1.5, 0.0])
+    assert np.allclose(sc.read(p, "tt", T, rng, squeeze_mV=2.0) - T, 8.0)    # lower supply reads hotter
+    assert np.allclose(p.error("ff", [200.0, 450.0]), [2.0, 1.2])            # held at the swept ends
+    assert sc.CircuitProfile.dvbe(_derive(), "one_point").droop_K_per_mV["tt"] == 0.0
+
+
+def test_read_circuit_is_one_corner_per_chip_and_tells_a_train_only_total():
+    from opentsense.bench import readings
+    from opentsense.bench.cases import CaseSet
+    from opentsense.estimate import sensor_circuit as sc
+    rng = np.random.default_rng(0)
+    N = 12
+    T = rng.uniform(10, 60, (N, 2, 4, 4)).astype(np.float32)
+    split = np.array(["train"] * 8 + ["test"] * 4)
+    cs = CaseSet(dict(T=T, readings=np.zeros((N, 2)), sensors=np.array([[0, 1, 1], [1, 2, 3]]), noise_K=0.1,
+                      split=split, group=np.array(list("aabbccddeeff")), tag=np.array(["x"] * N),
+                      dies=np.array(["top", "bot"]), buried=np.array([False, True]), cell_um=100.0, stack_id="g71_3d"))
+    p = sc.CircuitProfile.ring(_derive(), "asap7")
+    a, ca = readings.read_circuit(cs, "asap7_ring", p, 3, 106)
+    b, cb = readings.read_circuit(cs, "asap7_ring", p, 3, 106)
+    assert ca == cb and np.array_equal(a.readings, b.readings)
+    corners = {readings.read_circuit(cs, "asap7_ring", p, c, 106)[1] for c in range(30)}
+    assert corners == set(sc.CORNERS)
+    sq = np.zeros((N, 2)); sq[8:] = 50.0                                   # squeeze only on the test cases
+    c, _ = readings.read_circuit(cs, "asap7_ring", p, 3, 106, sq)
+    assert float(c.noise_K) == float(a.noise_K) and (c.readings[8:] > a.readings[8:] + 100).all()
+    with pytest.raises(ValueError):
+        readings.read_circuit(cs, "asap7_ring", p, 3, 106, np.zeros((N, 3)))
