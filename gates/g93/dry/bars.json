@@ -1,0 +1,208 @@
+{
+ "source": "floor_kaggle/floor_summary.json",
+ "min_bar_rel": 0.01,
+ "s3_floor_rel": {
+  "ice": {
+   "peak_rise_K": 0.002566851869903102,
+   "spread_K": 0.003997715591090052
+  },
+  "hs": {
+   "peak_rise_K": 0.002777709926547777,
+   "spread_K": 0.003975064470467653
+  },
+  "pact": {
+   "peak_rise_K": 0.0026092628832368185,
+   "spread_K": 0.003831417624517582
+  }
+ },
+ "bars_rel": {
+  "s1": {
+   "l3d": {
+    "peak_rise_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    },
+    "spread_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    }
+   },
+   "ccd": {
+    "peak_rise_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    },
+    "spread_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    }
+   }
+  },
+  "s2": {
+   "d0": {
+    "peak_rise_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    },
+    "spread_K": {
+     "ice-hs": 0.012646662858197445,
+     "ice-pact": 0.010395241580947796,
+     "hs-pact": 0.0102674533413706
+    }
+   },
+   "d1": {
+    "peak_rise_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    },
+    "spread_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    }
+   },
+   "d2": {
+    "peak_rise_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    },
+    "spread_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.010687383957897954,
+     "hs-pact": 0.01057194446065211
+    }
+   },
+   "d3": {
+    "peak_rise_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    },
+    "spread_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    }
+   },
+   "d4": {
+    "peak_rise_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    },
+    "spread_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    }
+   },
+   "d5": {
+    "peak_rise_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    },
+    "spread_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    }
+   },
+   "d6": {
+    "peak_rise_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    },
+    "spread_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    }
+   },
+   "d7": {
+    "peak_rise_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    },
+    "spread_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    }
+   },
+   "base": {
+    "peak_rise_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    },
+    "spread_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    }
+   }
+  },
+  "s4": {
+   "top": {
+    "peak_rise_K": {
+     "ice-hs": 0.010689123592901757,
+     "ice-pact": 0.010352229506279842,
+     "hs-pact": 0.010773945619569191
+    },
+    "spread_K": {
+     "ice-hs": 0.01594556012311541,
+     "ice-pact": 0.01565826643121527,
+     "hs-pact": 0.01561296418997047
+    }
+   },
+   "mid": {
+    "peak_rise_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.010233778920653594,
+     "hs-pact": 0.01
+    },
+    "spread_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    }
+   },
+   "bot": {
+    "peak_rise_K": {
+     "ice-hs": 0.01,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01
+    },
+    "spread_K": {
+     "ice-hs": 0.010549285315636217,
+     "ice-pact": 0.01,
+     "hs-pact": 0.01077261702945178
+    }
+   }
+  },
+  "s3": {
+   "*": {
+    "peak_rise_K": {
+     "ice-hs": 0.010689123592901757,
+     "ice-pact": 0.010352229506279842,
+     "hs-pact": 0.010773945619569191
+    },
+    "spread_K": {
+     "ice-hs": 0.01594556012311541,
+     "ice-pact": 0.01565826643121527,
+     "hs-pact": 0.01561296418997047
+    }
+   }
+  }
+ }
+}
