@@ -1,0 +1,60 @@
+{
+ "inputs": "9105997a166a32ae",
+ "image": "kaggle-build",
+ "stack": "s2",
+ "factor": 1,
+ "solver": "hs",
+ "grid": [
+  30,
+  30
+ ],
+ "nodes": 51300,
+ "wall_s": 36.2,
+ "dies": {
+  "d0": {
+   "peak_rise_K": 15.491334999999992,
+   "spread_K": 5.010035000000016,
+   "max_gradient_K_per_mm": 1.1390880000000152
+  },
+  "d1": {
+   "peak_rise_K": 19.682254,
+   "spread_K": 7.6099720000000275,
+   "max_gradient_K_per_mm": 2.2790959999999814
+  },
+  "d2": {
+   "peak_rise_K": 23.443082000000004,
+   "spread_K": 9.929043999999976,
+   "max_gradient_K_per_mm": 3.0816200000000435
+  },
+  "d3": {
+   "peak_rise_K": 26.64776999999998,
+   "spread_K": 11.837253999999973,
+   "max_gradient_K_per_mm": 3.4034920000000284
+  },
+  "d4": {
+   "peak_rise_K": 29.791928999999982,
+   "spread_K": 13.837571999999966,
+   "max_gradient_K_per_mm": 4.051578000000063
+  },
+  "d5": {
+   "peak_rise_K": 32.99425200000002,
+   "spread_K": 16.084577000000024,
+   "max_gradient_K_per_mm": 4.634977999999933
+  },
+  "d6": {
+   "peak_rise_K": 35.56652300000002,
+   "spread_K": 17.857444000000044,
+   "max_gradient_K_per_mm": 5.200956000000019
+  },
+  "d7": {
+   "peak_rise_K": 38.180124999999975,
+   "spread_K": 19.80659399999996,
+   "max_gradient_K_per_mm": 6.230706000000055
+  },
+  "base": {
+   "peak_rise_K": 40.70008899999999,
+   "spread_K": 21.78058599999997,
+   "max_gradient_K_per_mm": 8.49978800000008
+  }
+ }
+}
