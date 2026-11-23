@@ -1,0 +1,60 @@
+{
+ "inputs": "9105997a166a32ae",
+ "image": "opentsense:g94b",
+ "stack": "s2",
+ "factor": 1,
+ "solver": "ice",
+ "grid": [
+  30,
+  30
+ ],
+ "nodes": 51300,
+ "wall_s": 3.2,
+ "dies": {
+  "d0": {
+   "peak_rise_K": 15.492000000000019,
+   "spread_K": 5.009999999999991,
+   "max_gradient_K_per_mm": 1.1380000000000337
+  },
+  "d1": {
+   "peak_rise_K": 19.682999999999993,
+   "spread_K": 7.610000000000014,
+   "max_gradient_K_per_mm": 2.2799999999999727
+  },
+  "d2": {
+   "peak_rise_K": 23.444000000000017,
+   "spread_K": 9.92900000000003,
+   "max_gradient_K_per_mm": 3.0819999999999936
+  },
+  "d3": {
+   "peak_rise_K": 26.648000000000025,
+   "spread_K": 11.837000000000046,
+   "max_gradient_K_per_mm": 3.4039999999999964
+  },
+  "d4": {
+   "peak_rise_K": 29.793000000000006,
+   "spread_K": 13.838000000000022,
+   "max_gradient_K_per_mm": 4.0499999999999545
+  },
+  "d5": {
+   "peak_rise_K": 32.995000000000005,
+   "spread_K": 16.08499999999998,
+   "max_gradient_K_per_mm": 4.6340000000000146
+  },
+  "d6": {
+   "peak_rise_K": 35.56700000000001,
+   "spread_K": 17.857000000000028,
+   "max_gradient_K_per_mm": 5.199999999999932
+  },
+  "d7": {
+   "peak_rise_K": 38.18099999999998,
+   "spread_K": 19.80699999999996,
+   "max_gradient_K_per_mm": 6.230000000000018
+  },
+  "base": {
+   "peak_rise_K": 40.70100000000002,
+   "spread_K": 21.781000000000006,
+   "max_gradient_K_per_mm": 8.5
+  }
+ }
+}
