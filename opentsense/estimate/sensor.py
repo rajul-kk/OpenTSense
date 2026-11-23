@@ -26,11 +26,17 @@ cited whole-range figure and the gain term comes on top of it, so a profile is s
   graded C), so sigma 2.0 K, gain error 2%, 1 K steps, noise 0.1 K.
 - ideal_gauss: G84's model (exact temperature plus N(0, 0.1 K)), for comparison.
 """
+import zlib
 from dataclasses import dataclass
 
 import numpy as np
 
 T_TRIM = 358.15     # trim (and reference) temperature, K: the junction limit the margins use
+
+
+def chip_rng(name, chip_seed, salt):
+    """One generator per (salt, sensor name, chip), so readings do not depend on which other sensors or chips exist."""
+    return np.random.default_rng([salt, zlib.crc32(name.encode()), chip_seed])
 
 
 @dataclass(frozen=True)
