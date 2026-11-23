@@ -1,0 +1,40 @@
+{
+ "floor_rel": {},
+ "missing": [
+  "s1_x1_ice",
+  "s1_x1_hs",
+  "s1_x1_pact",
+  "s1_x2_ice",
+  "s1_x2_hs",
+  "s1_x2_pact",
+  "s2_x2_ice",
+  "s2_x2_hs",
+  "s2_x2_pact",
+  "s4_x1_ice",
+  "s4_x1_hs",
+  "s4_x1_pact",
+  "s4_x2_ice",
+  "s4_x2_hs",
+  "s4_x2_pact"
+ ],
+ "wall_s": {
+  "s2_x1_hs": 36.2,
+  "s2_x1_ice": 7.8,
+  "s2_x1_pact": 24.0
+ },
+ "parity": {
+  "s2_x1_hs": {
+   "rel": 0.0,
+   "same_inputs": true
+  },
+  "s2_x1_ice": {
+   "rel": 0.0,
+   "same_inputs": true
+  },
+  "s2_x1_pact": {
+   "rel": 0.0,
+   "same_inputs": true
+  }
+ },
+ "parity_ok": true
+}
