@@ -1,0 +1,58 @@
+{
+ "time_utc": "2026-11-18T02:05:05+00:00",
+ "host": "Rajul",
+ "python": "3.10.0",
+ "repo": {
+  "commit": "274b0cb899f1c7e516d048770eacba532d3b839f",
+  "dirty": true
+ },
+ "image": null,
+ "orfs_image": null,
+ "tools": {
+  "iverilog": null,
+  "verilator": null,
+  "ngspice": null,
+  "3dice_commit": "cat: /opt/3d-ice/COMMIT: No such file or directory",
+  "superlu_mt_commit": "fatal: cannot change to '/opt/3d-ice/superlu_mt-4.0.0': No such file or directory",
+  "pact_commit": "cat: /opt/pact/COMMIT: No such file or directory",
+  "spice_models_checksum": "cat: /opt/spice/CHECKSUM: No such file or directory",
+  "ca_certificates": null
+ },
+ "packages": {
+  "numpy": "2.2.6",
+  "scipy": "1.15.3",
+  "pandas": "2.3.3",
+  "PyYAML": "6.0.3",
+  "pytest": "9.0.2"
+ },
+ "gate": "G106",
+ "inputs_sha256": {
+  "configs/stacks/g71_3d.yaml": "2ec9d132844bcb400620afe20913fd5aaa66d2d48f767fcfbe9d8ba79330ee45",
+  "gates/g106/dry/derive.json": "6b5d8227257aba7b198c3d0c40bf67f6bf692685ea703f393a0178439ac5fc58",
+  "gates/g106/evaluate.py": "a7740be1698f97c03abedc77c61f415f8e84838293a63f05f33db23de2ee6206",
+  "gates/g106/registration.md": "6049be06b5d48b7020798d9709a2a81f5992c7ef89195cbe4c2a78e844362e3d",
+  "gates/g106/run.py": "469a7ff5fffdf8851c8828b427ce182e720235db360a0dd38ea2852f422228d4",
+  "gates/g71/inputs/maps.npz": "8979074660cf9a9a6bb5d966857c0c3f8780bd9f91f59b3c4aa894d8280f7644",
+  "gates/g72/runs/main/maps.npz": "0af27c81c446377b5923205adf0a9f36210f54af6b9c987455ee105f765653cd",
+  "gates/g84/make_cases.py": "4f90c91bb738506ca3365b0b2841f397425ba2af86f3c02b69230dea12b6a683",
+  "gates/g97/runs/main/maps.npz": "2e9b448868dbfa129e6b309ebea6c44300f2ec47d1cf2cde76294a1ee0f3ab31",
+  "gates/g97/runs/tpu/maps.npz": "8ea667fcfe80305dfcb60e55c2cf03cf9ef454b2601713ac8e3353c41f5ccf03",
+  "opentsense/__init__.py": "f4a38e1833ad3fcea97462959c76ea2a877f7aba20e8592166a46f493e43f47c",
+  "opentsense/bench/__init__.py": "999bf8ce66c0a6eaadd62ba165cd00dfcd0160222ec6e9c5e1edc677d30f33b4",
+  "opentsense/bench/cases.py": "c5b0963fbfce35463c09ee700008fbaf4ad65cc66473014a32340038f2921951",
+  "opentsense/bench/estimators.py": "3baecb57f1488c38b7fa1308fd25cc364f82d05d2019849de0baf324f9f19c61",
+  "opentsense/bench/metrics.py": "9b5717afc9794079fde9db35021104b02bb6cffef8eea4ff478be16176e2c501",
+  "opentsense/bench/readings.py": "32e353cbd3f529e646ae74c56bb05d9a98de04e2fa8f840888748b4be9f7cb0d",
+  "opentsense/bench/score.py": "5e5c1629be61e9d08decd4a0b16f21e356a2cdeeb1283965b21439f2d98e6b45",
+  "opentsense/estimate/__init__.py": "4fec38f660bccb9472fd2a4fe31278960dc36c3a2c764a2ba7b4a1bbd4995f4a",
+  "opentsense/estimate/calibrate.py": "bd504fc66b5261411ba87c986a696beec879bd6121840986f20a5987a76350b8",
+  "opentsense/estimate/field_model.py": "6ef969702a49b21ea9f46a7cd32456715995cdc5f54ac982a0f78d0c75beb300",
+  "opentsense/estimate/placement.py": "23ad4faca3f7964ce1432cacf39d5bc980aafac209ec96702b27a6c6004944fc",
+  "opentsense/estimate/regularise.py": "8907d30fec7a6a7eafe8b60fb105a55bbaa0ab936d7697f06ae50fd9a33bf6e8",
+  "opentsense/estimate/sensor.py": "c34e047f8f4f73ffc9636dff74d6c696e9aae4047fa344272e458b0094113b07",
+  "opentsense/estimate/sensor_circuit.py": "ce9156a90416a64b51d6d4e860c213f2b6d1a8f4d311d0041862e3eb1b0aa4a7",
+  "opentsense/manifest.py": "01b2e21768af404d400b7332bda5acd49aad96bb0b8ce60919fd2974ecbfe7f4",
+  "opentsense/stack/__init__.py": "91f78ac84806222cc55d781832b0a2a5f10fc90b44691977d254482fd429faaa",
+  "opentsense/stack/model.py": "93b1e2dc87bae30a0bbfcfc80ee24384bd70e672fb3d999e96d7eedee81847e8"
+ }
+}
