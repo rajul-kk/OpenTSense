@@ -37,5 +37,5 @@ gates/g104/dry/*.log
 gates/g106/dry/profiles/cases.npz
 gates/g106/dry/profiles/*.log
 gates/g106/dry/profiles/scores_v*.json
-gates/g93/dry/floor_image*/
+!gates/g93/dry/floor_image*/
 gates/g93/dry/floor_image*.log
