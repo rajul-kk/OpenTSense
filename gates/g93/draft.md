@@ -335,3 +335,57 @@ Seen:
   For the sensors the cooler's type is a level, not a shape: the uniform coefficient of the gated stacks is
   adequate. The first plated runs (`sens/coldplate_runs_v1/`, no baseline) are kept as run.
 - HotSpot and PACT refuse a cold plate (`model.check_one_sink`); this is a 3D-ICE-only check.
+
+## Leakage in the gated stacks (18 Nov 2026, decision delegated by the student)
+
+The student delegated the choice (18 Nov: "no questions just do what youd recommend as id pick that option either
+way"). Decision: the gated stacks carry leakage at a **10% share of each cell's nominal power at the 85 C reference**,
+on the ASAP7 LVT curve, solved by `run.solve_kT` in every solver. Why: 10% is the largest swept share that settles in
+every stack (S1 runs away at 25%; no published share for these dies was graded, so it stays ASSUMED) and
+the loop is the same code for all three solvers, so the gate still compares solvers on the same physics.
+The 85 C reference stays because the margins (G95) use it. A share of 0 and of 25% are reported from 3D-ICE, not
+gated. The noise-floor rule for the bars must then be measured with leakage on.
+
+## Bars by the noise-floor rule: the floor measurement (18 Nov 2026, decided under the student's delegation)
+
+The student delegated the choices (18 Nov: "no questions just do what youd recommend as id pick that option either
+way"). Fixed here, before any solver is compared on these stacks:
+
+- **Cell.** 500 um for the gate: the largest tried size that runs S1, S2 and S4 here (`dry/size_probe_lid.jsonl`);
+  S3 runs on a Kaggle CPU session (HotSpot 25.55 GB, `dry/size_probe_kaggle_beol.jsonl`).
+- **Floor.** For each solver, stack (S1, S2, S4) and die: f = |peak rise on the refined mesh - on the gated mesh| /
+  peak rise on the gated mesh, and the same for the spread (`dry/floor.py`, `dry/floor_summary.py`). The refined
+  mesh is the gated 500 um stack with every cell split in four (same layers, lid, die positions and regions; each
+  cell's power spread evenly over its children). Building at 250 um instead would move S2's DRAM banks and the lid
+  margins, which are rounded to whole cells, so the change would mix layout with mesh error (found by review).
+  S3 refined is about 1.5 M nodes and runs nowhere, so S3 takes, per solver, the largest f over S1, S2 and S4
+  (stated as an extrapolation; a missing unit is listed by `floor_summary.py`).
+- **Leakage.** The floor is a property of the mesh, so it is measured with one linear solve per unit, at each die's
+  nominal power (the gated power at the 85 C reference) and every temperature-dependent material at 85 C, not with
+  the 4 to 9 solves of the k(T) and leakage loop (`sens/leak_runs/`); it is relative, and the gate applies it to its
+  own loop-settled rises. This replaces "measured with leakage on" in the paragraph above.
+- **Bar (fixed now).** For each stack, die and solver pair (a, b): |peak_a - peak_b| <= max(2 (f_a + f_b), 1%) x the
+  pair's mean peak rise, and the same rule for the spread. Why 2: if a solver's error at 500 um goes as h^2, a
+  halving moves its answer by 0.75 of that error, and where it goes as h (at material and power edges) by 0.5, so its
+  500 um error is at most about 2 f; two solvers whose errors point opposite ways differ by at most 2 (f_a + f_b).
+  1% keeps a solver whose answer does not move from setting a zero bar. G93a's RMS bar (<= 2% of the mean rise)
+  stays. Buried dies (S1 ccd, S2 base, S4 mid) are reported separately and gated by the same rule. The floor
+  is lateral only: `refine` splits cells sideways and keeps each layer's sublayers, as G93a's did (its pairwise
+  agreement held with them), so differences in how the solvers treat the through-thickness direction are not in f.
+- **Kept blind, as far as it goes.** `floor.py` prints only wall times and `floor_summary.py` reports each solver
+  against itself; the unit files hold absolute peaks and are not read across solvers or committed before
+  registration. Declared: the review of this design (18 Nov) opened the first image units and quoted S2's base die
+  on the gated mesh at 40.701 / 40.700 / 40.680 K (3D-ICE / HotSpot / PACT; `dry/floor_image_v0/`, from the first
+  `floor.py`, the same stack and power as the gated nominal case at 85 C k), a 0.05% spread. The bar above was written
+  before that and is not changed by it.
+- **Where it runs.** `dry/kaggle_floor.py` on a Kaggle CPU session (no GPU quota): S1 and S4 refined are 403,088
+  and 431,880 nodes (counted from `floor.refine`), HotSpot about 25 GB or more (S3 at 391k nodes took 25.55 GB), past
+  this machine. The parity check runs first and stops the session if it fails (A18): S2 on the gated mesh in every
+  solver, all three present on both sides, against the image's units (`dry/floor_image.sh`, output
+  `dry/floor_image/`), same `inputs` hash and each die's peak and spread within 0.1%. A unit starts only with its
+  estimate left before 11.5 h and is capped at three times its estimate.
+
+Lints checked: A10 (cost re-estimated: one solve per unit, node counts from the refined stacks), A11 (detached, own
+time limit), A14 (outputs beside the probes; the first image units kept as `floor_image_v0/`), A15 (refine checked
+to conserve each die's power), A16 (one unit per file, a failed unit does not stop the rest), A18 (parity first,
+stops the session), A25 (every number above cites its file).
