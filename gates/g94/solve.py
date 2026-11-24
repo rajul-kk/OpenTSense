@@ -14,6 +14,9 @@ from opentsense.stack import to_3dice
 from opentsense.thermal.run import run_3dice, run_hotspot, run_pact
 
 SOLVERS = {"ice": run_3dice, "pact": run_pact, "hs": run_hotspot}
+# one transient run may take hours (HotSpot at level 5: about 4.5 h on the 3d stack); callers cap their own time,
+# so the runners' 2 h default must not stop it
+TIMEOUT_S = 24 * 3600
 
 
 def check_level(slot, level):
@@ -26,7 +29,8 @@ def rise(solver, stack, P, slot, level):
     r = 2 ** level
     check_level(slot, level)
     with tempfile.TemporaryDirectory() as wd:
-        T = SOLVERS[solver](stack, {d: np.repeat(v, r, 0) for d, v in P.items()}, wd, transient=(slot / r, slot / r))
+        rows = {d: np.repeat(v, r, 0) for d, v in P.items()}
+        T = SOLVERS[solver](stack, rows, wd, transient=(slot / r, slot / r), timeout=TIMEOUT_S)
     return {d: v - stack.ambient_K for d, v in T.items()}
 
 
