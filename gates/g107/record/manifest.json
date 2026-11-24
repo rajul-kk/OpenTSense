@@ -1,0 +1,47 @@
+{
+ "time_utc": "2026-11-20T05:32:54+00:00",
+ "host": "Rajul",
+ "python": "3.10.0",
+ "repo": {
+  "commit": "bb535b2e70c239152c57f0106326c599e56bec92",
+  "dirty": true
+ },
+ "image": null,
+ "orfs_image": null,
+ "tools": {
+  "iverilog": null,
+  "verilator": null,
+  "ngspice": null,
+  "3dice_commit": "cat: /opt/3d-ice/COMMIT: No such file or directory",
+  "superlu_mt_commit": "fatal: cannot change to '/opt/3d-ice/superlu_mt-4.0.0': No such file or directory",
+  "pact_commit": "cat: /opt/pact/COMMIT: No such file or directory",
+  "spice_models_checksum": "cat: /opt/spice/CHECKSUM: No such file or directory",
+  "ca_certificates": null
+ },
+ "packages": {
+  "numpy": "2.2.6",
+  "scipy": "1.15.3",
+  "pandas": "2.3.3",
+  "PyYAML": "6.0.3",
+  "pytest": "9.0.2"
+ },
+ "gate": "G107",
+ "inputs_sha256": {
+  "gates/g107/dry/budget.py": "12de26b562d9cdb290e7ec53b4d63e24da4d8e3a8fe2a5453fa086d77bea86ee",
+  "opentsense/estimate/placement.py": "23ad4faca3f7964ce1432cacf39d5bc980aafac209ec96702b27a6c6004944fc",
+  "opentsense/estimate/sensor.py": "c34e047f8f4f73ffc9636dff74d6c696e9aae4047fa344272e458b0094113b07",
+  "opentsense/estimate/field_model.py": "6ef969702a49b21ea9f46a7cd32456715995cdc5f54ac982a0f78d0c75beb300",
+  "opentsense/bench/readings.py": "fef54bac2a0a53055057ebadbb8f228f535372b5cfb3035fb3b66f71c0f08ed0",
+  "opentsense/bench/score.py": "5e5c1629be61e9d08decd4a0b16f21e356a2cdeeb1283965b21439f2d98e6b45",
+  "opentsense/bench/estimators.py": "3baecb57f1488c38b7fa1308fd25cc364f82d05d2019849de0baf324f9f19c61",
+  "opentsense/bench/metrics.py": "9b5717afc9794079fde9db35021104b02bb6cffef8eea4ff478be16176e2c501",
+  "opentsense/bench/cases.py": "c5b0963fbfce35463c09ee700008fbaf4ad65cc66473014a32340038f2921951",
+  "opentsense/stack/model.py": "93b1e2dc87bae30a0bbfcfc80ee24384bd70e672fb3d999e96d7eedee81847e8",
+  "gates/g107/run.py": "a710a34c34408d4f8d618b4a396d5b119f9ddf36e176a9e07de044392600002b",
+  "gates/g107/dry/budget.json": "2bc6be7a907ebe9290d6ebf42ad312e28d9e7f5e6eb0d6ae944e860f4821aa29",
+  "gates/g84/make_cases.py": "4f90c91bb738506ca3365b0b2841f397425ba2af86f3c02b69230dea12b6a683",
+  "configs/stacks/g71_3d.yaml": "2ec9d132844bcb400620afe20913fd5aaa66d2d48f767fcfbe9d8ba79330ee45"
+ },
+ "inputs_unchanged": true,
+ "note": "written after the run from scores.json (run.py writes no manifest); environment fields are from the same machine, 20 Nov"
+}
