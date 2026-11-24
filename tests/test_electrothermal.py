@@ -1,4 +1,6 @@
 """Leakage-temperature loop (G92): log-linear leakage tables, the fixed point, the loop gain rho and amplification."""
+import warnings
+
 import numpy as np
 import pytest
 
@@ -79,3 +81,20 @@ def test_rho_power_iteration_equals_eigvals_and_falls_back():
         r, D = et.rho(R, Leak(sign), T)
         assert abs(r - np.abs(np.linalg.eigvals(R * D[None, :])).max()) <= 1e-10 * r
     assert et.rho(R, Leak(0.0), T)[0] == 0.0
+
+
+def test_rho_is_inf_where_the_stencil_overflows_and_refuses_bad_inputs():
+    class Leak:
+        def tiles(self, T):
+            return np.exp(0.03 * (T - 300))
+
+    R = np.array([[2.0, 0.5], [0.5, 2.0]])
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")                          # handled, not warned about
+        assert et.rho(R, Leak(), np.array([340.0, 3e4]))[0] == np.inf             # the leakage itself overflows
+        assert et.rho(R * 1e300, Leak(), np.array([340.0, 2e4]))[0] == np.inf     # finite slope, R * D overflows
+    bad_T = np.array([np.nan, 340.0])
+    bad_R = R + np.array([[np.inf, 0.0], [0.0, 0.0]])
+    for R_in, T_in in ((R, bad_T), (bad_R, np.array([340.0, 340.0]))):
+        with pytest.raises(ValueError, match="finite"):
+            et.rho(R_in, Leak(), T_in)
