@@ -9,6 +9,7 @@
                                                     -> (that case set, the sensor.Chip that read it)
     read_circuit(cs, name, profile, chip_seed, salt, squeeze_mV=None)
                                                     -> (the case set read by a circuit sensor, the chip's corner)
+    subset(cs, cols, profile)                       -> a read case set keeping only sensors `cols`, same draws
 corr: None (independent offsets, G102's model) or (share, length_mm), sensor.Correlation at the sensors' positions.
 
 with_sensor is G102's `gates/g102/readings.py` (which stays as run) moved here so later gates share it; with the
@@ -38,6 +39,11 @@ def ambient_K(cs):
     return model.load(os.path.join(STACKS, f"{cs.stack_id}.yaml")).ambient_K
 
 
+def _site_T(cs, s, ambient):
+    """(N, m) absolute temperature (K) at sites s (m, 3) = (die, row, col) in every case."""
+    return cs.T[:, s[:, 0], s[:, 1], s[:, 2]].astype(np.float64) + ambient
+
+
 def read_chip(cs, profile, chip_seed, salt=102, corr=None):
     p = sensor.PROFILES[profile]
     rng = sensor.chip_rng(profile, chip_seed, salt)
@@ -45,7 +51,7 @@ def read_chip(cs, profile, chip_seed, salt=102, corr=None):
     c = None if corr is None else sensor.Correlation((s[:, [2, 1]] + 0.5) * float(cs.cell_um) / 1000, s[:, 0], *corr)
     chip = sensor.Chip.draw(p, len(s), rng, c)
     ambient = ambient_K(cs)
-    T = cs.T[:, s[:, 0], s[:, 1], s[:, 2]].astype(np.float64) + ambient
+    T = _site_T(cs, s, ambient)
     out = CaseSet({**cs.a, "readings": chip.read(T, rng) - ambient, "noise_K": p.total_sigma(T[cs.idx("train")])})
     return out, chip
 
@@ -57,7 +63,7 @@ def read_circuit(cs, name, profile, chip_seed, salt, squeeze_mV=None):
     rng = sensor.chip_rng(name, chip_seed, salt)
     corner = sensor_circuit.draw_corner(rng)
     s, ambient, tr = cs.sensors, ambient_K(cs), cs.idx("train")
-    T = cs.T[:, s[:, 0], s[:, 1], s[:, 2]].astype(np.float64) + ambient
+    T = _site_T(cs, s, ambient)
     sq = None if squeeze_mV is None else np.asarray(squeeze_mV, float)
     if sq is not None and sq.shape != T.shape:
         raise ValueError(f"squeeze_mV is {sq.shape}, need one value per case and sensor {T.shape}")
@@ -68,3 +74,14 @@ def read_circuit(cs, name, profile, chip_seed, salt, squeeze_mV=None):
 
 def with_sensor(cs, profile, chip_seed, salt=102, corr=None):
     return read_chip(cs, profile, chip_seed, salt, corr)[0]
+
+
+def subset(cs, cols, profile):
+    """The case set read by only the sensors `cols` of an already read chip: the same per-sensor errors and draws,
+    so site sets compared on one chip differ only in which sensors are read. noise_K is recomputed as read_chip
+    does, over the train split's temperatures at the kept sensors."""
+    cols = np.asarray(cols, int)
+    s = cs.sensors[cols]
+    T = _site_T(cs, s, ambient_K(cs))
+    return CaseSet({**cs.a, "sensors": s, "readings": cs.readings[:, cols],
+                    "noise_K": sensor.PROFILES[profile].total_sigma(T[cs.idx("train")])})

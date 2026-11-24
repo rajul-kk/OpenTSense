@@ -169,3 +169,22 @@ def test_read_circuit_is_one_corner_per_chip_and_tells_a_train_only_total():
     assert float(c.noise_K) == float(a.noise_K) and (c.readings[8:] > a.readings[8:] + 100).all()
     with pytest.raises(ValueError):
         readings.read_circuit(cs, "asap7_ring", p, 3, 106, np.zeros((N, 3)))
+
+
+def test_subset_keeps_each_sensors_reading_and_tells_the_noise_of_the_kept_sites():
+    """A site set read as a subset of one chip gives each kept sensor the reading it had on the full chip, and the
+    same noise_K as reading that set on its own (the train-only total over its sites)."""
+    from opentsense.bench import readings
+    from opentsense.bench.cases import CaseSet
+    rng = np.random.default_rng(0)
+    T = rng.uniform(0, 30, (12, 2, 6, 6)).astype(np.float32)
+    sens = np.array([[0, 1, 1], [0, 4, 4], [1, 2, 3], [1, 5, 0]])
+    cs = CaseSet(dict(T=T, readings=np.zeros((12, 4)), sensors=sens, noise_K=0.1,
+                      split=np.array(["train"] * 8 + ["test"] * 4), group=np.array(list("aaaabbbbcccc")),
+                      tag=np.array(["seen-group"] * 12), dies=np.array(["top", "bot"]), buried=np.array([False, True]),
+                      cell_um=50.0, stack_id="g71_3d"))
+    full = readings.with_sensor(cs, "ring_osc", 4, 107)
+    sub = readings.subset(full, [0, 1], "ring_osc")
+    assert np.array_equal(sub.sensors, sens[:2]) and np.array_equal(sub.readings, full.readings[:, :2])
+    alone = readings.with_sensor(readings.with_sites(cs, sens[:2]), "ring_osc", 4, 107)
+    assert float(sub.noise_K) == float(alone.noise_K) != float(full.noise_K)
