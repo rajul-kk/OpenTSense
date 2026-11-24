@@ -1,0 +1,29 @@
+{
+ "parity_ok": true,
+ "tol_K": 0.01,
+ "checks": {
+  "hotspot": [
+   true,
+   {
+    "small_die0": 0.0,
+    "3d_bot": 0.0,
+    "3d_top": 0.0
+   }
+  ],
+  "hotspot_small_L5": [
+   true,
+   {
+    "small_die0": 0.0
+   }
+  ],
+  "ice_3d_L4": [
+   true,
+   {
+    "peak_top": 0.0,
+    "peak_bot": 0.0,
+    "t63_top": 0.0,
+    "t63_bot": 0.0
+   }
+  ]
+ }
+}
