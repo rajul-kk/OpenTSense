@@ -20,8 +20,8 @@ import sys
 import time
 
 sys.path[:0] = [".", os.path.join("gates", "g94"), os.path.join("gates", "g94", "dry")]
+import run  # noqa: E402  G94's: before kaggle_floor_hs, which puts gates/g93 (with its own run.py) first on the path
 from kaggle_floor_hs import T0, build, parity  # noqa: E402
-import run  # noqa: E402
 
 LIMIT_S = 11.5 * 3600
 SESSIONS = {"step": [u for u in run.units() if u[1] == "step"],
