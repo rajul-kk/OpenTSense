@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "opentsense"
 version = "0.0.1"
 description = "Open testbed for per-die power and temperature sensing in 2.5D/3D chip stacks"
+license = {text = "BSD-3-Clause"}
 requires-python = ">=3.10"
 dependencies = ["numpy", "scipy", "pyyaml"]
 

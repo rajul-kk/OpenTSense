@@ -30,3 +30,11 @@ has the tile's power texture, not an accelerator's floorplan.
 pip install -e .[dev]
 pytest
 ```
+
+## Licence
+BSD 3-Clause (`LICENSE`), for OpenTSense's own code and data. Files from other projects keep their own licences:
+`docker/models/7nm_*.pm` (ASAP7 device models, BSD 3-Clause, Arizona State University; notice in each file) and the
+patches and build file in `docker/patches/` (each under the licence of the project it belongs to: PACT, HotSpot,
+3D-ICE, SuperLU_MT). The tools and images the Docker builds use (pinned in `docker/versions.env`: 3D-ICE, HotSpot,
+PACT, SuperLU_MT, OpenVAF, the ASAP7 and IHP kits, the ORFS image and an Ubuntu apt snapshot) are fetched at build
+time under their own licences and are not part of this repository.
