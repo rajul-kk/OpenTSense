@@ -89,11 +89,14 @@ def _write(res, out):
     os.replace(out + ".tmp", out)
 
 
-def main(cases, out):
+def main(cases, out, chips=CHIPS, extra_inputs=(), expect=None):
+    """Score `chips` into `out`. extra_inputs: more repo files to hash (the gated run's own); expect: a placed record
+    (placement_noise_K, buried_die, sites) the placed sites must equal before anything is scored (the dry run's)."""
     t0 = time.time()
     cs = CaseSet.load(cases)
-    inputs = INPUTS + [os.path.relpath(os.path.join(readings.STACKS, f"{cs.stack_id}.yaml"), ROOT).replace(os.sep, "/")]
-    key = {"case_set_sha256": cs.sha256(), "profile": PROFILE, "chips": list(CHIPS), "salt": SALT,
+    inputs = INPUTS + list(extra_inputs) + [
+        os.path.relpath(os.path.join(readings.STACKS, f"{cs.stack_id}.yaml"), ROOT).replace(os.sep, "/")]
+    key = {"case_set_sha256": cs.sha256(), "profile": PROFILE, "chips": list(chips), "salt": SALT,
            "offsets": dict(CORR), "inputs_sha256": {p: manifest.file_sha256(os.path.join(ROOT, p)) for p in inputs}}
     old = json.load(open(out)) if os.path.exists(out) else {}
     if old and {k: old.get(k) for k in key} != json.loads(json.dumps(key)):
@@ -101,15 +104,17 @@ def main(cases, out):
     sets, noise, gf, b = site_sets(cs)
     union = list(dict.fromkeys(tuple(int(x) for x in s) for S in sets.values() for s in S))
     cols = {k: [union.index(tuple(int(x) for x in s)) for s in S] for k, S in sets.items()}
-    placed = {"placement_noise_K": noise, "buried_die": int(b), "sites": {k: v.tolist() for k, v in sets.items()}}
-    if old and {k: old[k] for k in placed} != json.loads(json.dumps(placed)):
-        raise SystemExit(f"{out}: this machine places different sites from the same inputs; move it aside")
+    placed = json.loads(json.dumps(
+        {"placement_noise_K": noise, "buried_die": int(b), "sites": {k: v.tolist() for k, v in sets.items()}}))
+    for ref, what in ((old, "this run's earlier chips"), (expect, "the dry run")):
+        if ref and ({k: ref[k] for k in placed} != placed):
+            raise SystemExit(f"{out}: the placed sites differ from {what}; nothing scored")
     res = {**key, **placed,
            "per_die_count": {k: np.bincount(v[:, 0], minlength=len(cs.dies)).tolist() for k, v in sets.items()},
            "setup_s": round(time.time() - t0, 1), "runs": old.get("runs", {}), "wall_s": old.get("wall_s", 0.0)}
     groups = cs.group[cs.idx("test")]
     for oname, corr in CORR.items():
-        for chip in CHIPS:
+        for chip in chips:
             if all(f"{oname}/{name}/{chip}" in res["runs"] for name in sets):
                 continue
             t1 = time.time()
@@ -136,7 +141,12 @@ def main(cases, out):
             res["wall_s"] = round(res["wall_s"] + time.time() - t1, 1)
             _write(res, out)
             print(oname, "chip", chip, {k: res["runs"][f"{oname}/{k}/{chip}"]["rmse_K"] for k in sets}, flush=True)
-    print("done in", round(time.time() - t0, 1), "s this run", flush=True)
+    res["inputs_unchanged"] = all(manifest.file_sha256(os.path.join(ROOT, k)) == v
+                                  for k, v in key["inputs_sha256"].items())
+    res["complete"] = True                       # the end marker a reader requires: every chip scored, inputs checked
+    _write(res, out)
+    print("done in", round(time.time() - t0, 1), "s this run; inputs unchanged:", res["inputs_unchanged"], flush=True)
+    return res
 
 
 if __name__ == "__main__":
