@@ -5,15 +5,19 @@
     python scripts/record_gate.py g92d --parts    # one sub-folder per kit: runs/main/<kit>/ -> record/<kit>/
 
 Bulk outputs stay in runs/ (ignored). record/ holds only the small files a reader or the test in
-tests/test_gate_records.py needs: result.json and manifest.json. Missing files are reported, never invented.
+tests/test_gate_records.py needs: result.json and manifest.json, plus any per-machine manifests (manifest_*.json, a
+run split across machines) and parity checks (parity*.json) the run holds. Missing required files are reported,
+never invented.
 """
 import argparse
+import glob
 import os
 import shutil
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FILES = ("result.json", "manifest.json")
+EXTRA = ("manifest_*.json", "parity*.json")
 
 
 def copy(src, dst):
@@ -25,6 +29,9 @@ def copy(src, dst):
             shutil.copy2(s, os.path.join(dst, f))
         else:
             missing.append(os.path.relpath(s, ROOT))
+    for pattern in EXTRA:
+        for s in sorted(glob.glob(os.path.join(src, pattern))):
+            shutil.copy2(s, os.path.join(dst, os.path.basename(s)))
     return missing
 
 
