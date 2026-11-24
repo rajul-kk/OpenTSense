@@ -1,0 +1,30 @@
+{
+ "inputs": "9105997a166a32ae",
+ "image": "kaggle-build",
+ "stack": "s4",
+ "factor": 1,
+ "solver": "ice",
+ "grid": [
+  61,
+  59
+ ],
+ "nodes": 107970,
+ "wall_s": 44.4,
+ "dies": {
+  "top": {
+   "peak_rise_K": 30.776999999999987,
+   "spread_K": 15.759000000000015,
+   "max_gradient_K_per_mm": 12.33990147783252
+  },
+  "mid": {
+   "peak_rise_K": 34.84500000000003,
+   "spread_K": 19.010000000000048,
+   "max_gradient_K_per_mm": 14.793881254861189
+  },
+  "bot": {
+   "peak_rise_K": 36.44,
+   "spread_K": 20.245000000000005,
+   "max_gradient_K_per_mm": 15.355846512833793
+  }
+ }
+}
