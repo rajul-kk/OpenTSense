@@ -66,3 +66,24 @@ and the evaluator through the manifest), A16/A17 (one unit per file, written who
 (Kaggle parity first), A25 (every number above cites its file).
 
 Amendments go below, dated, each with the reason. Never re-run until it passes.
+
+
+### Amendment 1 (20 Nov 2026, before any unit was scored; 19 of 24 units in, none read by the scorer)
+
+Reason: a second, independent review found that `evaluate.py` took each case's dies from the first solver's unit
+and never checked row counts or `wall_s`; with one die removed from all three units of a case it still returned
+PASS on fewer comparisons. The registered validity rule already requires every unit present and finite; this makes
+the scorer check it in full. No bar, tolerance, case or level changes.
+- Validity also requires: every unit holds every die of its stack (`cases.STACKS`), n_slots x 2^level rows at its
+  level and twice that one level finer, for both peak and mean, and a finite `wall_s` (plus `steady_end_diff_K` for
+  step units), as numbers. Otherwise INCONCLUSIVE with the reason (`evaluate.problem`,
+  `tests/test_g94_evaluate.py`). Row counts come from `settings.json` and G81b's tracked record (`cases.n_slots`),
+  so a complete unit set can be scored without G81b's timelines.
+- "Wall time per unit" under *Reported* is the transient at the unit's level and its reduction to peak and mean
+  series (for PACT this includes the steady run that captures its matrix); `run.py` reads the clock before the
+  level + 1 solve, the steady solve and the writes. `result.json` names it `level_solve_s`.
+- The record also keeps `manifest_kaggle_step.json`, `manifest_kaggle_rest.json` and the two Kaggle parity files
+  (`parity_kaggle_step.json`, `parity_kaggle_rest.json`) (`scripts/record_gate.py`).
+- The local units were relaunched with a 4 GB cap (`bash gates/g94/run_local.sh 4g`): 3d_bottom step PACT thrashed
+  for 16 h at the 3 GB default (peak 3.17 GB). The manifests record no image digest and the local checkout was
+  dirty; the README states the image (`opentsense:g94b`) digest read after the run and this limit.
