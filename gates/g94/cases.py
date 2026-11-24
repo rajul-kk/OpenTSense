@@ -49,12 +49,30 @@ def pulse(stack_name, seed, n_slots, on_slots):
     return P
 
 
+def _g81b():
+    with open(os.path.join(ROOT, "gates", "g81b", "record", "result.json")) as f:
+        g81b = json.load(f)["programs"]
+    scaled = sorted(p for p in g81b if p != "idle_pass1" and "dyn_W" in g81b[p])     # G84's set, idle included
+    return g81b, scaled
+
+
+def program_order(seed):
+    """The programs in the seeded order (from G81b's tracked record only)."""
+    _, scaled = _g81b()
+    return list(np.random.default_rng(seed).permutation([p for p in scaled if p != "idle"]))
+
+
+def n_slots(case, S, seed):
+    """Slots in a case's power sequence, from settings and G81b's record (no timelines needed)."""
+    return {"step": S["step_slots"], "pulse": S["pulse_slots"],
+            "programs": len(program_order(seed)) * S["dwell_slots"]}[case]
+
+
 def programs(seed, dwell_slots, stack_name="3d"):
     """(power, order): the CPU sequence on a stack with a CPU die ("bot") and the program order."""
-    g81b = json.load(open(os.path.join(ROOT, "gates", "g81b", "record", "result.json")))["programs"]
-    scaled = sorted(p for p in g81b if p != "idle_pass1" and "dyn_W" in g81b[p])     # G84's set, idle included
+    g81b, scaled = _g81b()
     med = np.median([g81b[p]["dyn_W"]["mean"] for p in scaled])
-    order = list(np.random.default_rng(seed).permutation([p for p in scaled if p != "idle"]))
+    order = program_order(seed)
     Z = np.load(os.path.join(ROOT, "gates", "g71", "inputs", "maps.npz"))
     act = Z["act3"]
     (r0, c0), (r1, c1) = np.argwhere(act).min(0), np.argwhere(act).max(0) + 1
