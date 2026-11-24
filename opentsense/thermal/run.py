@@ -6,6 +6,7 @@ import itertools
 import os
 import subprocess
 import sys
+import threading
 from dataclasses import replace
 
 import numpy as np
@@ -95,19 +96,18 @@ def pact_transient(stack, power, workdir, step, slot, timeout=7200):
     return out
 
 
-def read_hotspot(path, layers, nx, ny):
-    """HotSpot's grid steady or transient file: per dump ("t = ..." opens each one in a transient file), "Layer n:"
-    then one "index temperature" line per cell, row 0 at the top edge (temperature_grid.c set_bgmap), so rows are
-    flipped to ours. Returns {layer index: (n_dumps, ny, nx)}."""
+def read_hotspot(lines, layers, nx, ny):
+    """HotSpot's grid steady or transient dump, as lines: per dump ("t = ..." opens each one in a transient dump),
+    "Layer n:" then one "index temperature" line per cell, row 0 at the top edge (temperature_grid.c set_bgmap), so
+    rows are flipped to ours. Returns {layer index: (n_dumps, ny, nx)}."""
     out, cur, vals = {l: [] for l in layers}, None, []
-    with open(path) as f:
-        for line in itertools.chain(f, ["t = end"]):
-            if line.startswith(("Layer", "t =")):
-                if cur in layers:
-                    out[cur].append(np.array(vals).reshape(ny, nx)[::-1])
-                cur, vals = (int(line.split()[1].rstrip(":")) if line.startswith("Layer") else None), []
-            elif cur in layers and line.strip():
-                vals.append(float(line.split()[1]))
+    for line in itertools.chain(lines, ["t = end"]):
+        if line.startswith(("Layer", "t =")):
+            if cur in layers:
+                out[cur].append(np.array(vals).reshape(ny, nx)[::-1])
+            cur, vals = (int(line.split()[1].rstrip(":")) if line.startswith("Layer") else None), []
+        elif cur in layers and line.strip():
+            vals.append(float(line.split()[1]))
     return {l: np.array(v) for l, v in out.items()}
 
 
@@ -115,18 +115,36 @@ def run_hotspot(stack, power, workdir, timeout=7200, transient=None):
     """As run_3dice: steady {die: (ny, nx)}, or {die: (n_slots, ny, nx)} at the end of each slot."""
     paths, src = to_hotspot.write(stack, power, workdir, transient=transient)
     wd = os.path.abspath(workdir)
-    grid = os.path.join(wd, "out.grid.steady" if transient is None else "out.grid.transient")
-    if os.path.exists(grid):
-        os.remove(grid)                                          # HotSpot appends to the transient file
     cmd = [HOTSPOT_EXE, "-c", paths["config"], "-p", paths["ptrace"], "-grid_layer_file", paths["lcf"], "-model_type", "grid",
            "-detailed_3D", "on"]
-    cmd += (["-steady_file", os.path.join(wd, "out.steady"), "-grid_steady_file", grid] if transient is None else
-            ["-o", os.path.join(wd, "out.ttrace"), "-grid_transient_file", grid])
-    r = subprocess.run(cmd, cwd=wd, capture_output=True, text=True, timeout=timeout)
-    if r.returncode or not os.path.exists(grid):
-        raise RuntimeError("HotSpot failed:\n" + r.stdout[-1500:] + r.stderr[-1500:])
     nx, ny = stack.grid
-    T = read_hotspot(grid, set(src.values()), nx, ny)
+    if transient is None:
+        grid = os.path.join(wd, "out.grid.steady")
+        r = subprocess.run(cmd + ["-steady_file", os.path.join(wd, "out.steady"), "-grid_steady_file", grid], cwd=wd,
+                           capture_output=True, text=True, timeout=timeout)
+        if r.returncode or not os.path.exists(grid):
+            raise RuntimeError("HotSpot failed:\n" + r.stdout[-1500:] + r.stderr[-1500:])
+        with open(grid) as f:
+            T = read_hotspot(f, set(src.values()), nx, ny)
+    else:
+        # The transient dump holds every layer at every row (about 2 MB a row on the 3d stack, tens of GB at G94's
+        # finest level), so it is streamed: HotSpot appends each dump to /dev/stdout, parsed here as it arrives.
+        with open(os.path.join(wd, "hotspot.err"), "w+") as err:
+            p = subprocess.Popen(cmd + ["-o", os.path.join(wd, "out.ttrace"), "-grid_transient_file", "/dev/stdout"],
+                                 cwd=wd, stdout=subprocess.PIPE, stderr=err, text=True)
+            timer = threading.Timer(timeout, p.kill)
+            timer.start()
+            try:
+                T = read_hotspot(p.stdout, set(src.values()), nx, ny)
+            except ValueError:
+                T = None                                         # a malformed dump: reported with HotSpot's errors
+            finally:
+                p.stdout.close()
+                rc = p.wait()
+                timer.cancel()
+            err.seek(0)
+            if rc or T is None:
+                raise RuntimeError(f"HotSpot failed (rc {rc}):\n" + err.read()[-3000:])
     return _per_die("HotSpot", stack, power, transient, {d: T[li] for d, li in src.items()})
 
 
