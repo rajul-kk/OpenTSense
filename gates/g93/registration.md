@@ -110,3 +110,20 @@ does not stop the rest), A17 (units skip on equal inputs and image), A18 (parity
 number cites its file).
 
 Amendments go below, dated, each with the reason. Never re-run until it passes.
+
+## Amendment 1 (18 Nov 2026, the student's decision; before any gated output was read)
+
+- **Change.** S3 is compared in 3D-ICE and PACT only; its HotSpot unit is dropped (the student: "forget S3
+  hotspot"). Session B (`opentsense-g93-run-b`, S3 HotSpot alone) was stopped by deleting the kernel about
+  40 min after it started. It had written its parity units (S2, `dry/floor.py`) but no gated unit, and nothing from it was read. `evaluate.py` forms S3's pairs from
+  `GATED["s3"] = ("ice", "pact")`.
+- **Why.** One HotSpot solve on S3 takes 4,483 s and 25.55 GB, and 9 solves would only just fit in a session, so S3's
+  HotSpot pairs risked leaving the whole gate INCONCLUSIVE. HotSpot is still compared on S1, S2 and S4.
+- **What it changes.** S3 has one pair, 3D-ICE against PACT, gated by its bar in `dry/bars.json` (unchanged: peak
+  1.04%, spread 1.57%); S3's ice-hs and hs-pact bars are no longer used. No longer apply: the question's "three
+  solvers" for S3, session B in "Solvers and where it runs", the sentence on S3's HotSpot pairs joining both
+  sessions' builds (under "Parity first"), and the S3 HotSpot budget under "Validity". No other bar, stack or
+  pair changes, and the verdict rule is unchanged.
+- **Known risk, not changed.** Session A was already running when this was decided: S3 3D-ICE runs before S3 PACT
+  and may take most of the session's time left. If S3 PACT is then missing or out of time, only that unit is run
+  in a new session (completing a missing unit, not a re-run of a finished one) and recorded as Amendment 2.

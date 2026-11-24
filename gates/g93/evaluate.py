@@ -1,6 +1,7 @@
 """G93 verdict from run.py's units (registration.md): for every stack, die (S3: region) and solver pair,
 (a) |peak_a - peak_b| and (b) |spread_a - spread_b| within dry/bars.json's bar of the pair's mean, and (c) the RMS of
 the difference of the two rise maps over the die's powered silicon within RMS_BAR of the pair's mean rise there.
+S3 is compared in 3D-ICE and PACT only (registration Amendment 1, GATED).
 
 A unit counts as missing when its JSON is absent, it ran out of time, its inputs differ from this code's, its regions
 differ, or its maps are unreadable (load). A pair is INCONCLUSIVE when a unit is missing, when its two units come
@@ -24,8 +25,10 @@ import run as g93run  # noqa: E402
 from opentsense import manifest  # noqa: E402
 from opentsense.manifest import write_json  # noqa: E402
 
-STACKS = ("s1", "s2", "s4", "s3")
 SOLVERS = ("ice", "hs", "pact")
+# Amendment 1 (registration.md): S3 is compared in 3D-ICE and PACT only
+GATED = {"s1": SOLVERS, "s2": SOLVERS, "s4": SOLVERS, "s3": ("ice", "pact")}
+STACKS = tuple(GATED)
 RMS_BAR = 0.02
 METRICS = ("peak_rise_K", "spread_K")
 
@@ -103,17 +106,20 @@ def reported(r, note):
             "max_gradient_K_per_mm": {d: v["max_gradient_K_per_mm"] for d, v in r.get("dies", {}).items()}}
 
 
-def main(runs, out, dry=None):
+def main(runs, out, flag=None):
+    if flag not in (None, "--dry"):
+        sys.exit(f"unknown option {flag}")
+    dry = flag == "--dry"
     bars = json.load(open(os.path.join(HERE, "dry", "bars.json")))["bars_rel"]
     code = g93run.inputs()
     res, units = {}, {}
     for name in STACKS:
         reg, amb = regions(name)
-        u = {s: load(runs, name, s, code, set(reg), dry) for s in SOLVERS}
+        u = {s: load(runs, name, s, code, set(reg), dry) for s in GATED[name]}
         units[name] = {s: {"present": r is not None} if dry else reported(r, note) for s, (r, _, note) in u.items()}
         if dry:
             continue
-        for a, b in itertools.combinations(SOLVERS, 2):
+        for a, b in itertools.combinations(GATED[name], 2):
             def bar(label, p=f"{a}-{b}"):
                 per = bars[name]["*" if name == "s3" else label]
                 return {k: per[k][p] for k in METRICS}
