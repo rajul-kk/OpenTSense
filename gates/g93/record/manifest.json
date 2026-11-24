@@ -1,0 +1,31 @@
+{
+ "time_utc": "2026-11-18T10:09:57+00:00",
+ "host": "Rajul",
+ "python": "3.10.0",
+ "repo": {
+  "commit": "787876344a431147607e26d97cc905a85b80be5e",
+  "dirty": true
+ },
+ "image": null,
+ "orfs_image": null,
+ "tools": {
+  "iverilog": null,
+  "verilator": null,
+  "ngspice": null,
+  "3dice_commit": "cat: /opt/3d-ice/COMMIT: No such file or directory",
+  "superlu_mt_commit": "fatal: cannot change to '/opt/3d-ice/superlu_mt-4.0.0': No such file or directory",
+  "pact_commit": "cat: /opt/pact/COMMIT: No such file or directory",
+  "spice_models_checksum": "cat: /opt/spice/CHECKSUM: No such file or directory",
+  "ca_certificates": null
+ },
+ "packages": {
+  "numpy": "2.2.6",
+  "scipy": "1.15.3",
+  "pandas": "2.3.3",
+  "PyYAML": "6.0.3",
+  "pytest": "9.0.2"
+ },
+ "gate": "G93",
+ "inputs": "9105997a166a32ae+24126ebf",
+ "units_dir": "gates/g93/runs/main"
+}
