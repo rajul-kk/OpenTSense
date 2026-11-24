@@ -1,0 +1,99 @@
+{
+ "gate": "G86b",
+ "verdict": "PASS",
+ "valid": true,
+ "bars_pass": {
+  "a": true,
+  "b": true,
+  "c": true,
+  "d": true
+ },
+ "bars": {
+  "a_healthy_false_alarm_share": 0.0,
+  "b_offset27_false_alarm_share": 0.0,
+  "c_ambient_detected_share": 1.0,
+  "c_ambient_checked_below_avg": {
+   "top": 1.0,
+   "bot": 1.0
+  },
+  "d_frozen_checked_below_avg": {
+   "top": 1.0,
+   "bot": 1.0
+  }
+ },
+ "reported": {
+  "ambient/detected_share": 1.0,
+  "frozen/detected_share": 0.353125,
+  "drift2/detected_share": 0.0,
+  "drift1/detected_share": 0.0,
+  "ambient/checked": {
+   "top": {
+    "mean_K": 0.21726424961113677,
+    "worst_K": 0.4106560222852661,
+    "below_avg_share": 1.0
+   },
+   "bot": {
+    "mean_K": 0.28654436269715544,
+    "worst_K": 0.45033635746630796,
+    "below_avg_share": 1.0
+   }
+  },
+  "frozen/checked": {
+   "top": {
+    "mean_K": 0.24232501944537158,
+    "worst_K": 0.4603559437480915,
+    "below_avg_share": 1.0
+   },
+   "bot": {
+    "mean_K": 0.30864845859842116,
+    "worst_K": 0.5629571292125533,
+    "below_avg_share": 1.0
+   }
+  },
+  "drift2/checked": {
+   "top": {
+    "mean_K": 0.21640150988691023,
+    "worst_K": 0.6910206458162091,
+    "below_avg_share": 1.0
+   },
+   "bot": {
+    "mean_K": 0.2810563390816907,
+    "worst_K": 0.664956295011742,
+    "below_avg_share": 1.0
+   }
+  },
+  "drift1/checked": {
+   "top": {
+    "mean_K": 0.20849043220097566,
+    "worst_K": 0.5077370560283252,
+    "below_avg_share": 1.0
+   },
+   "bot": {
+    "mean_K": 0.2760337815912804,
+    "worst_K": 0.5007166185038088,
+    "below_avg_share": 1.0
+   }
+  },
+  "healthy_false_alarm_share_uncalibrated": 0.0,
+  "healthy_checked_mean_K": {
+   "top": 0.21641732468754812,
+   "bot": 0.2851271464569346
+  },
+  "healthy_uncalibrated_unchecked_mean_K": {
+   "top": 0.24246343890676178,
+   "bot": 0.2794118171822652
+  },
+  "max_abs_offset_K": {
+   "16": 2.1683,
+   "17": 2.2461,
+   "18": 1.5547,
+   "19": 1.8122,
+   "20": 2.1463,
+   "21": 2.9264,
+   "22": 2.8551,
+   "23": 1.3658,
+   "24": 1.9636,
+   "25": 1.647
+  }
+ }
+}
