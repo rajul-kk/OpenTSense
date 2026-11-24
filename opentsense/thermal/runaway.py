@@ -9,6 +9,10 @@ R diag(dP_leak/dT) at every iterate.
 Starting from T = T_amb, with R >= 0 and leakage increasing and convex in T, the Newton iterates rise monotonically
 towards the lowest fixed point and never pass it, and rho rises with them. So:
 - rho reaching 1 before convergence means there is no fixed point below: runaway;
+- a step that is not finite means the same; so does one that lands where the leakage overflows, where `rho` returns
+  inf (rho can stay just under 1 at the start far past the boundary, so the first step can be finite but enormous;
+  c6 v2). This relies on the iterates staying below the lowest fixed point: with a table that is not convex across a
+  knot, a step could overshoot a real fixed point into the overflow, and `monotone` stays True, so nothing flags it;
 - the step falling under `tol` with rho < 1: converged (a stable fixed point);
 - neither within `max_it`: not converged (reported separately, unlike G74's inner solve).
 The log-linear leakage tables are exactly exponential within each segment; if a table is not convex across a knot,

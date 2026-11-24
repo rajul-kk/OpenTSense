@@ -1,4 +1,6 @@
 """U4: monotone Newton classifier of the leakage loop against the analytic one-tile boundary and the Picard solve."""
+import warnings
+
 import numpy as np
 import pytest
 
@@ -80,6 +82,22 @@ def test_critical_scale_refuses_a_bad_bracket():
         runaway.critical_scale(np.array([[r]]), np.array([dyn]), lambda s: leak(s * c_crit), Tamb, lo=2.0, hi=10.0)
 
 
-def test_critical_scale_refuses_a_bad_bracket():
+def test_critical_scale_refuses_reversed_bounds():
     with pytest.raises(ValueError, match="lo < hi"):
         runaway.critical_scale(np.eye(1), np.ones(1), None, 300.0, lo=10.0, hi=0.1)
+
+
+def test_a_finite_step_into_overflow_is_runaway():
+    # rho at ambient just under 1, far past the boundary: the first Newton step is finite but ~1e5 K, the leakage
+    # table's last segment then overflows, and the next rho sees inf/NaN (c6 v2, bs_kbeol1.2_tc200, scale 1000)
+    r, dyn, Tamb = 20.0, 1.0, 318.15
+    c = 0.9998 / (r * A * np.exp(A * (Tamb - 273.15)))
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")                          # the overflow is handled, not warned about
+        out = runaway.classify(np.array([[r]]), np.array([dyn]), leak(c), Tamb)
+        lo, hi, _ = runaway.critical_scale(np.array([[r]]), np.array([dyn]), lambda s: leak(s * c), Tamb,
+                                           lo=1e-3, hi=1.0, rtol=1e-3)
+    assert out.status == "runaway" and out.iterations == 2 and out.rho == np.inf
+    assert out.rho_path[0] < 1 and out.T[0] > 1e4             # step 1 was finite and landed past the table
+    c_crit = runaway.critical_scale_1tile(r, dyn, 1.0, A, Tamb)
+    assert lo * c <= c_crit <= hi * c * (1 + 1e-9)

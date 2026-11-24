@@ -72,11 +72,18 @@ def perron(M, close=1e-12, max_it=10000):
 
 def rho(R, leak, T, h=0.5):
     """Spectral radius of R @ diag(dP_leak/dT) at T, by central difference of each tile's own leakage. Power
-    iteration where its bracket is valid (M >= 0, no zero row) and closes; dense eigvals otherwise."""
-    D = (leak.tiles(T + h) - leak.tiles(T - h)) / (2 * h)
-    if not D.any():
-        return 0.0, D
-    M = R * D[None, :]
+    iteration where its bracket is valid (M >= 0, no zero row) and closes; dense eigvals otherwise. Where the
+    difference stencil overflows (leakage at T + h, or the loop gain, beyond float range: T far past the table), the
+    loop gain is unbounded: inf. Non-finite T or R is an input error, not a runaway: ValueError."""
+    if not (np.all(np.isfinite(T)) and np.all(np.isfinite(R))):
+        raise ValueError("rho: T and R must be finite")
+    with np.errstate(over="ignore", invalid="ignore"):
+        D = (leak.tiles(T + h) - leak.tiles(T - h)) / (2 * h)
+        if not D.any():
+            return 0.0, D
+        M = R * D[None, :]
+    if not np.all(np.isfinite(M)):
+        return float("inf"), D
     if M.min() >= 0 and (M > 0).any(axis=1).all():
         got = perron(M)
         if got is not None:
