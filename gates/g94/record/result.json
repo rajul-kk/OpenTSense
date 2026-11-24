@@ -1,0 +1,539 @@
+{
+ "a": {
+  "3d ice": {
+   "diff_K": 0.0009999999999763531,
+   "ok": true
+  },
+  "3d pact": {
+   "diff_K": 0.004998209096640949,
+   "ok": true
+  },
+  "3d hs": {
+   "diff_K": 1.0000000543186616e-06,
+   "ok": true
+  },
+  "25d_regions ice": {
+   "diff_K": 0.0010000000000331966,
+   "ok": true
+  },
+  "25d_regions pact": {
+   "diff_K": 0.004999624571269123,
+   "ok": true
+  },
+  "25d_regions hs": {
+   "diff_K": 1.0000000543186616e-06,
+   "ok": true
+  },
+  "3d_bottom ice": {
+   "diff_K": 0.0020000000000095497,
+   "ok": true
+  },
+  "3d_bottom pact": {
+   "diff_K": 0.00620321141138902,
+   "ok": true
+  },
+  "3d_bottom hs": {
+   "diff_K": 0.0011540000000422879,
+   "ok": true
+  }
+ },
+ "b": {
+  "3d step top ice-pact": {
+   "t63_s": [
+    0.003879078916071142,
+    0.004024076208051219
+   ],
+   "bar_s": 0.00019757887810305903,
+   "ok": true
+  },
+  "3d step top ice-hs": {
+   "t63_s": [
+    0.003879078916071142,
+    0.003875201822044532
+   ],
+   "bar_s": 0.00019385701845289185,
+   "ok": true
+  },
+  "3d step top pact-hs": {
+   "t63_s": [
+    0.004024076208051219,
+    0.003875201822044532
+   ],
+   "bar_s": 0.0001974819507523938,
+   "ok": true
+  },
+  "3d step bot ice-pact": {
+   "t63_s": [
+    0.01160885659022293,
+    0.011928808770569411
+   ],
+   "bar_s": 0.0005884416340198085,
+   "ok": true
+  },
+  "3d step bot ice-hs": {
+   "t63_s": [
+    0.01160885659022293,
+    0.01159857373067493
+   ],
+   "bar_s": 0.0005801857580224465,
+   "ok": true
+  },
+  "3d step bot pact-hs": {
+   "t63_s": [
+    0.011928808770569411,
+    0.01159857373067493
+   ],
+   "bar_s": 0.0005881845625311086,
+   "ok": true
+  },
+  "25d_regions step chiplets ice-pact": {
+   "t63_s": [
+    0.0023066080507961515,
+    0.0023700321898136867
+   ],
+   "bar_s": 0.0001775474644647372,
+   "ok": true
+  },
+  "25d_regions step chiplets ice-hs": {
+   "t63_s": [
+    0.0023066080507961515,
+    0.0023058940974624103
+   ],
+   "bar_s": 0.00017778166963864023,
+   "ok": true
+  },
+  "25d_regions step chiplets pact-hs": {
+   "t63_s": [
+    0.0023700321898136867,
+    0.0023058940974624103
+   ],
+   "bar_s": 0.00017778166963864023,
+   "ok": true
+  },
+  "3d_bottom step top ice-pact": {
+   "t63_s": [
+    0.00954368953363408,
+    0.009227808908979642
+   ],
+   "bar_s": 0.00046928746106534306,
+   "ok": true
+  },
+  "3d_bottom step top ice-hs": {
+   "t63_s": [
+    0.00954368953363408,
+    0.009530026085196524
+   ],
+   "bar_s": 0.0004768428904707651,
+   "ok": true
+  },
+  "3d_bottom step top pact-hs": {
+   "t63_s": [
+    0.009227808908979642,
+    0.009530026085196524
+   ],
+   "bar_s": 0.00046894587485440416,
+   "ok": true
+  },
+  "3d_bottom step bot ice-pact": {
+   "t63_s": [
+    0.016765540712859236,
+    0.016637011520657195
+   ],
+   "bar_s": 0.0008350638058379108,
+   "ok": true
+  },
+  "3d_bottom step bot ice-hs": {
+   "t63_s": [
+    0.016765540712859236,
+    0.016750518462476178
+   ],
+   "bar_s": 0.0008379014793833854,
+   "ok": true
+  },
+  "3d_bottom step bot pact-hs": {
+   "t63_s": [
+    0.016637011520657195,
+    0.016750518462476178
+   ],
+   "bar_s": 0.0008346882495783343,
+   "ok": true
+  }
+ },
+ "c": {
+  "3d step top ice-pact": {
+   "max_diff_K": 0.34350527975624345,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d step top ice-hs": {
+   "max_diff_K": 0.008916999999996733,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d step top pact-hs": {
+   "max_diff_K": 0.3431582797562669,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d step bot ice-pact": {
+   "max_diff_K": 0.27853448093952693,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d step bot ice-hs": {
+   "max_diff_K": 0.009102000000041244,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d step bot pact-hs": {
+   "max_diff_K": 0.2784404809395369,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d pulse top ice-pact": {
+   "max_diff_K": 0.34350527975624345,
+   "bar_K": 2.184000000000026,
+   "ok": true
+  },
+  "3d pulse top ice-hs": {
+   "max_diff_K": 0.001266999999984364,
+   "bar_K": 2.185617000000036,
+   "ok": true
+  },
+  "3d pulse top pact-hs": {
+   "max_diff_K": 0.3431582797562669,
+   "bar_K": 2.185617000000036,
+   "ok": true
+  },
+  "3d pulse bot ice-pact": {
+   "max_diff_K": 0.27853448093952693,
+   "bar_K": 0.6059999999999945,
+   "ok": true
+  },
+  "3d pulse bot ice-hs": {
+   "max_diff_K": 0.0012589999999477186,
+   "bar_K": 0.6059999999999945,
+   "ok": true
+  },
+  "3d pulse bot pact-hs": {
+   "max_diff_K": 0.2784404809395369,
+   "bar_K": 0.6057660000000737,
+   "ok": true
+  },
+  "3d programs top ice-pact": {
+   "max_diff_K": 0.3442163546187089,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d programs top ice-hs": {
+   "max_diff_K": 0.00890700000002198,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d programs top pact-hs": {
+   "max_diff_K": 0.3438903546187362,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d programs bot ice-pact": {
+   "max_diff_K": 0.26686681705245974,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d programs bot ice-hs": {
+   "max_diff_K": 0.009098999999991975,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d programs bot pact-hs": {
+   "max_diff_K": 0.26689281705245094,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "25d_regions step chiplets ice-pact": {
+   "max_diff_K": 0.3085188976934887,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "25d_regions step chiplets ice-hs": {
+   "max_diff_K": 0.0030639999999948486,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "25d_regions step chiplets pact-hs": {
+   "max_diff_K": 0.3082927122306387,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "25d_regions pulse chiplets ice-pact": {
+   "max_diff_K": 0.3085188976934887,
+   "bar_K": 2.2170000000000982,
+   "ok": true
+  },
+  "25d_regions pulse chiplets ice-hs": {
+   "max_diff_K": 0.0007599999999570173,
+   "bar_K": 2.2170000000000982,
+   "ok": true
+  },
+  "25d_regions pulse chiplets pact-hs": {
+   "max_diff_K": 0.3082927122306387,
+   "bar_K": 2.2165229999999383,
+   "ok": true
+  },
+  "3d_bottom step top ice-pact": {
+   "max_diff_K": 0.2638870765092065,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d_bottom step top ice-hs": {
+   "max_diff_K": 0.007137999999997646,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d_bottom step top pact-hs": {
+   "max_diff_K": 0.2642370765091755,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d_bottom step bot ice-pact": {
+   "max_diff_K": 0.0901724724786277,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d_bottom step bot ice-hs": {
+   "max_diff_K": 0.005231999999978143,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d_bottom step bot pact-hs": {
+   "max_diff_K": 0.09037147247863686,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d_bottom pulse top ice-pact": {
+   "max_diff_K": 0.3755874211525452,
+   "bar_K": 2.2526527304079877,
+   "ok": true
+  },
+  "3d_bottom pulse top ice-hs": {
+   "max_diff_K": 0.0009290000000419241,
+   "bar_K": 2.2259999999998854,
+   "ok": true
+  },
+  "3d_bottom pulse top pact-hs": {
+   "max_diff_K": 0.3760764211525611,
+   "bar_K": 2.2526527304079877,
+   "ok": true
+  },
+  "3d_bottom pulse bot ice-pact": {
+   "max_diff_K": 0.15605232960876947,
+   "bar_K": 0.6723285922553259,
+   "ok": true
+  },
+  "3d_bottom pulse bot ice-hs": {
+   "max_diff_K": 0.0010190000000420696,
+   "bar_K": 0.6599999999999113,
+   "ok": true
+  },
+  "3d_bottom pulse bot pact-hs": {
+   "max_diff_K": 0.15573432960877653,
+   "bar_K": 0.6723285922553259,
+   "ok": true
+  },
+  "3d_bottom programs top ice-pact": {
+   "max_diff_K": 0.2642903551487734,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d_bottom programs top ice-hs": {
+   "max_diff_K": 0.006831000000033782,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d_bottom programs top pact-hs": {
+   "max_diff_K": 0.26389335514875256,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d_bottom programs bot ice-pact": {
+   "max_diff_K": 0.07592787548441038,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d_bottom programs bot ice-hs": {
+   "max_diff_K": 0.005048999999985426,
+   "bar_K": 0.5,
+   "ok": true
+  },
+  "3d_bottom programs bot pact-hs": {
+   "max_diff_K": 0.07599587548440923,
+   "bar_K": 0.5,
+   "ok": true
+  }
+ },
+ "first_5ms": {
+  "3d step top ice-pact": 0.3983155061207526,
+  "3d step top ice-hs": 0.0004890000000159489,
+  "3d step top pact-hs": 0.3984705061207592,
+  "3d step bot ice-pact": 0.3214720287867294,
+  "3d step bot ice-hs": 0.00048500000002604793,
+  "3d step bot pact-hs": 0.3213354589455548,
+  "3d pulse top ice-pact": 0.3983155061207526,
+  "3d pulse top ice-hs": 0.0004890000000159489,
+  "3d pulse top pact-hs": 0.3984705061207592,
+  "3d pulse bot ice-pact": 0.3214720287867294,
+  "3d pulse bot ice-hs": 0.00048500000002604793,
+  "3d pulse bot pact-hs": 0.3213354589455548,
+  "3d programs top ice-pact": 0.3980529931423007,
+  "3d programs top ice-hs": 0.00048099999997930354,
+  "3d programs top pact-hs": 0.3978559931422865,
+  "3d programs bot ice-pact": 0.3135226095270127,
+  "3d programs bot ice-hs": 0.0004970000000525943,
+  "3d programs bot pact-hs": 0.31347039793018894,
+  "25d_regions step chiplets ice-pact": 0.39626315753326935,
+  "25d_regions step chiplets ice-hs": 0.0004969999999957508,
+  "25d_regions step chiplets pact-hs": 0.396292157533253,
+  "25d_regions pulse chiplets ice-pact": 0.39626315753326935,
+  "25d_regions pulse chiplets ice-hs": 0.0004969999999957508,
+  "25d_regions pulse chiplets pact-hs": 0.396292157533253,
+  "3d_bottom step top ice-pact": 0.2808507557077746,
+  "3d_bottom step top ice-hs": 0.0005309999999667525,
+  "3d_bottom step top pact-hs": 0.2812263661182328,
+  "3d_bottom step bot ice-pact": 0.1911121419277606,
+  "3d_bottom step bot ice-hs": 0.0006789999999909924,
+  "3d_bottom step bot pact-hs": 0.19165414192775643,
+  "3d_bottom pulse top ice-pact": 0.2808507557077746,
+  "3d_bottom pulse top ice-hs": 0.0005309999999667525,
+  "3d_bottom pulse top pact-hs": 0.2812263661182328,
+  "3d_bottom pulse bot ice-pact": 0.1911121419277606,
+  "3d_bottom pulse bot ice-hs": 0.0006789999999909924,
+  "3d_bottom pulse bot pact-hs": 0.19165414192775643,
+  "3d_bottom programs top ice-pact": 0.281786760168643,
+  "3d_bottom programs top ice-hs": 0.0005060000000298714,
+  "3d_bottom programs top pact-hs": 0.28165486165005404,
+  "3d_bottom programs bot ice-pact": 0.18717199466266266,
+  "3d_bottom programs bot ice-hs": 0.0008219999999710126,
+  "3d_bottom programs bot pact-hs": 0.1877569946626636
+ },
+ "rms_K": {
+  "3d step top ice-pact": 0.24025452994345703,
+  "3d step top ice-hs": 0.007762916794853506,
+  "3d step top pact-hs": 0.23300013711605438,
+  "3d step bot ice-pact": 0.058600747085137316,
+  "3d step bot ice-hs": 0.00785148948095475,
+  "3d step bot pact-hs": 0.053577050858822216,
+  "3d pulse top ice-pact": 0.05424237090601419,
+  "3d pulse top ice-hs": 0.0005666490238101338,
+  "3d pulse top pact-hs": 0.054286831280451454,
+  "3d pulse bot ice-pact": 0.0449375548432812,
+  "3d pulse bot ice-hs": 0.000553291919983387,
+  "3d pulse bot pact-hs": 0.0450251950481106,
+  "3d programs top ice-pact": 0.2508579909589632,
+  "3d programs top ice-hs": 0.006942659144677501,
+  "3d programs top pact-hs": 0.2447617276223554,
+  "3d programs bot ice-pact": 0.06144237682704515,
+  "3d programs bot ice-hs": 0.0070785418547901265,
+  "3d programs bot pact-hs": 0.058638709681545366,
+  "25d_regions step chiplets ice-pact": 0.24663794093377292,
+  "25d_regions step chiplets ice-hs": 0.002502543912594617,
+  "25d_regions step chiplets pact-hs": 0.24427932549610543,
+  "25d_regions pulse chiplets ice-pact": 0.051494690978898396,
+  "25d_regions pulse chiplets ice-hs": 0.0003354130490318601,
+  "25d_regions pulse chiplets pact-hs": 0.0515198357797057,
+  "3d_bottom step top ice-pact": 0.21125291277468022,
+  "3d_bottom step top ice-hs": 0.005696532462841179,
+  "3d_bottom step top pact-hs": 0.21667281398944815,
+  "3d_bottom step bot ice-pact": 0.014696033361926188,
+  "3d_bottom step bot ice-hs": 0.004103170928064092,
+  "3d_bottom step bot pact-hs": 0.01829265883392964,
+  "3d_bottom pulse top ice-pact": 0.044138060528259825,
+  "3d_bottom pulse top ice-hs": 0.00040724712737651153,
+  "3d_bottom pulse top pact-hs": 0.04414832670731127,
+  "3d_bottom pulse bot ice-pact": 0.0214762112226838,
+  "3d_bottom pulse bot ice-hs": 0.00036759561267198836,
+  "3d_bottom pulse bot pact-hs": 0.021449772776839533,
+  "3d_bottom programs top ice-pact": 0.20368306556493448,
+  "3d_bottom programs top ice-hs": 0.004572481564752704,
+  "3d_bottom programs top pact-hs": 0.20779275264585703,
+  "3d_bottom programs bot ice-pact": 0.01513239187780976,
+  "3d_bottom programs bot ice-hs": 0.0033983000844783487,
+  "3d_bottom programs bot pact-hs": 0.013104511335791151
+ },
+ "floor_K": {
+  "3d step top ice": 0.04600000000004911,
+  "3d step top pact": 0.0462451650474236,
+  "3d step top hs": 0.046586999999988166,
+  "3d step bot ice": 0.09199999999998454,
+  "3d step bot pact": 0.09207199119600773,
+  "3d step bot hs": 0.09167199999996001,
+  "3d pulse top ice": 0.7280000000000086,
+  "3d pulse top pact": 0.7186959142583191,
+  "3d pulse top hs": 0.728539000000012,
+  "3d pulse bot ice": 0.20199999999999818,
+  "3d pulse bot pact": 0.19360358215720908,
+  "3d pulse bot hs": 0.20192200000002458,
+  "3d programs top ice": 0.047000000000025466,
+  "3d programs top pact": 0.04687491414034639,
+  "3d programs top hs": 0.04719999999997526,
+  "3d programs bot ice": 0.09300000000001774,
+  "3d programs bot pact": 0.09337659765014905,
+  "3d programs bot hs": 0.09291200000001254,
+  "25d_regions step chiplets ice": 0.03500000000002501,
+  "25d_regions step chiplets pact": 0.034352447604703684,
+  "25d_regions step chiplets hs": 0.03465899999997646,
+  "25d_regions pulse chiplets ice": 0.7390000000000327,
+  "25d_regions pulse chiplets pact": 0.7284285624083395,
+  "25d_regions pulse chiplets hs": 0.7388409999999794,
+  "3d_bottom step top ice": 0.033999999999991815,
+  "3d_bottom step top pact": 0.03375871720555779,
+  "3d_bottom step top hs": 0.03410900000000083,
+  "3d_bottom step bot ice": 0.051999999999964075,
+  "3d_bottom step bot pact": 0.05027732059113532,
+  "3d_bottom step bot hs": 0.05179499999997006,
+  "3d_bottom pulse top ice": 0.7419999999999618,
+  "3d_bottom pulse top pact": 0.7508842434693292,
+  "3d_bottom pulse top hs": 0.7416589999999701,
+  "3d_bottom pulse bot ice": 0.21999999999997044,
+  "3d_bottom pulse bot pact": 0.2241095307517753,
+  "3d_bottom pulse bot hs": 0.21952999999996337,
+  "3d_bottom programs top ice": 0.03500000000002501,
+  "3d_bottom programs top pact": 0.03407416674383512,
+  "3d_bottom programs top hs": 0.0344419999999559,
+  "3d_bottom programs bot ice": 0.05299999999999727,
+  "3d_bottom programs bot pact": 0.050772539924082594,
+  "3d_bottom programs bot hs": 0.052329000000042925
+ },
+ "level_solve_s": {
+  "3d step ice": 347.8709056377411,
+  "3d step pact": 493.1403262615204,
+  "3d step hs": 3940.027234315872,
+  "3d pulse ice": 224.8897988796234,
+  "3d pulse pact": 224.32287216186523,
+  "3d pulse hs": 2217.3131427764893,
+  "3d programs ice": 230.66982460021973,
+  "3d programs pact": 320.7304871082306,
+  "3d programs hs": 3553.20938205719,
+  "25d_regions step ice": 1543.4200990200043,
+  "25d_regions step pact": 1750.7246153354645,
+  "25d_regions step hs": 5878.69559264183,
+  "25d_regions pulse ice": 265.4424612522125,
+  "25d_regions pulse pact": 423.4906761646271,
+  "25d_regions pulse hs": 3399.7599699497223,
+  "3d_bottom step ice": 578.8853464126587,
+  "3d_bottom step pact": 570.0336842536926,
+  "3d_bottom step hs": 3975.693929195404,
+  "3d_bottom pulse ice": 123.77541184425354,
+  "3d_bottom pulse pact": 284.64105796813965,
+  "3d_bottom pulse hs": 2218.84979224205,
+  "3d_bottom programs ice": 273.82814860343933,
+  "3d_bottom programs pact": 445.7272574901581,
+  "3d_bottom programs hs": 3557.690853834152
+ },
+ "verdict": "PASS",
+ "valid": true,
+ "passed": {
+  "a": true,
+  "b": true,
+  "c": true
+ }
+}

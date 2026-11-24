@@ -1,0 +1,52 @@
+{
+ "time_utc": "2026-11-19T06:50:13+00:00",
+ "host": "5e7bba5da0ab",
+ "python": "3.14.4",
+ "repo": {
+  "commit": "ce3765bb5859d6cdd6b1fd58100f35d914222ad0",
+  "dirty": true
+ },
+ "image": null,
+ "orfs_image": null,
+ "tools": {
+  "iverilog": "Icarus Verilog version 12.0 (stable) ()",
+  "verilator": "Verilator 5.032 2025-01-01 rev (Debian 5.032-1)",
+  "ngspice": "ngspice-45.2 : Circuit level simulation program",
+  "3dice_commit": "4953952a1ef6d38807ff307212a6f15e5b2ef935",
+  "superlu_mt_commit": "e60ed2c1dd491e1832d783f519c1851288f9d422",
+  "pact_commit": "bb7f05a0a893eac4826b1bc55b3e1f2415ba057d",
+  "spice_models_checksum": "c2e03ea1f08c84c7492e18e40dd1f882e32e3838f828910b8485c2070e9d109d",
+  "ca_certificates": "20260816ubuntu0.26.04.1"
+ },
+ "packages": {
+  "numpy": "2.3.4",
+  "scipy": "1.16.3",
+  "pandas": "2.3.3",
+  "PyYAML": "6.0.3",
+  "pytest": "8.4.2"
+ },
+ "spice_models": [
+  "openvaf-r v24.0.2mob",
+  "IHP-Open-PDK 5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+  "VA-Models 6099b4e12e6f66ff530f59b8d01fb909094be85a",
+  "asap7sc7p5t_28 e5bd25da72cd297b8c0ec6f77600e0cbaa1124d0"
+ ],
+ "gate": "G94",
+ "settings": {
+  "note": "Fixed in the registration (19 Nov 2026) from the dry runs. Level 5 for all three: the after-5 ms change from level 4 to 5 is at most 0.186 K on every die and stack (dry/floor_after/floor.jsonl; student rule of 17 Nov, at most 0.2 K). step_slots covers 10 slowest time constants (3d_bottom 0.078 s, dry/time_constants.json). tol_c_K 0.5 K (student, 17 Nov); tol_b_rel 5% (draft's proposal, delegated 18 Nov).",
+  "slot_s": 0.005,
+  "step_slots": 156,
+  "pulse_slots": 40,
+  "pulse_on_slots": 2,
+  "dwell_slots": 4,
+  "level": {
+   "ice": 5,
+   "pact": 5,
+   "hs": 5
+  },
+  "a_K": 0.01,
+  "tol_b_rel": 0.05,
+  "tol_c_K": 0.5
+ },
+ "seed": 0
+}
