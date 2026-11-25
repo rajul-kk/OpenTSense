@@ -155,3 +155,70 @@ codegraph before and after: cycles 0, needless 0; the 8 hidden pairs are the sta
 - Kept: `gates/g101/run.py`'s `Recorder` copies rho's body without the guard; it is a recorded gate's timing harness
   (eigvals against the Perron bracket), so it is left as recorded. A rerun of G101 would need it to call `et.rho`.
 - A duplicate test name in `tests/test_runaway.py` hid one test; renamed, so that test runs again.
+
+## G94 (20 Nov 2026): one pass for the gate, after its run (PASS) and before its commits
+
+Scope: `gates/g94/{cases,solve,run,evaluate,kaggle_gate_hs,kaggle_kernel}.py`, `run_local.sh`,
+`tests/test_g94_evaluate.py`, `scripts/record_gate.py`. Nothing outside `gates/g94` imports its modules (grep).
+Rule for this pass (A14): the files that produced the recorded units (`cases.py`, `solve.py`, `run.py`,
+`kaggle_gate_hs.py`, `kaggle_kernel.py`, `dry/*`) stay as they ran; their problems are logged for whoever reuses
+them. The scorer is re-run, and must give a byte-identical `result.json`.
+
+- Split `evaluate.main`'s single loop (bars b and c, floors, first 5 ms, RMS, all inline) into `trajectories` (bar c
+  for one pair on one die) and `time_constants` (bar b), each taking (level, series, finer series) per solver, so a
+  bar's rule changes in one function. Done; `result.json` sha256 c69fd72c... before and after; behaviour tests
+  added after Sol's last review (G94-LR-4): a 0.6 K gap in the first 5 ms passes c and shows in first_5ms, the
+  same gap later fails; the floor widens c's bar; t63 2% apart passes b and 40% fails; string or nested series are
+  refused (`problem` now checks 1-D numeric rows, LR-5; result.json still c69fd72c...).
+  - `evaluate.py:main` computed the floor, the late-time mask, bar c and bar b for each pair in one 30-line loop body.
+  - No test exercised a bar: `tests/test_g94_evaluate.py` covered validity (`problem`) only.
+- Frozen as run, for a successor that reuses this code (G79 will name a solver from G94):
+  - `cases.py`: G71's `maps.npz` path is built in both `maps()` and `programs()`; `programs()` defaults
+    `stack_name="3d"` though every caller passes it; `CPU_BLOCK_W` and the 0.4 W dark power are copies of G84's
+    values (G84 frozen, so a copy, commented, rather than a cross-gate import).
+  - `run.py` / `evaluate.py`: the unit schema (`series`, `series_finer`, `wall_s`, `steady_end_diff_K`) is written in
+    `run.unit` and checked in `evaluate.problem`; both sit in this folder, so the link is local but unnamed.
+  - `run.py`, `evaluate.py`: importing them edits `sys.path` and needs the repo root as cwd (the test fixture
+    `chdir`s); `settings()` reads relative paths.
+  - `kaggle_gate_hs.py`: correct only if `run` is imported before `kaggle_floor_hs` (which puts `gates/g93`, with its
+    own `run.py`, first on the path) - an import order callers must know.
+  - `solve.py` belongs in the package (A6) if G79 or a later gate runs these transients: move it then, with A24.
+  - Old ruff findings in these files (unused `noqa`, import order, open() without a context manager): left as run.
+- `scripts/record_gate.py`, `run_local.sh`: nothing to change (the 4g default is Amendment 1's).
+- Comments/Tests passes: the comments in `evaluate.py` state outside facts (Amendment 1, run.py's clock); none
+  removed. Tests: all 9 check behaviour a regression would break; none removed.
+
+## runaway-fix (20 Nov 2026): certified verdicts (C6-3, RF-1..6)
+
+- Every verdict now comes with what proves it: "converged" needs an upper solution at or below T_cap
+  (`upper_solution`), "runaway" a monotone lower iterate past T_cap (`lowest_fixed_point`); anything else is
+  not_converged. One operator rule (`operator`: round-off negatives projected once) is used by both solves, so the
+  Newton and fixed-point paths can no longer disagree about which R they classify.
+  - Newton's runaway exits assumed leakage convex in T (false for Liberty tables): C6-3.
+  - A small Picard step was taken as existence (also happens just past the fold): RF-1.
+  - The post-Picard central-difference rho decided stability (misreads a point just below the fold): RF-1 round 1.
+  - Signed R broke the lower-iterate proof: RF-3.
+  - The Newton converged exit accepted points above T_cap while Picard counted them runaway: review finding 2.
+- `classify`'s inner helper renamed `runaway` -> `by_fixed_point` (it decides by fixed-point iteration; the old name
+  shadowed the module's own name for readers).
+- Left, logged: `lowest_fixed_point` repeats `electrothermal.solve`'s loop. `solve`'s divergence rule (step > 1e4 K)
+  and tol produced recorded results (G74, G95 sweep's picard_diff_K), so they stay apart; merge only with an
+  equivalence check on those records (A15).
+- Declined with a stated limit (docstring): RF-5/RF-6, rounding of H beyond the matrix product (~1e-13 relative on
+  constructed inputs; rtol is 1e-4).
+- Before/after on real data: the synthetic 1,024-tile SVT case gives the same bracket [482.251, 482.277] with and
+  without the change; the recorded gates' cases are the runaway-audit task.
+
+## Runaway audit (20 Nov 2026): gates/runaway_audit/{audit.py,run.sh}
+
+**Kept: G95's case construction is loaded from `gates/g95/sweep.py` (by file, as G103's margin.py does)**, not
+copied, so the audit's R and cases are the gates' own; TT units are checked against G92e's recorded peaks.
+**Kept: the kit table (placement, stack) repeats `gates/g95/run_sweep.sh`**: G95 is recorded and frozen, and the
+audit hashes the stack file per unit, so a drift shows as an input mismatch.
+**Kept in the audit, not moved to `runaway`: the monotone envelopes for non-monotone tables.** One consumer; the
+package's classifier keeps refusing such tables. Move it into `runaway` (with the Brouwer/induction argument and a
+test) the first time a gate needs a verdict on a non-monotone model.
+**Changed before the record run (Sol RA-1..3):** a failed re-bracket is recorded instead of raised; a kept unit is
+reused only if its hashed inputs match; "complete" needs all nine units.
+**Tests:** `tests/test_runaway_audit.py` checks the envelopes off-grid on random non-monotone tables; the audit is the
+check of the recorded gates.

@@ -15,3 +15,6 @@ dev = ["pytest"]
 
 [tool.setuptools.packages.find]
 include = ["opentsense*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]   # gates/*/runs hold downloaded copies of tests/ (Kaggle bundles)
