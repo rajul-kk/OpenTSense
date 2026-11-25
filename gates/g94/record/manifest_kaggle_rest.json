@@ -1,0 +1,46 @@
+{
+ "time_utc": "2026-11-20T03:55:29+00:00",
+ "host": "c7333722f1cf",
+ "python": "3.13.18",
+ "repo": {
+  "commit": null,
+  "dirty": true
+ },
+ "image": null,
+ "orfs_image": null,
+ "tools": {
+  "iverilog": null,
+  "verilator": null,
+  "ngspice": null,
+  "3dice_commit": "cat: /opt/3d-ice/COMMIT: No such file or directory",
+  "superlu_mt_commit": "e60ed2c1dd491e1832d783f519c1851288f9d422",
+  "pact_commit": "cat: /opt/pact/COMMIT: No such file or directory",
+  "spice_models_checksum": "cat: /opt/spice/CHECKSUM: No such file or directory",
+  "ca_certificates": "20260816ubuntu0.24.04.1"
+ },
+ "packages": {
+  "numpy": "2.1.3",
+  "scipy": "1.16.3",
+  "pandas": "2.3.3",
+  "PyYAML": "6.0.3",
+  "pytest": "8.4.2"
+ },
+ "gate": "G94",
+ "settings": {
+  "note": "Fixed in the registration (19 Nov 2026) from the dry runs. Level 5 for all three: the after-5 ms change from level 4 to 5 is at most 0.186 K on every die and stack (dry/floor_after/floor.jsonl; student rule of 17 Nov, at most 0.2 K). step_slots covers 10 slowest time constants (3d_bottom 0.078 s, dry/time_constants.json). tol_c_K 0.5 K (student, 17 Nov); tol_b_rel 5% (draft's proposal, delegated 18 Nov).",
+  "slot_s": 0.005,
+  "step_slots": 156,
+  "pulse_slots": 40,
+  "pulse_on_slots": 2,
+  "dwell_slots": 4,
+  "level": {
+   "ice": 5,
+   "pact": 5,
+   "hs": 5
+  },
+  "a_K": 0.01,
+  "tol_b_rel": 0.05,
+  "tol_c_K": 0.5
+ },
+ "seed": 0
+}
