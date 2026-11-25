@@ -1,0 +1,2054 @@
+{
+ "T_amb_K": 358.15,
+ "units": {
+  "ihp:tt": {
+   "recorded_from": "gates/g95/runs/main/ihp/sweep_ihp.json",
+   "inputs": {
+    "placement": "/b/g53/ihp-sg13g2-ibex/inst_loc.csv",
+    "sha256": {
+     "gates/runaway_audit/audit.py": "c7649dce19e9dc1d7acb77de3105ddca1860aaaa59e01bd35370047f180b02ed",
+     "gates/g95/sweep.py": "30212662316b609f6c57de1bd289bfdf798754fed3c8f48829c75b41a2718e90",
+     "opentsense/thermal/runaway.py": "11fd9f726e54fbfab7e44091a14d737644ea7d4fab4d538a186235998b9a2209",
+     "opentsense/thermal/electrothermal.py": "6ee0ffc05d1a70bceda1da09a9dc32520a3459e06407aa2ae2d3d486370571b7",
+     "gates/g95/runs/main/ihp/sweep_ihp.json": "63c295fc81bfd3bb0cb67bdef682aa0b996063cd6192f03237f821f5438f5d78",
+     "configs/stacks/g92_ihp.yaml": "69edaa573a198c73d5c34faf0d5c393b505e5968e4118eb8bcda45a6bbdd957c",
+     "gates/g92e/runs/main/ihp/power/k0_100.txt": "56342cf668281f080b0fa891c2622f5f42e0d31fe8b186df472c54be48b6f29c",
+     "gates/g92e/runs/main/ihp/power/k0_125.txt": "91d853628ee3d621634291b6b916dd6c872488b158e64a4728bf9e798bc8d1c2",
+     "gates/g92e/runs/main/ihp/power/k0_25.txt": "9978b9661263de0a9b35bd21ae0046c7284b6ad8184cb65aa6b6ec4109996481",
+     "gates/g92e/runs/main/ihp/power/k0_50.txt": "0be2f807de38fdad778738e71e1b0ed57cff10e7b8b2b4e8fabaf43562541e34",
+     "gates/g92e/runs/main/ihp/power/k0_75.txt": "c29233755494ed8803614938d413effbc1420dc375c113f67e438de47c5fa409",
+     "gates/g92e/runs/main/ihp/power/k0_ship.txt": "a5fbf36d74800b35d4a493bf5295e4701d9833b7df01dea2823ac7387b1e3650",
+     "gates/g92e/runs/main/ihp/power/k1_100.txt": "82924f2bbceb150628b7a4e4239b0a7b1e996d01cd29ff5b6d006b46a5a42018",
+     "gates/g92e/runs/main/ihp/power/k1_125.txt": "29066f95e4b3ac0348148a0bab9bdd559cad7af7291002a7ad1cdf2ac02270c5",
+     "gates/g92e/runs/main/ihp/power/k1_25.txt": "dd97d253ea17db7ddadf31cf2a75b9f5bcc79807eb84eadd5a2462b8e8d88e04",
+     "gates/g92e/runs/main/ihp/power/k1_50.txt": "5596ab72b3b066921d44ffd88690c27cd539cf5ca4a988a3c33b960cff53bdc8",
+     "gates/g92e/runs/main/ihp/power/k1_75.txt": "7cab0900b67d334db904bf1ceaa79bf35dab2bd91b2b76384bba3078aa3add2f",
+     "gates/g92e/runs/main/ihp/power/k1_ship.txt": "5743d9d0ef65014f62158df329f3c046622cfd58f49f7d70b304cebd64cf7e69",
+     "gates/g92e/runs/main/ihp/power/k2_100.txt": "31ba5b0358d74dd5865009ef733eafa750fd584a8212b6e6b064992ada7ec699",
+     "gates/g92e/runs/main/ihp/power/k2_125.txt": "28c56b4160be5497d5a9dab59c355194c4c3ef14abdc19cc0e0e0b60af6c425e",
+     "gates/g92e/runs/main/ihp/power/k2_25.txt": "3a183289f3a4cdf1d4b25ce733bdf32879f014c93ac0d0df5cd785c0fc8b3819",
+     "gates/g92e/runs/main/ihp/power/k2_50.txt": "3b69a197b878ac3b255fb8fdc5057322e9a267521819fef213db73c05408abae",
+     "gates/g92e/runs/main/ihp/power/k2_75.txt": "1750b76b6f5753ed72b278fd25742296133ac17ec67c7261182e0b8c1c7dd804",
+     "gates/g92e/runs/main/ihp/power/k2_ship.txt": "bfeeb53a50e25282742b9b6d90ebb6a22d0d617f6a2dd5e4e2d87a4ec972ea52",
+     "gates/g92e/runs/main/ihp/power/k3_100.txt": "313b4a801e4b631bf48fe70b3a71048ccc5770b983bf3c92341439d505da9b82",
+     "gates/g92e/runs/main/ihp/power/k3_125.txt": "e287e3e6e1adcf9a8280725932cd3c608c4e250060f287f318d5b92dcbf4fabc",
+     "gates/g92e/runs/main/ihp/power/k3_25.txt": "e6f5c687f65d4c7f8bb7dad3bc0019710fd1593b88ae2ebcf141fa715729169f",
+     "gates/g92e/runs/main/ihp/power/k3_50.txt": "c02128cff05e201d4440693068fdb3b402e627bee8e762ebeb2acf1633fb9093",
+     "gates/g92e/runs/main/ihp/power/k3_75.txt": "fd28d7bcbc710ca82b7752b7c50fc049024aaff4a2d43b110e9481c4875ead24",
+     "gates/g92e/runs/main/ihp/power/k3_ship.txt": "3702dde36b2b2309f3b01f56eb0cd52fbd04d48d236014abb4d1e89bb71e8c70",
+     "gates/g92e/runs/main/ihp/result.json": "b5be617a01e2a612d94dd51041bed7c54b654586a37e22e8240b77b7937ffa0a",
+     "gates/g101/runs/main/ihp/g101_ihp.json": "8e8209f92a39809cc4c9483ca607568005ed97af8a640e5cdc7f768c61ba647d"
+    }
+   },
+   "operator_s": 55.4,
+   "R_min": 58.344423578151556,
+   "windows": {
+    "k0": {
+     "s_lo": 4606.388843634657,
+     "s_hi": 4606.712542821425,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 539,
+      "iterations": 8,
+      "peak_K": 389.46598790855455,
+      "wall_s": 6.56
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 14,
+      "peak_K": 389.2674866719528,
+      "wall_s": 3.8
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true,
+     "g101_sets": {
+      "perron": {
+       "s_star": 4564.226998783937,
+       "above": {
+        "status": "runaway",
+        "picard_it": 477,
+        "iterations": 8,
+        "peak_K": 389.6202327991216,
+        "wall_s": 6.31
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 11,
+        "peak_K": 388.9458604902994,
+        "wall_s": 3.21
+       },
+       "holds": true
+      },
+      "hot": {
+       "s_star": 4572.497821429363,
+       "above": {
+        "status": "runaway",
+        "picard_it": 517,
+        "iterations": 8,
+        "peak_K": 389.5747247147624,
+        "wall_s": 6.11
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 11,
+        "peak_K": 388.9684072183745,
+        "wall_s": 3.4
+       },
+       "holds": true
+      },
+      "leak": {
+       "s_star": 4564.226998783937,
+       "above": {
+        "status": "runaway",
+        "picard_it": 490,
+        "iterations": 8,
+        "peak_K": 389.5830626514047,
+        "wall_s": 5.94
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 11,
+        "peak_K": 388.9360115380368,
+        "wall_s": 3.65
+       },
+       "holds": true
+      },
+      "slope": {
+       "s_star": 4564.226998783937,
+       "above": {
+        "status": "runaway",
+        "picard_it": 484,
+        "iterations": 8,
+        "peak_K": 389.5995167797012,
+        "wall_s": 6.92
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 11,
+        "peak_K": 388.94087169323575,
+        "wall_s": 3.4
+       },
+       "holds": true
+      }
+     }
+    },
+    "k1": {
+     "s_lo": 4581.854141495073,
+     "s_hi": 4582.176116584418,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 561,
+      "iterations": 8,
+      "peak_K": 389.5140638069434,
+      "wall_s": 6.72
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 13,
+      "peak_K": 389.3080593533413,
+      "wall_s": 3.6
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true,
+     "g101_sets": {
+      "perron": {
+       "s_star": 4539.916860470851,
+       "above": {
+        "status": "runaway",
+        "picard_it": 496,
+        "iterations": 8,
+        "peak_K": 389.64948227240933,
+        "wall_s": 6.34
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 11,
+        "peak_K": 389.0148817936185,
+        "wall_s": 3.59
+       },
+       "holds": true
+      },
+      "hot": {
+       "s_star": 4548.44861210824,
+       "above": {
+        "status": "runaway",
+        "picard_it": 447,
+        "iterations": 8,
+        "peak_K": 389.85002383443276,
+        "wall_s": 5.76
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 11,
+        "peak_K": 389.0958087606772,
+        "wall_s": 3.6
+       },
+       "holds": true
+      },
+      "leak": {
+       "s_star": 4539.916860470851,
+       "above": {
+        "status": "runaway",
+        "picard_it": 502,
+        "iterations": 8,
+        "peak_K": 389.6316916309702,
+        "wall_s": 6.15
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 11,
+        "peak_K": 389.0069802300103,
+        "wall_s": 3.28
+       },
+       "holds": true
+      },
+      "slope": {
+       "s_star": 4539.916860470851,
+       "above": {
+        "status": "runaway",
+        "picard_it": 508,
+        "iterations": 8,
+        "peak_K": 389.6208712852354,
+        "wall_s": 6.14
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 11,
+        "peak_K": 389.00465760602395,
+        "wall_s": 2.98
+       },
+       "holds": true
+      }
+     }
+    },
+    "k2": {
+     "s_lo": 4587.330796199504,
+     "s_hi": 4587.653156143175,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 579,
+      "iterations": 8,
+      "peak_K": 389.491057470371,
+      "wall_s": 6.72
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 13,
+      "peak_K": 389.28359755980983,
+      "wall_s": 3.87
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true,
+     "g101_sets": {
+      "perron": {
+       "s_star": 4545.343387868669,
+       "above": {
+        "status": "runaway",
+        "picard_it": 472,
+        "iterations": 8,
+        "peak_K": 389.7074257276539,
+        "wall_s": 5.92
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 11,
+        "peak_K": 389.0236833436555,
+        "wall_s": 3.12
+       },
+       "holds": true
+      },
+      "hot": {
+       "s_star": 4553.885337442591,
+       "above": {
+        "status": "runaway",
+        "picard_it": 486,
+        "iterations": 8,
+        "peak_K": 389.7206137428654,
+        "wall_s": 6.32
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 11,
+        "peak_K": 389.0663055790979,
+        "wall_s": 3.24
+       },
+       "holds": true
+      },
+      "leak": {
+       "s_star": 4545.343387868669,
+       "above": {
+        "status": "runaway",
+        "picard_it": 476,
+        "iterations": 8,
+        "peak_K": 389.69422812796597,
+        "wall_s": 6.03
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 11,
+        "peak_K": 389.0197919493171,
+        "wall_s": 2.92
+       },
+       "holds": true
+      },
+      "slope": {
+       "s_star": 4545.343387868669,
+       "above": {
+        "status": "runaway",
+        "picard_it": 476,
+        "iterations": 8,
+        "peak_K": 389.69422812796597,
+        "wall_s": 6.46
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 11,
+        "peak_K": 389.0197919493171,
+        "wall_s": 2.69
+       },
+       "holds": true
+      }
+     }
+    },
+    "k3": {
+     "s_lo": 4619.02998200473,
+     "s_hi": 4619.354569506911,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 854,
+      "iterations": 9,
+      "peak_K": 389.55738635053086,
+      "wall_s": 8.91
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 12,
+      "peak_K": 389.0562367168425,
+      "wall_s": 2.73
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true,
+     "g101_sets": {
+      "perron": {
+       "s_star": 4577.059333722734,
+       "above": {
+        "status": "runaway",
+        "picard_it": 414,
+        "iterations": 8,
+        "peak_K": 389.8831695945616,
+        "wall_s": 4.9
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 388.9648933260378,
+        "wall_s": 1.58
+       },
+       "holds": true
+      },
+      "hot": {
+       "s_star": 4585.660886276466,
+       "above": {
+        "status": "runaway",
+        "picard_it": 389,
+        "iterations": 8,
+        "peak_K": 390.2084975884468,
+        "wall_s": 2.69
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 389.05234169017757,
+        "wall_s": 1.89
+       },
+       "holds": true
+      },
+      "leak": {
+       "s_star": 4577.059333722734,
+       "above": {
+        "status": "runaway",
+        "picard_it": 421,
+        "iterations": 8,
+        "peak_K": 389.82739599174306,
+        "wall_s": 1.94
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 11,
+        "peak_K": 388.9560331087723,
+        "wall_s": 1.37
+       },
+       "holds": true
+      },
+      "slope": {
+       "s_star": 4577.059333722734,
+       "above": {
+        "status": "runaway",
+        "picard_it": 421,
+        "iterations": 8,
+        "peak_K": 389.8313890401749,
+        "wall_s": 2.09
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 11,
+        "peak_K": 388.95809034567435,
+        "wall_s": 1.11
+       },
+       "holds": true
+      }
+     }
+    }
+   },
+   "done": true
+  },
+  "ihp:ss": {
+   "recorded_from": "gates/g103/runs/main/ihp/ss/margin.json",
+   "inputs": {
+    "placement": "/b/g53/ihp-sg13g2-ibex/inst_loc.csv",
+    "sha256": {
+     "gates/runaway_audit/audit.py": "c7649dce19e9dc1d7acb77de3105ddca1860aaaa59e01bd35370047f180b02ed",
+     "gates/g95/sweep.py": "30212662316b609f6c57de1bd289bfdf798754fed3c8f48829c75b41a2718e90",
+     "opentsense/thermal/runaway.py": "11fd9f726e54fbfab7e44091a14d737644ea7d4fab4d538a186235998b9a2209",
+     "opentsense/thermal/electrothermal.py": "6ee0ffc05d1a70bceda1da09a9dc32520a3459e06407aa2ae2d3d486370571b7",
+     "gates/g103/runs/main/ihp/ss/margin.json": "98ea746b4db64702e59e93565d936b8e7cf6efe0021993363d81b7051d319832",
+     "configs/stacks/g92_ihp.yaml": "69edaa573a198c73d5c34faf0d5c393b505e5968e4118eb8bcda45a6bbdd957c",
+     "gates/g103/runs/main/ihp/ss/power/k0_100.txt": "d8a1016cacad87467826a06b542b590741e108175d27a60372ef3153e1f02dfd",
+     "gates/g103/runs/main/ihp/ss/power/k0_125.txt": "9dce37a6f4e4a67d0d4313d715742ae2f7eda3fa0cd798827575ff9d298bee7f",
+     "gates/g103/runs/main/ihp/ss/power/k0_25.txt": "fb00132d94f860de1e3da022752a51b073634ac1d256da2d2635299cbab1419d",
+     "gates/g103/runs/main/ihp/ss/power/k0_50.txt": "b5f512f076b8c42c92769acf232b23e270f632238833ade01f104124e54f5404",
+     "gates/g103/runs/main/ihp/ss/power/k0_75.txt": "77cb469d30d96b4765a8efb96d308bfcccf7757c259a4e628aa67e7486e02bb3",
+     "gates/g103/runs/main/ihp/ss/power/k1_100.txt": "ee021ebfc73f653ef8ef2af978d4ba08ca47501e87c49bd35842906b28e645c5",
+     "gates/g103/runs/main/ihp/ss/power/k1_125.txt": "390ae00ad66c0e0e02d7e0c3aecda820ef64cebdc7f86ff3321f5288ea2e5afc",
+     "gates/g103/runs/main/ihp/ss/power/k1_25.txt": "c9b77547f9edf4d2b01e465795ef9954ff9e5d44f2c3872cb607ec1b42c82f2d",
+     "gates/g103/runs/main/ihp/ss/power/k1_50.txt": "4f8afae6e8b208442913ca3b6df7c0190004fc185591238b632807437c0f0a3f",
+     "gates/g103/runs/main/ihp/ss/power/k1_75.txt": "6bfdc16f3386af989eafbe40204572c4038073d1e115619ab08bed8acfd5f8a3",
+     "gates/g103/runs/main/ihp/ss/power/k2_100.txt": "e64b87f27b77771a19417bf762290588535e070c50ed97712c23d3a7c9860cd7",
+     "gates/g103/runs/main/ihp/ss/power/k2_125.txt": "e9b4ca29bf622132cdd676b22ee592b161630df1845441ca895d61669c5de595",
+     "gates/g103/runs/main/ihp/ss/power/k2_25.txt": "1b4efc61f5ad69a4039e86335e415741fb5fddad55d0a3ab28d90a8142a378aa",
+     "gates/g103/runs/main/ihp/ss/power/k2_50.txt": "2d70a647b6a85353d704adf03118141988151a55ea20093e8b747f0d314cedfe",
+     "gates/g103/runs/main/ihp/ss/power/k2_75.txt": "407da2df53a40536f997fbbaad004e64c512a7e677252f3e4edf68302ca06cc2",
+     "gates/g103/runs/main/ihp/ss/power/k3_100.txt": "6bdf6c3a4ac24152154b4bdab7b12f58a542c2317f849e1464a0bca5d61796e8",
+     "gates/g103/runs/main/ihp/ss/power/k3_125.txt": "fb55e19924bccba5128ae3b188f8a146670704c0768f5b853f7031b318e390af",
+     "gates/g103/runs/main/ihp/ss/power/k3_25.txt": "fe564f0c76c71f3af5413011faedcbace2145703653b3a66934dd7da7e728f43",
+     "gates/g103/runs/main/ihp/ss/power/k3_50.txt": "364cb7554054ab966b0ee3aed83825860c8b87696d91dda40b2aee51e2aa3f3a",
+     "gates/g103/runs/main/ihp/ss/power/k3_75.txt": "01b03fd4eba532016b575e85039f754e0b970f5d09d4dded50fb8b2feac4d531"
+    }
+   },
+   "operator_s": 12.9,
+   "R_min": 58.344423578151556,
+   "windows": {
+    "k0": {
+     "s_lo": 29799.751772602394,
+     "s_hi": 29801.845854483472,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 511,
+      "iterations": 8,
+      "peak_K": 384.5378200758025,
+      "wall_s": 1.52
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 17,
+      "peak_K": 384.38595202267703,
+      "wall_s": 1.03
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k1": {
+     "s_lo": 29624.373180851166,
+     "s_hi": 29626.454938564777,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 1056,
+      "iterations": 9,
+      "peak_K": 384.5560551767812,
+      "wall_s": 3.21
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 12,
+      "peak_K": 384.26138848875274,
+      "wall_s": 0.81
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k2": {
+     "s_lo": 29636.865921671037,
+     "s_hi": 29638.9485572719,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 517,
+      "iterations": 8,
+      "peak_K": 384.6226071017511,
+      "wall_s": 1.41
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 15,
+      "peak_K": 384.46024622928644,
+      "wall_s": 1.29
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k3": {
+     "s_lo": 29789.283570158346,
+     "s_hi": 29791.376916420104,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 569,
+      "iterations": 8,
+      "peak_K": 384.47016008425453,
+      "wall_s": 2.4
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 13,
+      "peak_K": 384.2918207455235,
+      "wall_s": 1.31
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    }
+   },
+   "done": true
+  },
+  "ihp:ff": {
+   "recorded_from": "gates/g103/runs/main/ihp/ff/margin.json",
+   "inputs": {
+    "placement": "/b/g53/ihp-sg13g2-ibex/inst_loc.csv",
+    "sha256": {
+     "gates/runaway_audit/audit.py": "c7649dce19e9dc1d7acb77de3105ddca1860aaaa59e01bd35370047f180b02ed",
+     "gates/g95/sweep.py": "30212662316b609f6c57de1bd289bfdf798754fed3c8f48829c75b41a2718e90",
+     "opentsense/thermal/runaway.py": "11fd9f726e54fbfab7e44091a14d737644ea7d4fab4d538a186235998b9a2209",
+     "opentsense/thermal/electrothermal.py": "6ee0ffc05d1a70bceda1da09a9dc32520a3459e06407aa2ae2d3d486370571b7",
+     "gates/g103/runs/main/ihp/ff/margin.json": "f47f64a62db2a10af65e276bf7733547f7c7b01a818d0e0097ebd0139f42274d",
+     "configs/stacks/g92_ihp.yaml": "69edaa573a198c73d5c34faf0d5c393b505e5968e4118eb8bcda45a6bbdd957c",
+     "gates/g103/runs/main/ihp/ff/power/k0_100.txt": "97d5296e8ad60d33ea74162039009f250f39fb232122a37cf701abb553d43513",
+     "gates/g103/runs/main/ihp/ff/power/k0_125.txt": "0cccba408aa658b4d9988380ffb3a01e6b66c97d0fd253b9d2007108cda38904",
+     "gates/g103/runs/main/ihp/ff/power/k0_25.txt": "cbdeff6ec4ed0d7abaac51d8b891c4ad1839d25e8d70f377d3603d9f571ab83d",
+     "gates/g103/runs/main/ihp/ff/power/k0_50.txt": "bca2ab489ff83578be5d9536edb3613e7747c8a10fdc96c5063008f5671d9f50",
+     "gates/g103/runs/main/ihp/ff/power/k0_75.txt": "5e299f5c09d07849d456ae016f83903cf2d6b8cf044dd1ff0d4015f61e57e5ab",
+     "gates/g103/runs/main/ihp/ff/power/k1_100.txt": "858c92f109791f429e313397d30eac92a6ec167c4a1e723c3c2899268ea6b0c3",
+     "gates/g103/runs/main/ihp/ff/power/k1_125.txt": "63dfe4c3b7f32e61fffb64906b085698d87c4598dacf963344779e44b7a3ce32",
+     "gates/g103/runs/main/ihp/ff/power/k1_25.txt": "d1505f68def6ef0deb64f0af94bf5e41160895eec15ee3ebe7e155ba0328947b",
+     "gates/g103/runs/main/ihp/ff/power/k1_50.txt": "54ddd02378b4bbd53cea033937fdb709479681b5d209fb55eb58334e001ea95f",
+     "gates/g103/runs/main/ihp/ff/power/k1_75.txt": "42503021a5f9c60a26fb08579327633a644482b533c2607e634154c2239338b4",
+     "gates/g103/runs/main/ihp/ff/power/k2_100.txt": "6e5b74eb575b0c75f323de3d679b37ba0c0e7f695d50b838f6f66decfcb331c1",
+     "gates/g103/runs/main/ihp/ff/power/k2_125.txt": "8ccca3c1e864012a1be8299b4099ce3189acb17d0dbc7c93c2eac37fadd5aa01",
+     "gates/g103/runs/main/ihp/ff/power/k2_25.txt": "3e0a5b01c9b7e0ed49078a6bfa5262b807e45392944ef0b8acc397faf45d9a36",
+     "gates/g103/runs/main/ihp/ff/power/k2_50.txt": "d1d7d915694d5326f12551ea0768c8328f126f9b55857a68a939e5c5c0d67f65",
+     "gates/g103/runs/main/ihp/ff/power/k2_75.txt": "786326a65c5068d41158d1b36fed3b5a8ef6fdfcb273f175dd01b23969bae2fb",
+     "gates/g103/runs/main/ihp/ff/power/k3_100.txt": "445c1894dbf50f373107e3e648c7630fc8d9d03a53a4f805d104eb1ddccd468d",
+     "gates/g103/runs/main/ihp/ff/power/k3_125.txt": "9151cc862047ce4030f7def9fc7958d633a9cd7a3f05f79120a897bd32488a9d",
+     "gates/g103/runs/main/ihp/ff/power/k3_25.txt": "ba99b100963f566faf80c7b2fda2a4df4a7cd967d5c2f878102c56cc674cb8c5",
+     "gates/g103/runs/main/ihp/ff/power/k3_50.txt": "5896029ba6fa5f38a1d416598f971436ff778e9c1b4cec4b97f1887d017cb0eb",
+     "gates/g103/runs/main/ihp/ff/power/k3_75.txt": "d5c58fb7170bed459d8f0d005de9c1368d36398d94056f7b4433c4b6f1020628"
+    }
+   },
+   "operator_s": 14.6,
+   "R_min": 58.344423578151556,
+   "windows": {
+    "k0": {
+     "s_lo": 912.7622411206353,
+     "s_hi": 912.826382556626,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 553,
+      "iterations": 8,
+      "peak_K": 393.7305194634402,
+      "wall_s": 2.48
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 13,
+      "peak_K": 393.48989245522273,
+      "wall_s": 1.18
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k1": {
+     "s_lo": 908.2197002353964,
+     "s_hi": 908.2835224589107,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 1669,
+      "iterations": 10,
+      "peak_K": 393.8572049182166,
+      "wall_s": 5.71
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 12,
+      "peak_K": 393.3124811143639,
+      "wall_s": 0.67
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k2": {
+     "s_lo": 909.6887466147409,
+     "s_hi": 909.752672070773,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 1021,
+      "iterations": 9,
+      "peak_K": 393.7780407669998,
+      "wall_s": 3.35
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 12,
+      "peak_K": 393.3400900311358,
+      "wall_s": 0.74
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k3": {
+     "s_lo": 916.7475455111489,
+     "s_hi": 916.8119670016105,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 922,
+      "iterations": 9,
+      "peak_K": 393.7424519329958,
+      "wall_s": 2.48
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 12,
+      "peak_K": 393.23596669265726,
+      "wall_s": 0.69
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    }
+   },
+   "done": true
+  },
+  "asap7:tt": {
+   "recorded_from": "gates/g95/runs/main/asap7/sweep_asap7.json",
+   "inputs": {
+    "placement": "/b/asap7/asap7-ibex/inst_loc.csv",
+    "sha256": {
+     "gates/runaway_audit/audit.py": "c7649dce19e9dc1d7acb77de3105ddca1860aaaa59e01bd35370047f180b02ed",
+     "gates/g95/sweep.py": "30212662316b609f6c57de1bd289bfdf798754fed3c8f48829c75b41a2718e90",
+     "opentsense/thermal/runaway.py": "11fd9f726e54fbfab7e44091a14d737644ea7d4fab4d538a186235998b9a2209",
+     "opentsense/thermal/electrothermal.py": "6ee0ffc05d1a70bceda1da09a9dc32520a3459e06407aa2ae2d3d486370571b7",
+     "gates/g95/runs/main/asap7/sweep_asap7.json": "60a860ec4a73d38f2b393aa2a3865403297703c004879b1a0d052988ba8db4e4",
+     "configs/stacks/g92b_asap7.yaml": "e79bfdba3f5b8bc7ba3f5551580dd39fde47f6376ca5e959b52b6967b28ae922",
+     "gates/g92e/runs/main/asap7/power/k0_100.txt": "03128308a3bb48a0a235d29f16e38229c9adaf0bbe1666adff32e89262bb557d",
+     "gates/g92e/runs/main/asap7/power/k0_125.txt": "3442659022502d4a175ff5df95f31d52bcf52674ec2cd0c392628a0882ec37cc",
+     "gates/g92e/runs/main/asap7/power/k0_25.txt": "035393ffc67ed5d92d5da4c52c0ef346541de30b59e308451e863f8bdb91db12",
+     "gates/g92e/runs/main/asap7/power/k0_50.txt": "82081acf973dfd2e2461abdc2c1f04be9aebdefa0dc070b481fc89f44f2a5a2c",
+     "gates/g92e/runs/main/asap7/power/k0_75.txt": "d564cbcf810e01be2def1a9e07bf88db7aafaea487a5188cb8874c591a75d782",
+     "gates/g92e/runs/main/asap7/power/k0_ship.txt": "a5975c612716b14866fe1fc81d2513ea5255f5bd467a1683b0d4fb1ae34208f7",
+     "gates/g92e/runs/main/asap7/power/k1_100.txt": "89990522e9044b521af50a46de2e8360ae6e46cf095b36a25db296538e0c4ec7",
+     "gates/g92e/runs/main/asap7/power/k1_125.txt": "fd3dde2f1b9f61da4052d75c69723f2b02c3d4b787400fc7d984ac323e021d25",
+     "gates/g92e/runs/main/asap7/power/k1_25.txt": "c70eb85b9bd723564a08057628446d15d2a2c99937717a7c60d51945edc2f889",
+     "gates/g92e/runs/main/asap7/power/k1_50.txt": "dabb8f95aa8485c1452222d1e29555bb72025452bbb728f3337959951fe84e5e",
+     "gates/g92e/runs/main/asap7/power/k1_75.txt": "981c325d0c47d8eb44273df781180bcdaf769a1d49b7557b365912ce8c87de91",
+     "gates/g92e/runs/main/asap7/power/k1_ship.txt": "5f8e1bc0bf27f392af8877406f851d757880ad8851061e23cb41585362f439da",
+     "gates/g92e/runs/main/asap7/power/k2_100.txt": "5d23cd666cbae5f3e02c1f0c2dd61d153d81aaf4baddc572f58afa33b43035f3",
+     "gates/g92e/runs/main/asap7/power/k2_125.txt": "1852c13ebb9539760d02436a5c9ac3adce79334b362abd4c8d8bb548f73760b6",
+     "gates/g92e/runs/main/asap7/power/k2_25.txt": "aaed614e94786aaca71d526ae2ed6dc21299d60e4130f83c382dcc11755bec90",
+     "gates/g92e/runs/main/asap7/power/k2_50.txt": "eaf1aaf872a3cca6a5a721ddd6d54f99bd457d3dc99be3110185b37e3f0d5231",
+     "gates/g92e/runs/main/asap7/power/k2_75.txt": "6d9e826cab0b05e3afe3ba9edff938f4dfda5e29f453b296a95fcfea1331bb36",
+     "gates/g92e/runs/main/asap7/power/k2_ship.txt": "88cd92c8fd420c3f925b07886b61cddcc2be25b8d71a513029495cb0a6b7a414",
+     "gates/g92e/runs/main/asap7/power/k3_100.txt": "0b31ac0d04f4514668538b3b5fa9f0d6b6d2844a9c62aacd32c4b948c67eb3e0",
+     "gates/g92e/runs/main/asap7/power/k3_125.txt": "a1bfe1df0d74fd81ea450fe61a458bc02f103a7cd2a5b8a1c8977b6ad7d24636",
+     "gates/g92e/runs/main/asap7/power/k3_25.txt": "fc9e909fe2a97d5b531947ae88935b14ad2c65edaf02353f02079db2d8625bb7",
+     "gates/g92e/runs/main/asap7/power/k3_50.txt": "594046d0e532dd0e396288ef1a4a6b60a9e862bc853940b290788e8c86003865",
+     "gates/g92e/runs/main/asap7/power/k3_75.txt": "f895969dfa4ed1079f2ffc7a9e5fde7b67ba54e69a54632bddc8511ff862b87e",
+     "gates/g92e/runs/main/asap7/power/k3_ship.txt": "524d541694458aee5a7c3858e35bfa5a6ff1f828e105814d1550d07f15c6eb70",
+     "gates/g92e/runs/main/asap7/result.json": "383d07de2689dbbaa07bfe167102f50204ce3570469be54ac9ffade6a6b15919",
+     "gates/g101/runs/main/asap7/g101_asap7.json": "3aac013fb5c71e61c5ff3573c9cc39a109d9e45c1ec4e73c5f119607c673d9e7"
+    }
+   },
+   "operator_s": 15.1,
+   "R_min": 4686.425012032207,
+   "windows": {
+    "k0": {
+     "s_lo": 25.215777476783632,
+     "s_hi": 25.217549434588324,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 611,
+      "iterations": 9,
+      "peak_K": 421.11037999404164,
+      "wall_s": 2.9
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 13,
+      "peak_K": 420.6594387099182,
+      "wall_s": 0.78
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true,
+     "g101_sets": {
+      "perron": {
+       "s_star": 24.9749298005177,
+       "above": {
+        "status": "runaway",
+        "picard_it": 534,
+        "iterations": 9,
+        "peak_K": 421.4776806940115,
+        "wall_s": 2.27
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 420.36335202908356,
+        "wall_s": 0.69
+       },
+       "holds": true
+      },
+      "hot": {
+       "s_star": 25.03864833900089,
+       "above": {
+        "status": "runaway",
+        "picard_it": 465,
+        "iterations": 9,
+        "peak_K": 425.37299432483985,
+        "wall_s": 2.54
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 420.4094572848036,
+        "wall_s": 0.75
+       },
+       "holds": true
+      },
+      "leak": {
+       "s_star": 24.9749298005177,
+       "above": {
+        "status": "runaway",
+        "picard_it": 534,
+        "iterations": 9,
+        "peak_K": 421.4776806940115,
+        "wall_s": 2.02
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 420.36335202908356,
+        "wall_s": 0.72
+       },
+       "holds": true
+      },
+      "slope": {
+       "s_star": 24.9749298005177,
+       "above": {
+        "status": "runaway",
+        "picard_it": 538,
+        "iterations": 9,
+        "peak_K": 421.449783994061,
+        "wall_s": 1.91
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 420.3618560662075,
+        "wall_s": 0.71
+       },
+       "holds": true
+      }
+     }
+    },
+    "k1": {
+     "s_lo": 22.787492210286544,
+     "s_hi": 22.789093528140363,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 2735,
+      "iterations": 11,
+      "peak_K": 423.97977440765857,
+      "wall_s": 8.35
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 12,
+      "peak_K": 423.6056564076861,
+      "wall_s": 0.71
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true,
+     "g101_sets": {
+      "perron": {
+       "s_star": 22.56983822155553,
+       "above": {
+        "status": "runaway",
+        "picard_it": 428,
+        "iterations": 8,
+        "peak_K": 423.95943743018444,
+        "wall_s": 1.5
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 423.54937467051747,
+        "wall_s": 0.69
+       },
+       "holds": true
+      },
+      "hot": {
+       "s_star": 22.61831893024869,
+       "above": {
+        "status": "runaway",
+        "picard_it": 410,
+        "iterations": 8,
+        "peak_K": 423.9948969374831,
+        "wall_s": 1.84
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 423.5734687371144,
+        "wall_s": 0.7
+       },
+       "holds": true
+      },
+      "leak": {
+       "s_star": 22.56983822155553,
+       "above": {
+        "status": "runaway",
+        "picard_it": 428,
+        "iterations": 8,
+        "peak_K": 423.95943743018444,
+        "wall_s": 1.69
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 423.54937467051747,
+        "wall_s": 0.71
+       },
+       "holds": true
+      },
+      "slope": {
+       "s_star": 22.56983822155553,
+       "above": {
+        "status": "runaway",
+        "picard_it": 428,
+        "iterations": 8,
+        "peak_K": 423.95848413896425,
+        "wall_s": 1.53
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 423.54876224636104,
+        "wall_s": 0.7
+       },
+       "holds": true
+      }
+     }
+    },
+    "k2": {
+     "s_lo": 23.346678222663964,
+     "s_hi": 23.348318835519482,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 1032,
+      "iterations": 10,
+      "peak_K": 423.4652508651168,
+      "wall_s": 3.84
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 12,
+      "peak_K": 422.7620611998157,
+      "wall_s": 0.84
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true,
+     "g101_sets": {
+      "perron": {
+       "s_star": 23.125233773778152,
+       "above": {
+        "status": "runaway",
+        "picard_it": 479,
+        "iterations": 9,
+        "peak_K": 424.731446692855,
+        "wall_s": 2.08
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 422.62035201994047,
+        "wall_s": 0.71
+       },
+       "holds": true
+      },
+      "hot": {
+       "s_star": 23.179569867022142,
+       "above": {
+        "status": "runaway",
+        "picard_it": 387,
+        "iterations": 8,
+        "peak_K": 423.16536948546445,
+        "wall_s": 1.39
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 422.72140847376073,
+        "wall_s": 0.8
+       },
+       "holds": true
+      },
+      "leak": {
+       "s_star": 23.125233773778152,
+       "above": {
+        "status": "runaway",
+        "picard_it": 479,
+        "iterations": 9,
+        "peak_K": 424.731446692855,
+        "wall_s": 1.73
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 422.62035201994047,
+        "wall_s": 0.68
+       },
+       "holds": true
+      },
+      "slope": {
+       "s_star": 23.125233773778152,
+       "above": {
+        "status": "runaway",
+        "picard_it": 479,
+        "iterations": 9,
+        "peak_K": 424.731446692855,
+        "wall_s": 1.8
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 422.62035201994047,
+        "wall_s": 0.75
+       },
+       "holds": true
+      }
+     }
+    },
+    "k3": {
+     "s_lo": 24.909344823757603,
+     "s_hi": 24.911095247991437,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 867,
+      "iterations": 9,
+      "peak_K": 420.4282070499361,
+      "wall_s": 3.0
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 13,
+      "peak_K": 420.1418252231196,
+      "wall_s": 0.82
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true,
+     "g101_sets": {
+      "perron": {
+       "s_star": 24.66811561684473,
+       "above": {
+        "status": "runaway",
+        "picard_it": 409,
+        "iterations": 8,
+        "peak_K": 420.481297076106,
+        "wall_s": 1.49
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 420.04103442751614,
+        "wall_s": 0.7
+       },
+       "holds": true
+      },
+      "hot": {
+       "s_star": 24.734368233191336,
+       "above": {
+        "status": "runaway",
+        "picard_it": 478,
+        "iterations": 9,
+        "peak_K": 422.7760294549693,
+        "wall_s": 1.68
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 419.9828966512537,
+        "wall_s": 0.85
+       },
+       "holds": true
+      },
+      "leak": {
+       "s_star": 24.66811561684473,
+       "above": {
+        "status": "runaway",
+        "picard_it": 409,
+        "iterations": 8,
+        "peak_K": 420.481297076106,
+        "wall_s": 1.59
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 420.04103442751614,
+        "wall_s": 0.79
+       },
+       "holds": true
+      },
+      "slope": {
+       "s_star": 24.66811561684473,
+       "above": {
+        "status": "runaway",
+        "picard_it": 410,
+        "iterations": 8,
+        "peak_K": 420.47884561070396,
+        "wall_s": 1.43
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 420.0395299356443,
+        "wall_s": 0.76
+       },
+       "holds": true
+      }
+     }
+    }
+   },
+   "done": true
+  },
+  "asap7:ss": {
+   "recorded_from": "gates/g103/runs/main/asap7/ss/margin.json",
+   "inputs": {
+    "placement": "/b/asap7/asap7-ibex/inst_loc.csv",
+    "sha256": {
+     "gates/runaway_audit/audit.py": "c7649dce19e9dc1d7acb77de3105ddca1860aaaa59e01bd35370047f180b02ed",
+     "gates/g95/sweep.py": "30212662316b609f6c57de1bd289bfdf798754fed3c8f48829c75b41a2718e90",
+     "opentsense/thermal/runaway.py": "11fd9f726e54fbfab7e44091a14d737644ea7d4fab4d538a186235998b9a2209",
+     "opentsense/thermal/electrothermal.py": "6ee0ffc05d1a70bceda1da09a9dc32520a3459e06407aa2ae2d3d486370571b7",
+     "gates/g103/runs/main/asap7/ss/margin.json": "77f7cd2037a758ee8bc2a646efc8a4d59472a4d25fabd2f918cf24927bb040b4",
+     "configs/stacks/g92b_asap7.yaml": "e79bfdba3f5b8bc7ba3f5551580dd39fde47f6376ca5e959b52b6967b28ae922",
+     "gates/g103/runs/main/asap7/ss/power/k0_100.txt": "43eccde991d68c6cc2282f775edb858a833be6bdeeabd77c2056d5cdd7cd0a02",
+     "gates/g103/runs/main/asap7/ss/power/k0_125.txt": "07059de884b5d23834d1914335aacc74a4ef90e8d8a6ee269d637e82b61ca58e",
+     "gates/g103/runs/main/asap7/ss/power/k0_25.txt": "843942cfd83e8f80722bbaf864e6be26d54d4e01fb6c2efbb5a478946385c246",
+     "gates/g103/runs/main/asap7/ss/power/k0_50.txt": "99b6202f81541d58c0c68b70a493c2143a915ceb4daddbde2d733f130c37e400",
+     "gates/g103/runs/main/asap7/ss/power/k0_75.txt": "a861bb2642cb0e1789da9788c58169b75febb51f2007f6092fbea10be07d1e4b",
+     "gates/g103/runs/main/asap7/ss/power/k1_100.txt": "8ee6b059923a0fb4ca47a2b53e8d5e82e645ce2b51bd95fe28f4346125f0e613",
+     "gates/g103/runs/main/asap7/ss/power/k1_125.txt": "87256979badf2e3dd69b12ae37ec3757255c29990849238bd9b8bdfb6ec11c97",
+     "gates/g103/runs/main/asap7/ss/power/k1_25.txt": "0d4fd57fc701cd1cd994a511329f9ec878b6a2e53181c3e8a6d96edbc9f8b99c",
+     "gates/g103/runs/main/asap7/ss/power/k1_50.txt": "ca04dbf0813bc65eca4b2866d1accdf459d5deb2890208d8e13bb2137a06e841",
+     "gates/g103/runs/main/asap7/ss/power/k1_75.txt": "4c5aedbac720b20d39ccfeedaf1ebab353122938c8152c2e77042b4f397628c9",
+     "gates/g103/runs/main/asap7/ss/power/k2_100.txt": "252137388621f5081219c27616bbba898f52f4a3f72cc3bdd0c211ee1418295f",
+     "gates/g103/runs/main/asap7/ss/power/k2_125.txt": "6264673885058a3d9e87871c93b80c4a80dd1dcff5173c9e3bf73b158792baeb",
+     "gates/g103/runs/main/asap7/ss/power/k2_25.txt": "34be9b5c2dac23f9a8f21fc1ed99c9e052b9562c022175c0f758200efc1a5614",
+     "gates/g103/runs/main/asap7/ss/power/k2_50.txt": "e98205c0fe240af6fe4e9d1d29969309873e3a83882d31c9235d9f5a07bba8f5",
+     "gates/g103/runs/main/asap7/ss/power/k2_75.txt": "4cf7728e8d1bf11630f9c958fdf2e83afb76ae6a635e51a039186b554330e62a",
+     "gates/g103/runs/main/asap7/ss/power/k3_100.txt": "503d04ecea63e0d3e5cbae5ca76ae64325c47ad5be17eb22dd50967e3735a1d7",
+     "gates/g103/runs/main/asap7/ss/power/k3_125.txt": "830016de3d5e7a4444058911a9d5c261385421019932fc9d8f6d5c2db99e9680",
+     "gates/g103/runs/main/asap7/ss/power/k3_25.txt": "afc4ac53a8d10986553e5e922f4e75859057d60fe9ae6c7c86fbec4b09431202",
+     "gates/g103/runs/main/asap7/ss/power/k3_50.txt": "d6d5a77dc3587c2b4f3d19ade0a59e54a0418b7068818b6baebf02d12f79adc6",
+     "gates/g103/runs/main/asap7/ss/power/k3_75.txt": "1fbfe8ee95240f9f9c28abd1cc6942c4e348e26bfe38018b4e3761e119cd5c5d"
+    }
+   },
+   "operator_s": 13.9,
+   "R_min": 4686.425012032207,
+   "windows": {
+    "k0": {
+     "s_lo": 35.03193378640656,
+     "s_hi": 35.03439554308028,
+     "non_monotone_instances": 1666,
+     "at_s_hi": {
+      "status": "runaway",
+      "envelope": [
+       "runaway",
+       "runaway"
+      ],
+      "wall_s": 6.57
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "envelope": [
+       "converged",
+       "converged"
+      ],
+      "wall_s": 1.52
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k1": {
+     "s_lo": 31.633889108855367,
+     "s_hi": 31.636112078849088,
+     "non_monotone_instances": 1666,
+     "at_s_hi": {
+      "status": "runaway",
+      "envelope": [
+       "runaway",
+       "runaway"
+      ],
+      "wall_s": 16.92
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "envelope": [
+       "converged",
+       "converged"
+      ],
+      "wall_s": 2.61
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k2": {
+     "s_lo": 32.40788094725712,
+     "s_hi": 32.410158307042316,
+     "non_monotone_instances": 1666,
+     "at_s_hi": {
+      "status": "runaway",
+      "envelope": [
+       "runaway",
+       "runaway"
+      ],
+      "wall_s": 10.15
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "envelope": [
+       "converged",
+       "converged"
+      ],
+      "wall_s": 2.38
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k3": {
+     "s_lo": 34.63053719988977,
+     "s_hi": 34.63297074970709,
+     "non_monotone_instances": 1666,
+     "at_s_hi": {
+      "status": "runaway",
+      "envelope": [
+       "runaway",
+       "runaway"
+      ],
+      "wall_s": 12.41
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "envelope": [
+       "converged",
+       "converged"
+      ],
+      "wall_s": 2.56
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    }
+   },
+   "done": true
+  },
+  "asap7:ff": {
+   "recorded_from": "gates/g103/runs/main/asap7/ff/margin.json",
+   "inputs": {
+    "placement": "/b/asap7/asap7-ibex/inst_loc.csv",
+    "sha256": {
+     "gates/runaway_audit/audit.py": "c7649dce19e9dc1d7acb77de3105ddca1860aaaa59e01bd35370047f180b02ed",
+     "gates/g95/sweep.py": "30212662316b609f6c57de1bd289bfdf798754fed3c8f48829c75b41a2718e90",
+     "opentsense/thermal/runaway.py": "11fd9f726e54fbfab7e44091a14d737644ea7d4fab4d538a186235998b9a2209",
+     "opentsense/thermal/electrothermal.py": "6ee0ffc05d1a70bceda1da09a9dc32520a3459e06407aa2ae2d3d486370571b7",
+     "gates/g103/runs/main/asap7/ff/margin.json": "56baf5281fef3ca39119a89535c09af6594c9b6279040959146d106b792a71a1",
+     "configs/stacks/g92b_asap7.yaml": "e79bfdba3f5b8bc7ba3f5551580dd39fde47f6376ca5e959b52b6967b28ae922",
+     "gates/g103/runs/main/asap7/ff/power/k0_100.txt": "cd863870252044abebf5bccad8b828a626ca2661e603b315913f79c4b12704ca",
+     "gates/g103/runs/main/asap7/ff/power/k0_125.txt": "73aa3e79e85b9a34bed57993ddb343150f55fd3a63e9b15252b13afb8b11ff76",
+     "gates/g103/runs/main/asap7/ff/power/k0_25.txt": "6e18ce850ee29c8f74faf3bec3cdbab1ce52bb46a15607e9b26ca7a8ff996a69",
+     "gates/g103/runs/main/asap7/ff/power/k0_50.txt": "7cbc0b79cb7441ec7523a904b3c943d26e07efcbaa27f4c5690ea3b77da64e53",
+     "gates/g103/runs/main/asap7/ff/power/k0_75.txt": "da158dbab1e9cbce6c7e5fe5bce666e0ee838b7c713ccb9c2149cf434bf0ef0e",
+     "gates/g103/runs/main/asap7/ff/power/k1_100.txt": "4bcd48636773446ea28142620c5f13ad276b14c1662f8f31caabfeb6c444d86a",
+     "gates/g103/runs/main/asap7/ff/power/k1_125.txt": "9d8b8bc7fa610d77b1cb10ef3944eaeb2ad67664083d7f2fdc5ce27f4ef788f0",
+     "gates/g103/runs/main/asap7/ff/power/k1_25.txt": "7b9b3481dba78942e95e7fe104036f6e031999bea6e104d9568c9c6cb66429a7",
+     "gates/g103/runs/main/asap7/ff/power/k1_50.txt": "3ac0fd9b0a32842970297e381085372b82eea2a0a96b7efa57fc1410783466dd",
+     "gates/g103/runs/main/asap7/ff/power/k1_75.txt": "783e544849981a6ad64e18288e616de98aa435866ee9e2beb03fc08261a42f5a",
+     "gates/g103/runs/main/asap7/ff/power/k2_100.txt": "d40b1c9ea67f79c23c5a42af0917e3463a757591b3485d67ef729cf37c776ac3",
+     "gates/g103/runs/main/asap7/ff/power/k2_125.txt": "54b6592ff077c6842b928bde2350df60b69ba0039547946d8e0f56b4415ae381",
+     "gates/g103/runs/main/asap7/ff/power/k2_25.txt": "1074f3cd86b30ae75fa89e0b1c1d203721d7c3e408dbd11e0f0a27fa3247aaa1",
+     "gates/g103/runs/main/asap7/ff/power/k2_50.txt": "2dc8435057a971a1eb808dd7f29dadc5cb8944ea366b7b302e452ecf20f84814",
+     "gates/g103/runs/main/asap7/ff/power/k2_75.txt": "dca79b9d80edc17cbf555b6122cd952f22a9548b7198716d6d6f527834ef540e",
+     "gates/g103/runs/main/asap7/ff/power/k3_100.txt": "be5771cb7d2850545c8474008adb196509d5e31f73f7c93969a9b9cb62e374e6",
+     "gates/g103/runs/main/asap7/ff/power/k3_125.txt": "4cbdcbb7d5b4a63080c05a85cf106702151e94523eb045a35c50e0ece3dd6d4a",
+     "gates/g103/runs/main/asap7/ff/power/k3_25.txt": "2b4e34325e360be4b34cbe7e0aabf0cf1741f4bda220ca4d0c75f492cdb8c4c2",
+     "gates/g103/runs/main/asap7/ff/power/k3_50.txt": "df6e923e778fefd800a57417a524780b1cd080651ef3addfb68145a739411115",
+     "gates/g103/runs/main/asap7/ff/power/k3_75.txt": "aad67b7797ac92be0b1cb8027a02ee13a2135aa4a86e2dd92139250cdae1b7db"
+    }
+   },
+   "operator_s": 15.1,
+   "R_min": 4686.425012032207,
+   "windows": {
+    "k0": {
+     "s_lo": 18.852116175570615,
+     "s_hi": 18.853440947508464,
+     "non_monotone_instances": 15,
+     "at_s_hi": {
+      "status": "runaway",
+      "envelope": [
+       "runaway",
+       "runaway"
+      ],
+      "wall_s": 23.97
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "envelope": [
+       "converged",
+       "converged"
+      ],
+      "wall_s": 2.28
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k1": {
+     "s_lo": 17.052223093151266,
+     "s_hi": 17.053421383381465,
+     "non_monotone_instances": 15,
+     "at_s_hi": {
+      "status": "runaway",
+      "envelope": [
+       "runaway",
+       "runaway"
+      ],
+      "wall_s": 8.45
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "envelope": [
+       "converged",
+       "converged"
+      ],
+      "wall_s": 3.05
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k2": {
+     "s_lo": 17.469442786097904,
+     "s_hi": 17.470670395102506,
+     "non_monotone_instances": 15,
+     "at_s_hi": {
+      "status": "runaway",
+      "envelope": [
+       "runaway",
+       "runaway"
+      ],
+      "wall_s": 9.83
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "envelope": [
+       "converged",
+       "converged"
+      ],
+      "wall_s": 2.33
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k3": {
+     "s_lo": 18.61516728520364,
+     "s_hi": 18.616475406318962,
+     "non_monotone_instances": 15,
+     "at_s_hi": {
+      "status": "runaway",
+      "envelope": [
+       "runaway",
+       "runaway"
+      ],
+      "wall_s": 7.88
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "envelope": [
+       "converged",
+       "converged"
+      ],
+      "wall_s": 2.75
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    }
+   },
+   "done": true
+  },
+  "asap7_lvt:tt": {
+   "recorded_from": "gates/g95/runs/main/asap7_lvt/sweep_asap7_lvt.json",
+   "inputs": {
+    "placement": "/b/asap7/asap7-ibex/inst_loc.csv",
+    "sha256": {
+     "gates/runaway_audit/audit.py": "c7649dce19e9dc1d7acb77de3105ddca1860aaaa59e01bd35370047f180b02ed",
+     "gates/g95/sweep.py": "30212662316b609f6c57de1bd289bfdf798754fed3c8f48829c75b41a2718e90",
+     "opentsense/thermal/runaway.py": "11fd9f726e54fbfab7e44091a14d737644ea7d4fab4d538a186235998b9a2209",
+     "opentsense/thermal/electrothermal.py": "6ee0ffc05d1a70bceda1da09a9dc32520a3459e06407aa2ae2d3d486370571b7",
+     "gates/g95/runs/main/asap7_lvt/sweep_asap7_lvt.json": "ee62105c119357a00793a5646fd70ffc2cb9da8ae0ca3f04f0d24be3ee9b2a38",
+     "configs/stacks/g92b_asap7.yaml": "e79bfdba3f5b8bc7ba3f5551580dd39fde47f6376ca5e959b52b6967b28ae922",
+     "gates/g92e/runs/main/asap7_lvt/power/k0_100.txt": "af28d3acc3d6d29154c4928e338b03c46708ba3c247e16538c17072842594235",
+     "gates/g92e/runs/main/asap7_lvt/power/k0_125.txt": "1107e6bd66c2890aa8e987da0e8fdcd55859465640d187b05c4c2a23848e6d82",
+     "gates/g92e/runs/main/asap7_lvt/power/k0_25.txt": "fc20c0e54f693c556da962290c88376841fc983f988ec803958208fadb45ce3c",
+     "gates/g92e/runs/main/asap7_lvt/power/k0_50.txt": "531b3889f07e1bf44665ec234426c2a4adb362c2cd2574bfc6d9769edbe36730",
+     "gates/g92e/runs/main/asap7_lvt/power/k0_75.txt": "fd7f6f2a3128a25a29252ebbe5061b746aa4ac4ef5f95e5a22608bdf3ec294ec",
+     "gates/g92e/runs/main/asap7_lvt/power/k0_ship.txt": "6f2ffb3d3bd6b9a240ac1d6bfb0f0bf5ae4053b7f02fdaeda45130a7e12077bc",
+     "gates/g92e/runs/main/asap7_lvt/power/k1_100.txt": "f7c6ea9320cdc080e1891758e3b15b183379c3e8f0930816d8fa750075a04487",
+     "gates/g92e/runs/main/asap7_lvt/power/k1_125.txt": "5626cc11e436cc923b942ea623b6b5679073aa2fc821805c814b50a2bd183d24",
+     "gates/g92e/runs/main/asap7_lvt/power/k1_25.txt": "1ba69764abdf6f56ee0e930b47ec132c241747a9b7d2a7e314eefd17733f19b3",
+     "gates/g92e/runs/main/asap7_lvt/power/k1_50.txt": "3d20bfd6e13e8424b1ad4b61d51ab959038eb09e10af7981408a1c2249a43652",
+     "gates/g92e/runs/main/asap7_lvt/power/k1_75.txt": "cd5f6128d9f30137d231249e2a522ce1a195cd764c7bdefefe05ad5a368ec237",
+     "gates/g92e/runs/main/asap7_lvt/power/k1_ship.txt": "0ac8897370805979ccf047249e3a6522e31157ce43e79e7af902296637272cee",
+     "gates/g92e/runs/main/asap7_lvt/power/k2_100.txt": "1a2f6782ed2ce6724ba4bcfb183ba2716428fe726ce20680ac506edc8111f313",
+     "gates/g92e/runs/main/asap7_lvt/power/k2_125.txt": "54fe19c4a583ed5563ff34f16a496f2541be23723b15665c8386b522d4ef5f69",
+     "gates/g92e/runs/main/asap7_lvt/power/k2_25.txt": "d11fc9940615a69cf88682b541ece19bf9e0def110824c0bdd77992e04a92e48",
+     "gates/g92e/runs/main/asap7_lvt/power/k2_50.txt": "bd435296f1037e08a8292335c1714817b56b4820611870d1cc79df4712540047",
+     "gates/g92e/runs/main/asap7_lvt/power/k2_75.txt": "66b005f15a50f4bd3364f03c30cee97f80f9dfe5049d749ba108d97836bb70ba",
+     "gates/g92e/runs/main/asap7_lvt/power/k2_ship.txt": "1ae83c6740bfb5f7ee3fe57efcd7dcda39d931c00168bcf3bc9518f93ca392ac",
+     "gates/g92e/runs/main/asap7_lvt/power/k3_100.txt": "0c5b09ec965a357162eaaedb65c908cd0965ffaab9d80e21a66afae1749ab6eb",
+     "gates/g92e/runs/main/asap7_lvt/power/k3_125.txt": "b4ab7d4c908419324a0efe2ba9d70c245e10f261e2aa583a920a19be97ceaf74",
+     "gates/g92e/runs/main/asap7_lvt/power/k3_25.txt": "fa0ce1b5fc1a6cbfae48f0100ec931debace498ef6d0ec503d4e0098fc99136d",
+     "gates/g92e/runs/main/asap7_lvt/power/k3_50.txt": "2ebfb54f7450d345d16d2cdd00ec8d1f8d95877aedaa681cdc9e78ae6e287263",
+     "gates/g92e/runs/main/asap7_lvt/power/k3_75.txt": "8067e21a7f648b04bbc85692730a6de1d560adfa10367c4360136a96046004df",
+     "gates/g92e/runs/main/asap7_lvt/power/k3_ship.txt": "7fb6e77ae7b9a8c2bdfdcf98b6d88e82bab405dea937c191b7d07e96357e9dd4",
+     "gates/g92e/runs/main/asap7_lvt/result.json": "b8efa14a6b47a9dbebdc8d1669e1bea18053e91443997c6a27a0db69552a95a8",
+     "gates/g101/runs/main/asap7_lvt/g101_asap7_lvt.json": "32f9e9a57632adec57e6fed6465f6ee826d4f8168f88b3cc1f2260777c220d5f"
+    }
+   },
+   "operator_s": 17.2,
+   "R_min": 4686.425012032207,
+   "windows": {
+    "k0": {
+     "s_lo": 4.503331687148997,
+     "s_hi": 4.503648144324965,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 621,
+      "iterations": 9,
+      "peak_K": 428.11917024949895,
+      "wall_s": 3.24
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 13,
+      "peak_K": 427.58926460014715,
+      "wall_s": 0.83
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true,
+     "g101_sets": {
+      "perron": {
+       "s_star": 4.460617353482351,
+       "above": {
+        "status": "runaway",
+        "picard_it": 422,
+        "iterations": 8,
+        "peak_K": 427.86341836276523,
+        "wall_s": 1.5
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 427.35010658994923,
+        "wall_s": 1.03
+       },
+       "holds": true
+      },
+      "hot": {
+       "s_star": 4.471697871391032,
+       "above": {
+        "status": "runaway",
+        "picard_it": 454,
+        "iterations": 8,
+        "peak_K": 427.8085216326942,
+        "wall_s": 2.21
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 427.3199659071175,
+        "wall_s": 1.14
+       },
+       "holds": true
+      },
+      "leak": {
+       "s_star": 4.460617353482351,
+       "above": {
+        "status": "runaway",
+        "picard_it": 422,
+        "iterations": 8,
+        "peak_K": 427.86341836276523,
+        "wall_s": 2.29
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 427.35010658994923,
+        "wall_s": 1.33
+       },
+       "holds": true
+      },
+      "slope": {
+       "s_star": 4.460617353482351,
+       "above": {
+        "status": "runaway",
+        "picard_it": 422,
+        "iterations": 8,
+        "peak_K": 427.86341836276523,
+        "wall_s": 2.12
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 427.35010658994923,
+        "wall_s": 1.41
+       },
+       "holds": true
+      }
+     }
+    },
+    "k1": {
+     "s_lo": 4.100662284935179,
+     "s_hi": 4.100950445811714,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 1402,
+      "iterations": 10,
+      "peak_K": 431.21250465876767,
+      "wall_s": 6.71
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 12,
+      "peak_K": 430.7696812238828,
+      "wall_s": 0.69
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true,
+     "g101_sets": {
+      "perron": {
+       "s_star": 4.061494942845991,
+       "above": {
+        "status": "runaway",
+        "picard_it": 483,
+        "iterations": 9,
+        "peak_K": 433.21497338373206,
+        "wall_s": 2.76
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 430.6287086845779,
+        "wall_s": 1.09
+       },
+       "holds": true
+      },
+      "hot": {
+       "s_star": 4.070219159264823,
+       "above": {
+        "status": "runaway",
+        "picard_it": 414,
+        "iterations": 8,
+        "peak_K": 431.2063653652554,
+        "wall_s": 2.32
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 430.70445869469677,
+        "wall_s": 1.14
+       },
+       "holds": true
+      },
+      "leak": {
+       "s_star": 4.061494942845991,
+       "above": {
+        "status": "runaway",
+        "picard_it": 483,
+        "iterations": 9,
+        "peak_K": 433.21497338373206,
+        "wall_s": 2.63
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 430.6287086845779,
+        "wall_s": 1.14
+       },
+       "holds": true
+      },
+      "slope": {
+       "s_star": 4.061494942845991,
+       "above": {
+        "status": "runaway",
+        "picard_it": 485,
+        "iterations": 9,
+        "peak_K": 433.0838872211417,
+        "wall_s": 2.69
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 430.62707628722177,
+        "wall_s": 1.05
+       },
+       "holds": true
+      }
+     }
+    },
+    "k2": {
+     "s_lo": 4.192441786734447,
+     "s_hi": 4.192736397120804,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 964,
+      "iterations": 10,
+      "peak_K": 431.5269491944114,
+      "wall_s": 5.14
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 12,
+      "peak_K": 429.8599180174484,
+      "wall_s": 1.14
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true,
+     "g101_sets": {
+      "perron": {
+       "s_star": 4.152676259831866,
+       "above": {
+        "status": "runaway",
+        "picard_it": 544,
+        "iterations": 9,
+        "peak_K": 430.87107655986097,
+        "wall_s": 3.72
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 429.6465508974023,
+        "wall_s": 1.25
+       },
+       "holds": true
+      },
+      "hot": {
+       "s_star": 4.162154477091135,
+       "above": {
+        "status": "runaway",
+        "picard_it": 429,
+        "iterations": 8,
+        "peak_K": 430.23307524116643,
+        "wall_s": 2.3
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 429.73909517447817,
+        "wall_s": 1.13
+       },
+       "holds": true
+      },
+      "leak": {
+       "s_star": 4.152676259831866,
+       "above": {
+        "status": "runaway",
+        "picard_it": 544,
+        "iterations": 9,
+        "peak_K": 430.8667379771565,
+        "wall_s": 2.97
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 429.64617638237956,
+        "wall_s": 1.15
+       },
+       "holds": true
+      },
+      "slope": {
+       "s_star": 4.152954722608325,
+       "above": {
+        "status": "runaway",
+        "picard_it": 387,
+        "iterations": 8,
+        "peak_K": 430.3365573890948,
+        "wall_s": 2.31
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 429.8010430813774,
+        "wall_s": 1.13
+       },
+       "holds": true
+      }
+     }
+    },
+    "k3": {
+     "s_lo": 4.437989591077582,
+     "s_hi": 4.438301456547537,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 564,
+      "iterations": 9,
+      "peak_K": 427.9694804982737,
+      "wall_s": 2.95
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 14,
+      "peak_K": 427.24262324920375,
+      "wall_s": 1.37
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true,
+     "g101_sets": {
+      "perron": {
+       "s_star": 4.394716139771593,
+       "above": {
+        "status": "runaway",
+        "picard_it": 513,
+        "iterations": 9,
+        "peak_K": 428.646799704725,
+        "wall_s": 2.8
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 426.8484704928836,
+        "wall_s": 1.18
+       },
+       "holds": true
+      },
+      "hot": {
+       "s_star": 4.406519288698043,
+       "above": {
+        "status": "runaway",
+        "picard_it": 503,
+        "iterations": 9,
+        "peak_K": 429.00484665075544,
+        "wall_s": 2.81
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 426.86240117856636,
+        "wall_s": 1.27
+       },
+       "holds": true
+      },
+      "leak": {
+       "s_star": 4.394716139771593,
+       "above": {
+        "status": "runaway",
+        "picard_it": 513,
+        "iterations": 9,
+        "peak_K": 428.646799704725,
+        "wall_s": 2.76
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 426.8484704928836,
+        "wall_s": 0.85
+       },
+       "holds": true
+      },
+      "slope": {
+       "s_star": 4.394716139771593,
+       "above": {
+        "status": "runaway",
+        "picard_it": 513,
+        "iterations": 9,
+        "peak_K": 428.646799704725,
+        "wall_s": 2.06
+       },
+       "below": {
+        "status": "converged",
+        "picard_it": 0,
+        "iterations": 12,
+        "peak_K": 426.8484704928836,
+        "wall_s": 0.76
+       },
+       "holds": true
+      }
+     }
+    }
+   },
+   "done": true
+  },
+  "asap7_lvt:ss": {
+   "recorded_from": "gates/g103/runs/main/asap7_lvt/ss/margin.json",
+   "inputs": {
+    "placement": "/b/asap7/asap7-ibex/inst_loc.csv",
+    "sha256": {
+     "gates/runaway_audit/audit.py": "c7649dce19e9dc1d7acb77de3105ddca1860aaaa59e01bd35370047f180b02ed",
+     "gates/g95/sweep.py": "30212662316b609f6c57de1bd289bfdf798754fed3c8f48829c75b41a2718e90",
+     "opentsense/thermal/runaway.py": "11fd9f726e54fbfab7e44091a14d737644ea7d4fab4d538a186235998b9a2209",
+     "opentsense/thermal/electrothermal.py": "6ee0ffc05d1a70bceda1da09a9dc32520a3459e06407aa2ae2d3d486370571b7",
+     "gates/g103/runs/main/asap7_lvt/ss/margin.json": "dea48534b902d3e4b6400fe8cc28762bbb4019f4ebed19229e04dfafdf9f1104",
+     "configs/stacks/g92b_asap7.yaml": "e79bfdba3f5b8bc7ba3f5551580dd39fde47f6376ca5e959b52b6967b28ae922",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k0_100.txt": "98587a83d6dc7c1c40513279fe33bab2f2b82098d82295f167c21fc6adc2ecd5",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k0_125.txt": "a294995ec2cbc7b0a17c00237120d9d3543e5e88d41a17cbdfb8fae447a1d3ef",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k0_25.txt": "7dd7c448460f4eb9359079a1f60944a8d84606cffe249a7f4ad453ebd2b722ee",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k0_50.txt": "629b5c5b8bba5fe24b62fc5de70c4c30feac56d5ebd12c0c7f97cfc297992671",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k0_75.txt": "2a3cbfd9a0af13a5618ab9125dfbb03dbd30b7f8f59ef6aa537daac0a65a53a7",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k1_100.txt": "45c5fd68fcfd530716fc2addd304e3bd16e9ebe21d61c232369d33979b0edf1c",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k1_125.txt": "9c0b8b647e789aa658425b1ab8199eb8b831dcdd08c0e5f449e56a55d44fc664",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k1_25.txt": "ab0dc0fe8b2cc459171417a0cf211fec7e9da26605ee0944a7ebfe27e4fbc3d9",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k1_50.txt": "56b4b59720be1c92bac78331eee7daf1155623b7f9cd2616c9545f199962626f",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k1_75.txt": "aaebbfce9965eb2f35c3ad646a45e89988ba75cb97064186bc53bc4afc36159e",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k2_100.txt": "6efd05accb4e174a7a7ca977094ec6fd4608c4545021103c7718f173090b10a7",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k2_125.txt": "8403026138c6fc86cb88989211f4903ab12392173d0f25ec4061e62e57c0966e",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k2_25.txt": "7aada88d57da5b4218daa22a0e4209a04b85102c48b431b29b0302d913ea40e0",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k2_50.txt": "6072a2a3b1b89e87bd0ebfa39e09870650e3997e044a2c6bf7e1db76d91ce474",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k2_75.txt": "10d66e95ce6022f03e922c82e9b4823ff2e5cb08057c78f4ae9f9994d41b215a",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k3_100.txt": "021a1d8452a71bd36d3e3db6549031b94a568e4f8bcf5274d4a74b210ad061b2",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k3_125.txt": "bdb5489c4587e61a09437ccaed14a90c48adac32ea865ec05e3a7d90493aa961",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k3_25.txt": "871a630d934f29652b8f8f08e487e798597b3970d99d7ec99bb769d3672a9708",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k3_50.txt": "be824d4f6a6669289c223c10fc64ec3c1fe22493d2719b6471078f9a1c9faeb5",
+     "gates/g103/runs/main/asap7_lvt/ss/power/k3_75.txt": "b0b46ccd1aa103f91fdc2cd1528534c1e798cf4ff317280acaeae7f87fba717c"
+    }
+   },
+   "operator_s": 13.5,
+   "R_min": 4686.425012032207,
+   "windows": {
+    "k0": {
+     "s_lo": 6.250704310286933,
+     "s_hi": 6.251143558463898,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 699,
+      "iterations": 9,
+      "peak_K": 427.4714693763835,
+      "wall_s": 2.15
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 13,
+      "peak_K": 427.0564183195671,
+      "wall_s": 0.82
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k1": {
+     "s_lo": 5.685795818437888,
+     "s_hi": 5.6861953694842775,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 647,
+      "iterations": 9,
+      "peak_K": 430.8758297170482,
+      "wall_s": 2.31
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 13,
+      "peak_K": 430.4255925667335,
+      "wall_s": 0.74
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k2": {
+     "s_lo": 5.8130531908544585,
+     "s_hi": 5.813461684504124,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 561,
+      "iterations": 9,
+      "peak_K": 430.23666092549803,
+      "wall_s": 2.19
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 14,
+      "peak_K": 429.5773838349828,
+      "wall_s": 0.96
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k3": {
+     "s_lo": 6.164338438380722,
+     "s_hi": 6.164771617473324,
+     "non_monotone_instances": 0,
+     "at_s_hi": {
+      "status": "runaway",
+      "picard_it": 1596,
+      "iterations": 10,
+      "peak_K": 426.92498000218865,
+      "wall_s": 6.0
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "picard_it": 0,
+      "iterations": 12,
+      "peak_K": 426.52228532441967,
+      "wall_s": 0.69
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    }
+   },
+   "done": true
+  },
+  "asap7_lvt:ff": {
+   "recorded_from": "gates/g103/runs/main/asap7_lvt/ff/margin.json",
+   "inputs": {
+    "placement": "/b/asap7/asap7-ibex/inst_loc.csv",
+    "sha256": {
+     "gates/runaway_audit/audit.py": "c7649dce19e9dc1d7acb77de3105ddca1860aaaa59e01bd35370047f180b02ed",
+     "gates/g95/sweep.py": "30212662316b609f6c57de1bd289bfdf798754fed3c8f48829c75b41a2718e90",
+     "opentsense/thermal/runaway.py": "11fd9f726e54fbfab7e44091a14d737644ea7d4fab4d538a186235998b9a2209",
+     "opentsense/thermal/electrothermal.py": "6ee0ffc05d1a70bceda1da09a9dc32520a3459e06407aa2ae2d3d486370571b7",
+     "gates/g103/runs/main/asap7_lvt/ff/margin.json": "1448c7f52e8aa40f7a7d796d65114aa0d6f7db8d597fbc9b2ecc2af97dc0d1e7",
+     "configs/stacks/g92b_asap7.yaml": "e79bfdba3f5b8bc7ba3f5551580dd39fde47f6376ca5e959b52b6967b28ae922",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k0_100.txt": "1eb90eb0db7202fe1a761c53abd5867ef1e0f8ec9d86d08a906b6907f041d874",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k0_125.txt": "7faa28200afac8f584618b40699792be1fb3045abbcccf144f5280581e6ec5c7",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k0_25.txt": "33fbb9e7e0eb3e0c209879b74575398de090531e605b5b6bfbfdee3ea2926bb3",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k0_50.txt": "b9f3fa9ac1da65413bbf580585011569c5e49ca23765c73df1bee70a4b7516b2",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k0_75.txt": "bc27c42b6ac92d95a9c861bd403c0f4fe01835ea02513469ff6cac07209bef75",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k1_100.txt": "1473b123739c1b24dd6a85274ed55876929c07edd115cc5a41ec378866141084",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k1_125.txt": "fff195bb0251939f33f6cd97adf0378d0bdcbbb4da575f65113847bbc40148b1",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k1_25.txt": "6fcbb9feb11d744d3a18cbd29f5dc17cdbf67b79b2c9f9fa668cd26e0a7b70be",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k1_50.txt": "266c75c1e89fd927e7cdb0992e6266534c606014ebb0ba60c414745d75faf9f7",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k1_75.txt": "8634b16a8e9f0d73a2cb8f1bbb0f045602f89f173c243666a5452b1cc1a41bad",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k2_100.txt": "50f8162b7c54f7f70faadd3bdd4a77beec80b6a8948c2bbd4e9a0c55598ef605",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k2_125.txt": "c93342a64eae1523712122a22e8ee12ce3d09453ca10be8039e690432f7ffd6c",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k2_25.txt": "b9482187c3222965c72f2bbbd1b11da67c37f0734c6a05a2f93b2ad6b4ded90c",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k2_50.txt": "9ce026b591e67455ed38d0d5dcce16961cc5a740248ee5485a1181c7fa6eb88c",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k2_75.txt": "379d4bc9fac5b933ac7e1ce3da93b995e37cb3bdeeb1ecdf49dad6098a6db185",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k3_100.txt": "331a5214015c63735bff53063fbe719647186a5bcc431bf3ae5efb182636da09",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k3_125.txt": "8670b2f317f24d3ca5f3f7209072e8550f2cc80854ff726d1ebf59a003dbaf94",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k3_25.txt": "2e0f6ed6c0aa37aa5451a5ba936208cf2297b3f413e8c6a88a309fcc93503a5c",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k3_50.txt": "a5f1c9178bbd1da428c1d7c3d27527c7e8caf01917c2b10c8440df362b440171",
+     "gates/g103/runs/main/asap7_lvt/ff/power/k3_75.txt": "0215861dae4afd952034525d52f83c692a0c21e5c3085735be43ec9207da6c09"
+    }
+   },
+   "operator_s": 13.4,
+   "R_min": 4686.425012032207,
+   "windows": {
+    "k0": {
+     "s_lo": 3.374413051746276,
+     "s_hi": 3.3746501777896354,
+     "non_monotone_instances": 1666,
+     "at_s_hi": {
+      "status": "runaway",
+      "envelope": [
+       "runaway",
+       "runaway"
+      ],
+      "wall_s": 11.8
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "envelope": [
+       "converged",
+       "converged"
+      ],
+      "wall_s": 1.72
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k1": {
+     "s_lo": 3.0759273537060934,
+     "s_hi": 3.076143504625338,
+     "non_monotone_instances": 1666,
+     "at_s_hi": {
+      "status": "runaway",
+      "envelope": [
+       "runaway",
+       "runaway"
+      ],
+      "wall_s": 21.64
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "envelope": [
+       "converged",
+       "converged"
+      ],
+      "wall_s": 2.79
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k2": {
+     "s_lo": 3.1445506452796104,
+     "s_hi": 3.144771618480349,
+     "non_monotone_instances": 1666,
+     "at_s_hi": {
+      "status": "runaway",
+      "envelope": [
+       "runaway",
+       "runaway"
+      ],
+      "wall_s": 13.62
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "envelope": [
+       "converged",
+       "converged"
+      ],
+      "wall_s": 3.03
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    },
+    "k3": {
+     "s_lo": 3.3238159143770623,
+     "s_hi": 3.3240494848690396,
+     "non_monotone_instances": 1666,
+     "at_s_hi": {
+      "status": "runaway",
+      "envelope": [
+       "runaway",
+       "runaway"
+      ],
+      "wall_s": 9.68
+     },
+     "at_s_lo": {
+      "status": "converged",
+      "envelope": [
+       "converged",
+       "converged"
+      ],
+      "wall_s": 2.59
+     },
+     "s_hi_holds": true,
+     "s_lo_certified": true
+    }
+   },
+   "done": true
+  }
+ },
+ "requested": [
+  "ihp:tt",
+  "ihp:ss",
+  "ihp:ff",
+  "asap7:tt",
+  "asap7:ss",
+  "asap7:ff",
+  "asap7_lvt:tt",
+  "asap7_lvt:ss",
+  "asap7_lvt:ff"
+ ],
+ "complete": true
+}
