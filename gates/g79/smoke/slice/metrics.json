@@ -1,0 +1,17 @@
+{
+  "stage": "slice",
+  "image_id": "sha256:76e2685256694157a3b1937008377de4f8554be7b712776f88dbbde878716e98",
+  "returncode": 0,
+  "wall_s": 0.48400000000037835,
+  "machine_total_bytes": 16876888064,
+  "machine_start_free_bytes": 6732902400,
+  "machine_min_free_bytes": 6731665408,
+  "machine_peak_used_bytes": 10145222656,
+  "ram_samples": 6,
+  "container_cap_mib": 2500,
+  "inputs_sha256": {
+    "gates/g79/smoke/obj/simv": "f922f0486970435de6b2a185681017365892858219924ed2275d7b020e2fb181",
+    "gates/g81b/runs/main/sw/crc32.hex": "0ece44f4a9421d7c2b8a88a380f0619ba91f785b8ac6bc617044f166e2876850",
+    "gates/g81b/runs/main/crc32/run.log": "80912bad10418b765898ce05b6af51b1bb1f1ac9e31711777314d81f81760988"
+  }
+}
