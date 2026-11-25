@@ -1,0 +1,68 @@
+{
+  "ok": true,
+  "full_rows_rtl": 983,
+  "full_rows_gate": 983,
+  "identical_row_indices": true,
+  "signal_order": [
+    "instr_req",
+    "data_req",
+    "data_we",
+    "core_sleep"
+  ],
+  "sampled_windows": [
+    {
+      "input": "w000.vcd",
+      "sha256": "8f9539a611d32a2afdf7374a762b4c28139777f16c645ce1ecf56a291b35e19c",
+      "start_cycle": 23000,
+      "row_end_cycle": 24000,
+      "gate_falling_edges": 1000,
+      "gate_transitions_without_first_edge": [
+        437,
+        188,
+        62,
+        0
+      ],
+      "rtl_transitions": [
+        437,
+        188,
+        62,
+        0
+      ],
+      "rtl_minus_gate": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "gate_regional_toggles_sum": 2072386,
+      "ok": true
+    },
+    {
+      "input": "w010.vcd",
+      "sha256": "566b8124a72e3fc5932dca5a03c7a6ba2d069de512efc47cf5312ff3eb15eca8",
+      "start_cycle": 491000,
+      "row_end_cycle": 492000,
+      "gate_falling_edges": 1000,
+      "gate_transitions_without_first_edge": [
+        432,
+        187,
+        63,
+        0
+      ],
+      "rtl_transitions": [
+        433,
+        188,
+        64,
+        0
+      ],
+      "rtl_minus_gate": [
+        1,
+        1,
+        1,
+        0
+      ],
+      "gate_regional_toggles_sum": 2057235,
+      "ok": true
+    }
+  ]
+}
