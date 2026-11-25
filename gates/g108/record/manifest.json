@@ -1,0 +1,58 @@
+{
+ "gate": "G108",
+ "key": {
+  "case_set_sha256": "f5941ad74a0d62f256c052607607be24985eaaa3c43fffe3fa10514a677f6e7c",
+  "profile": "ring_osc",
+  "salt": 107,
+  "chips": [
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40
+  ],
+  "offsets": {
+   "indep": null,
+   "corr0.8_3mm": [
+    0.8,
+    3.0
+   ]
+  },
+  "inputs_sha256": {
+   "configs/stacks/g71_3d.yaml": "2ec9d132844bcb400620afe20913fd5aaa66d2d48f767fcfbe9d8ba79330ee45",
+   "gates/g104/dry/sites.py": "79229dab0ac1cce6bbf42884deecad8b4c869d73c0f804f2192ed3ce0c07fe3a",
+   "gates/g107/dry/budget.json": "2bc6be7a907ebe9290d6ebf42ad312e28d9e7f5e6eb0d6ae944e860f4821aa29",
+   "gates/g107/dry/budget.py": "12de26b562d9cdb290e7ec53b4d63e24da4d8e3a8fe2a5453fa086d77bea86ee",
+   "gates/g108/dry/keepout.json": "33e9c84efa9ecea22697afc81ce3841ba4bf4236120620c0bc1911cf098d02b5",
+   "gates/g108/dry/keepout.py": "f7bbe5ed6555e297e629628cda990edbe9dfc593f305b20a3fb35dc9265ee7aa",
+   "gates/g108/dry/launch.ps1": "ac2e49701656bf813192f720580de8e4e912134f14424fb26b7f62d87098b311",
+   "gates/g108/run.py": "da615c130d6c9cee40440c03e300b682b9232dd4ec5b8cc568274f4c563645bf",
+   "gates/g71/inputs/maps.npz": "8979074660cf9a9a6bb5d966857c0c3f8780bd9f91f59b3c4aa894d8280f7644",
+   "gates/g84/dry/cases.npz": "ef8d193c8107f5f77aa2e0f4650d80c70a0392522f57932ddd29362c15a3389e",
+   "gates/g84/make_cases.py": "4f90c91bb738506ca3365b0b2841f397425ba2af86f3c02b69230dea12b6a683",
+   "opentsense/bench/cases.py": "c5b0963fbfce35463c09ee700008fbaf4ad65cc66473014a32340038f2921951",
+   "opentsense/bench/estimators.py": "3baecb57f1488c38b7fa1308fd25cc364f82d05d2019849de0baf324f9f19c61",
+   "opentsense/bench/metrics.py": "9b5717afc9794079fde9db35021104b02bb6cffef8eea4ff478be16176e2c501",
+   "opentsense/bench/readings.py": "fef54bac2a0a53055057ebadbb8f228f535372b5cfb3035fb3b66f71c0f08ed0",
+   "opentsense/bench/score.py": "5e5c1629be61e9d08decd4a0b16f21e356a2cdeeb1283965b21439f2d98e6b45",
+   "opentsense/estimate/field_model.py": "6ef969702a49b21ea9f46a7cd32456715995cdc5f54ac982a0f78d0c75beb300",
+   "opentsense/estimate/placement.py": "23ad4faca3f7964ce1432cacf39d5bc980aafac209ec96702b27a6c6004944fc",
+   "opentsense/estimate/regularise.py": "8907d30fec7a6a7eafe8b60fb105a55bbaa0ab936d7697f06ae50fd9a33bf6e8",
+   "opentsense/estimate/sensor.py": "c34e047f8f4f73ffc9636dff74d6c696e9aae4047fa344272e458b0094113b07",
+   "opentsense/estimate/sensor_circuit.py": "ce9156a90416a64b51d6d4e860c213f2b6d1a8f4d311d0041862e3eb1b0aa4a7",
+   "opentsense/manifest.py": "01b2e21768af404d400b7332bda5acd49aad96bb0b8ce60919fd2974ecbfe7f4",
+   "opentsense/stack/model.py": "93b1e2dc87bae30a0bbfcfc80ee24384bd70e672fb3d999e96d7eedee81847e8"
+  },
+  "runtime": {
+   "python": "3.10.0",
+   "numpy": "2.2.6",
+   "scipy": "1.15.3",
+   "openblas_threads": "2"
+  }
+ }
+}
