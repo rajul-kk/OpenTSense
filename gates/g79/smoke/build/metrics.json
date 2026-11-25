@@ -1,0 +1,19 @@
+{
+  "stage": "build",
+  "image_id": "sha256:76e2685256694157a3b1937008377de4f8554be7b712776f88dbbde878716e98",
+  "returncode": 0,
+  "wall_s": 19.17199999999866,
+  "machine_total_bytes": 16876888064,
+  "machine_start_free_bytes": 7498383360,
+  "machine_min_free_bytes": 6725984256,
+  "machine_peak_used_bytes": 10150903808,
+  "ram_samples": 175,
+  "container_cap_mib": 2500,
+  "inputs_sha256": {
+    "gates/g79/smoke/build.sh": "5ce7b08d2595c591b83ec99fe08a297a3ec152710f30e5e26a68bfbc54bfcc0f",
+    "gates/g79/smoke/regions.vh": "7707bfca802b484670d506e5dbc7c741da8dafe467228ba76a587b394b8fff49",
+    "gates/g79/smoke/source.json": "fe764aaee6b4cd76ff12fd40a169a99dafc47324b8fd043df9d1c1831abbcbf3",
+    "gates/g81b/tb/ibex_tb_g81b.v": "6507d8e7fc25c6661b0319604c48a9cdc263beef5adcfa17426a760cb53184e4",
+    "gates/g81b/tb/main.cpp": "048839c9e07d9164cedb785ca3ae81174368ce2d411833823879d1c1db502c4f"
+  }
+}

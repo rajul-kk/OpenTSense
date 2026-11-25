@@ -1,0 +1,166 @@
+Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_pkg.sv:9:9: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    9 | package ibex_pkg;
+      |         ^~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.032
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_alu.sv:9:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    9 | module ibex_alu #(
+      |        ^~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_compressed_decoder.sv:16:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   16 | module ibex_compressed_decoder (
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_controller.sv:12:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   12 | module ibex_controller #(
+      |        ^~~~~~~~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_core.sv:15:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   15 | module ibex_core #(
+      |        ^~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_counter.sv:1:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    1 | module ibex_counter #(
+      |        ^~~~~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_cs_registers.sv:15:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   15 | module ibex_cs_registers #(
+      |        ^~~~~~~~~~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_csr.sv:11:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   11 | module ibex_csr #(
+      |        ^~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_decoder.sv:16:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   16 | module ibex_decoder #(
+      |        ^~~~~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_ex_block.sv:11:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   11 | module ibex_ex_block #(
+      |        ^~~~~~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_fetch_fifo.sv:15:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   15 | module ibex_fetch_fifo #(
+      |        ^~~~~~~~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_id_stage.sv:19:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   19 | module ibex_id_stage #(
+      |        ^~~~~~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_if_stage.sv:15:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   15 | module ibex_if_stage #(
+      |        ^~~~~~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_load_store_unit.sv:16:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   16 | module ibex_load_store_unit
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_multdiv_fast.sv:17:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   17 | module ibex_multdiv_fast #(
+      |        ^~~~~~~~~~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_multdiv_slow.sv:14:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   14 | module ibex_multdiv_slow
+      |        ^~~~~~~~~~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_pmp.sv:5:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    5 | module ibex_pmp #(
+      |        ^~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_prefetch_buffer.sv:12:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   12 | module ibex_prefetch_buffer #(
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_register_file_ff.sv:13:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   13 | module ibex_register_file_ff #(
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/ibex_wb_stage.sv:16:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   16 | module ibex_wb_stage #(
+      |        ^~~~~~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-TIMESCALEMOD: /smoke/source/designs/src/ibex_sv/syn/rtl/prim_clock_gating.v:7:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    7 | module prim_clock_gating (
+      |        ^~~~~~~~~~~~~~~~~
+                       /repo/gates/g81b/tb/ibex_tb_g81b.v:12:8: ... Location of module with timescale
+   12 | module tb(output [31:0] cyc_o);       
+      |        ^~
+%Warning-WIDTHTRUNC: /smoke/regions.vh:11:7: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'tl_fd' generates 32 bits.
+                                           : ... note: In instance 'tb'
+   11 |   if (!tl_fd) $fatal(1, "could not open rtl_activity.csv");
+      |       ^
+                     /repo/gates/g81b/tb/ibex_tb_g81b.v:57:1: ... note: In file included from 'ibex_tb_g81b.v'
+%Warning-LATCH: /smoke/source/designs/src/ibex_sv/syn/rtl/prim_clock_gating.v:16:3: Latch inferred for signal 'tb.dut.core_clock_gate_i.en_latch' (not all control paths of combinational always assign a value)
+                                                                                  : ... Suggest use of always_latch for intentional latches
+   16 |   always @* begin
+      |   ^~~~~~
+make: Entering directory '/smoke/obj'
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -Os  -c -o main.o /repo/gates/g81b/tb/main.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -c -o verilated.o /usr/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -c -o verilated_vcd_c.o /usr/share/verilator/include/verilated_vcd_c.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -c -o verilated_timing.o /usr/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -c -o verilated_threads.o /usr/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -x c++-header Vtb__pch.h -o Vtb__pch.h.fast.gch
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -x c++-header Vtb__pch.h -o Vtb__pch.h.slow.gch
+echo "" > Vtb__ALL.verilator_deplist.tmp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -include Vtb__pch.h.fast -c -o Vtb.o Vtb.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -include Vtb__pch.h.fast -c -o Vtb___024root__DepSet_hfe20aad3__0.o Vtb___024root__DepSet_hfe20aad3__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -include Vtb__pch.h.fast -c -o Vtb___024root__DepSet_ha183790c__0.o Vtb___024root__DepSet_ha183790c__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -include Vtb__pch.h.fast -c -o Vtb___024root__DepSet_ha183790c__1.o Vtb___024root__DepSet_ha183790c__1.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -include Vtb__pch.h.fast -c -o Vtb__Trace__0.o Vtb__Trace__0.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -include Vtb__pch.h.slow -c -o Vtb__ConstPool_0.o Vtb__ConstPool_0.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -include Vtb__pch.h.slow -c -o Vtb___024root__Slow.o Vtb___024root__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -include Vtb__pch.h.slow -c -o Vtb___024root__DepSet_hfe20aad3__0__Slow.o Vtb___024root__DepSet_hfe20aad3__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -include Vtb__pch.h.slow -c -o Vtb___024root__DepSet_ha183790c__0__Slow.o Vtb___024root__DepSet_ha183790c__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -include Vtb__pch.h.slow -c -o Vtb__Syms.o Vtb__Syms.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -include Vtb__pch.h.slow -c -o Vtb__Trace__0__Slow.o Vtb__Trace__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -fcoroutines -include Vtb__pch.h.slow -c -o Vtb__TraceDecls__0__Slow.o Vtb__TraceDecls__0__Slow.cpp
+g++    main.o verilated.o verilated_vcd_c.o verilated_timing.o verilated_threads.o Vtb__ALL.a    -pthread -lpthread -latomic   -o simv
+rm Vtb__ALL.verilator_deplist.tmp
+make: Leaving directory '/smoke/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 6.355 MB sources in 30 modules, into 1.664 MB in 12 C++ files needing 0.001 MB
+- Verilator: Walltime 16.964 s (elab=0.043, cvt=0.195, bld=16.232); cpu 0.353 s on 2 threads; alloced 31.340 MB
+BUILD_COMPLETE
