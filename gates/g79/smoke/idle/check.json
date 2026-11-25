@@ -1,0 +1,15 @@
+{
+  "ok": false,
+  "checks": {
+    "docker_success": true,
+    "harness_end": true,
+    "timeline_rows": true,
+    "result_and_cycles": false,
+    "markers": false
+  },
+  "rtl": "RESULT result=dead0002 done=1 done_cycle=1666 start=-1 stop=-1 cycles=1672",
+  "gate_level": "RESULT result=9c2704d8 done=1 done_cycle=370959 start=-1 stop=-1 cycles=370965",
+  "markers_checked": 0,
+  "cycles_per_wall_s": null,
+  "wall_s_per_0p5ms_slot": null
+}

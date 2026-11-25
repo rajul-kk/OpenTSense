@@ -1,0 +1,4 @@
+             1486000: Illegal instruction (hart 0) at PC 0x00000110: 0x3047a073
+RESULT result=dead0002 done=1 done_cycle=1666 start=-1 stop=-1 cycles=1672
+- /repo/gates/g81b/tb/ibex_tb_g81b.v:62: Verilog $finish
+WINDOWS written=0 requested=0 truncated=0

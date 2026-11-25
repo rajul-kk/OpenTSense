@@ -1,0 +1,17 @@
+{
+  "stage": "idle",
+  "image_id": "sha256:76e2685256694157a3b1937008377de4f8554be7b712776f88dbbde878716e98",
+  "returncode": 0,
+  "wall_s": 0.3440000000009604,
+  "machine_total_bytes": 16876888064,
+  "machine_start_free_bytes": 7485267968,
+  "machine_min_free_bytes": 7453724672,
+  "machine_peak_used_bytes": 9423163392,
+  "ram_samples": 5,
+  "container_cap_mib": 2500,
+  "inputs_sha256": {
+    "gates/g79/smoke/obj/simv": "f922f0486970435de6b2a185681017365892858219924ed2275d7b020e2fb181",
+    "gates/g81b/runs/main/sw/idle.hex": "76db504e55a4859fb3750767a1c2b656c899dc1424720dcde7ee2fa70e3c368f",
+    "gates/g81b/runs/main/idle/run.log": "22e4d60c19272a4f709e500a1abf10ea789b3ee4fce9a17624431c863794ee6b"
+  }
+}
