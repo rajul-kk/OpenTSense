@@ -66,11 +66,18 @@ readings only, both arms). Either fallback keeps the comparison paired; the choi
 
 **Decisions (20 Nov 2026, made by the agent for the student at the student's request; `fyp/goals.md` decision 15).**
 - **Truth solver:** 3D-ICE 4.0, as proposed above. The PACT known-operator control and the 3D-ICE/PACT site comparison run on a bounded scope (one cal program, three noise seeds, at most 2 h of heavy compute), reported only.
-- **Activity channel: per-die rail telemetry at 2%.** Each die's total power for the completed slot, observed with Gaussian error of standard deviation 2% of that total (G67's figure, a synthetic setting, not a measured rail sensor). The error is drawn from its own child stream (L56) and paired across arms. It says nothing about the split of power within a die.
+- **Activity channel: per-die rail telemetry at 2%.** Each die's total power for the completed slot, observed with Gaussian error of standard deviation 2% of that total (G67's figure, a synthetic setting, not a measured rail sensor). The error is drawn from its own child stream (L56) and paired across arms. It says nothing about the split of power within a die. The estimators are told a fixed error, 2% of the train
+  mean die total, never one computed from the true total (Sol G79-D1). The power basis keeps each die-total
+  direction exactly (`PowerPrior.fit(..., keep=rail rows)`), so the rail observes what the basis represents (G79-D2).
   - The first choice was an on-chip power-proxy meter in the style of APOLLO (Xie et al., MICRO 2021) on longer RTL-simulated workloads. It depended on a smoke check, which failed on 20 Nov: the pinned RTL Ibex matched the gate-level CRC32 and EDN runs exactly, but the idle program trapped on an illegal instruction and returned a different checksum (`smoke/README.md`, `smoke/idle/check.json`).
   - The meter is not used unless a diagnosis of that trap passes a new smoke check before the dry run.
 - **Thermal truth** is the draft's causal sequence of ordered G81b windows with the declared cycle-to-time mapping, solved by 3D-ICE.
-- **Arms.** Gated: identified-plant Kalman against the quasi-static Bayesian estimator, with the same channel and sensors. Reported only: temperature-only, and a BPI-style baseline (Reda and Belouchrani, DATE 2017; Reda, Dev and Belouchrani, IEEE Sensors J. 2018) with one observed temperature per modelled unit and total power from a synthetic 2% rail model. It is never scored as if it used the sparse bins.
+- **Arms.** Gated: identified-plant Kalman against the quasi-static Bayesian estimator, with the same channel and sensors. Reported only: temperature-only, and a BPI-style baseline (Reda and Belouchrani, DATE 2017; Reda, Dev and Belouchrani, IEEE Sensors J. 2018) with one observed temperature per modelled unit and total power from a synthetic 2% rail model. It is never scored as if it used the sparse bins. Its NMF starts from steady-state temperatures, BPISS style (Said et al., IGSC 2018). The DBSCAN start of Elshamy et al. (arXiv 2410.21261) is not added: their 0.9–3.5% errors come from noise-free HotSpot runs on 2D floorplans with one sensor per unit, a setting this gate does not have.
+- **Calibrated per arm on cal groups only:** the Kalman arm's mean-reversion time τ, and the quasi-static arm's
+  temperature error inflated for steady-model error (G44's `qs(Y, infl)`). With raw sensor noise the quasi-static
+  inverse trusts transient-biased readings over the rail and gets worse when the rail is added
+  (`tests/test_estimate_dynamic.py`), so an uncalibrated quasi-static arm would be a straw man. Estimators:
+  `opentsense/estimate/dynamic.py` (ERA, augmented Kalman with Joseph update, quasi-static inverse).
 - **Time conventions:** 0.5 ms sample period, 0.125 ms substep with a 0.0625 ms check, first-order sensor lag of 1 ms, all frozen after the plumbing dry check.
 - **Decision-rule form:** PASS needs a paired mean reduction of at least 10% in held-out buried-bin power RMSE, with the one-sided 95% lower bound above 0. Whether 10% can fail on the dry data (L76) is checked after the dry noise floor; the threshold may then rise, never fall.
 
