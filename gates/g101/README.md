@@ -8,14 +8,15 @@ k0 to k3) at 358.15 K. They are not held out: G95 ran them, though not these qua
 | Bar | Result |
 |---|---|
 | Validity | G92e reproduction check passed. R > 0 everywhere (min 58 K/W on IHP, 4,686 K/W on ASAP7). D ≥ 0 at all 8,173 recorded calls. |
-| (a) certificate | At every one of the 8,173 Newton iterates, over all bisection probes, the eigvals ρ lies inside the power-iteration Collatz–Wielandt bracket (largest relative gap 0). The runaway verdict is the same, and the bracket closes to 1e-12 in 5 to 13 iterations. Mean time per call: 1.8 to 9 ms, against 424 to 1,032 ms for eigvals (about 110 to 240 times faster). |
+| (a) certificate | At every one of the 8,173 Newton iterates, over all bisection probes, the eigvals ρ lies inside the power-iteration Collatz–Wielandt bracket (largest relative gap 0). The runaway verdict is the same, and the bracket closes to 1e-12 in 5 to 13 iterations. Mean time per call: 1.8 to 9 ms, against 424 to 1,032 ms for eigvals (114 to 269 times faster per call, by kit). |
 | (b) ranking | Scaling the leakage of the 51 top-w tiles by 1.1 lowers s* by 0.91 to 0.98%. That is at least as much as every baseline in all 12 windows. |
 | (c) first-order law | pred = 1 - 1/(1 + 0.1 Σ_S w / Σ w) is within 0.7% of the measured drop in every window (bar 25%), and within 1.1% for the hot set (reported). That is about the resolution of the perturbed bisection, whose drops fall on a grid of about 7e-5 (0.7% of a 0.009 drop). |
 
 ## What it shows
 
-- **Runaway can be certified without an eigendecomposition.** Power iteration gives a two-sided bound, and here it
-  never disagreed with eigvals. Switching `electrothermal.rho` to it is a separate change, for the student to approve.
+- **A power-iteration bracket can stand in for eigvals in the runaway test.** It gives a two-sided bound on rho, and
+  here it always contained eigvals' value and gave the same verdict. Only a lower bound >= 1 certifies runaway by
+  itself (an upper bound >= 1 does not), so the bracket must be closed before deciding. Switching `electrothermal.rho` to it is a separate change, for the student to approve.
 - **On these single-die stacks the left Perron vector adds no ranking information.** The Perron set overlaps the
   top-leakage set in 48 to 51 of 51 tiles and ties it in every window (strictly better in 0 of 12). Bar (b) passes,
   but the test favoured leaky tiles by construction: scaling a set's leakage by 1.1 adds power in proportion to the

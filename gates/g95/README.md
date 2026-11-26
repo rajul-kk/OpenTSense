@@ -29,7 +29,7 @@ point predicts the leakage amplification within 16% while the leakage is at most
 | ASAP7 LVT | 23 to 26 | **4.1 to 4.5** |
 
 At an 85 C ambient, the LVT ibex runs away if its leakage is about four times the library's typical value; RVT at
-about 24 times. The margin shrinks about 7x between 300 K and 358 K on every kit.
+about 24 times. Between 300 K and 358 K the margin shrinks 5.7x to 7.8x, depending on the kit.
 
 ## Reported
 
@@ -43,7 +43,8 @@ about 24 times. The margin shrinks about 7x between 300 K and 358 K on every kit
 
 ## What this means
 
-RQ1: the electrothermal loop's runaway test is reliable on the real temperature-aware libraries, and the useful
+RQ1: on the real temperature-aware libraries the runaway test separated converging from running away at every
+recorded window endpoint (the audit checks those endpoints, not every Newton step), and the useful
 number for a design is its leakage margin. At a hot ambient the LVT ibex has a margin of about 4x, which process
 variation (fast corners leak several times typical) could use up; this motivates corners in later work.
 

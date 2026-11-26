@@ -58,7 +58,8 @@ offset model.
   tolerance, though not gated) and +0.16 +- 0.09 K on the top die; on the buried die, one to four buried sensors
   cost at most +0.03 K (on the top die up to +0.06 K). That a buried sensor or two helps by sharing the offset
   burden is a reading of these numbers, not tested (exploratory).
-- Placement matters more than count: 12 sites placed by the greedy (split 6 + 6) beat the 16-site uniform reference
+- Fewer greedy sites beat more uniform ones (placement and count change together here, so this does not
+  separate their effects): 12 sites placed by the greedy (split 6 + 6) beat the 16-site uniform reference
   by 0.15-0.23 K on the buried die in both offset models. The greedy's buried sites lie inside the CPU die's active
   block (rows 23-36, columns 27-32, against the block's cells 20-39: `sites` in `dry/budget.json`, which the run
   checked equal), and TSV keep-outs may forbid that; untested.
