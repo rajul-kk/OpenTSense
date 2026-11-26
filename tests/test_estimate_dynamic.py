@@ -169,6 +169,8 @@ def test_a_two_percent_rail_total_helps_both_estimators():
                                                           total, std), (Y[:, :1], total, std)):
             with pytest.raises(ValueError, match="finite"):
                 built.run(*args)
+        with pytest.raises(ValueError, match="sigma_T"):
+            est(plant, prior, np.nan, rail_rows=rails).run(Y, total, std)
 
 
 def test_the_prior_fit_keeps_every_rail_total_exact():
@@ -179,6 +181,9 @@ def test_the_prior_fit_keeps_every_rail_total_exact():
     projected = prior.powers(prior.coefficients(P))
     assert np.allclose(projected @ rails.T, P @ rails.T)
     assert np.allclose(prior.D.T @ prior.D, np.eye(4))
+    flat = np.repeat(rng.normal(1.0, 0.1, size=(400, 2)), 4, axis=1)   # uniform within each die: the mean is a sum of rail rows
+    prior = PowerPrior.fit(flat, rank=2, dt=DT, tau=1e-2, keep=rails)
+    assert np.allclose(prior.powers(prior.coefficients(flat)) @ rails.T, flat @ rails.T)
 
 
 def test_the_prior_fit_refuses_a_rank_the_train_variation_lacks():

@@ -66,8 +66,9 @@ def era(h, order, rows=None, rank_tol=1e-10, max_bytes=2 ** 30):
     c = K - 1 - r
     if r < 1 or c < 1 or order > min(r * p, c * m):
         raise ValueError(f"{K} Markov parameters cannot support order {order} with {r} block rows")
-    if 8 * r * p * c * m > max_bytes:
-        raise ValueError(f"a {r * p} x {c * m} Hankel matrix exceeds max_bytes={max_bytes}: shorten h or rows")
+    if 4 * 8 * r * p * c * m > max_bytes:          # H0, H1, U and Vt are each about one Hankel matrix
+        raise ValueError(f"ERA on a {r * p} x {c * m} Hankel matrix needs about four such arrays, over "
+                         f"max_bytes={max_bytes}: shorten h or rows")
     H0 = np.block([[h[i + j] for j in range(c)] for i in range(r)])
     H1 = np.block([[h[i + j + 1] for j in range(c)] for i in range(r)])
     U, s, Vt = np.linalg.svd(H0, full_matrices=False)
@@ -103,9 +104,10 @@ class PowerPrior:
         number more than rank, or if the complement has fewer than the remaining columns above rank_tol."""
         P = np.asarray(P_train, float)
         fixed = np.vstack([P.mean(0)] + ([] if keep is None else [np.asarray(keep, float)])).T
-        Q, R = np.linalg.qr(fixed)
-        if len(Q.T) > rank or np.min(np.abs(np.diag(R))) <= rank_tol * np.max(np.abs(np.diag(R))):
-            raise ValueError(f"the mean and keep rows give {len(Q.T)} directions, dependent or more than rank {rank}")
+        U, sv, _ = np.linalg.svd(fixed, full_matrices=False)
+        Q = U[:, sv > rank_tol * sv[0]]       # their span: a mean that is a sum of rail rows adds no direction
+        if len(Q.T) > rank:
+            raise ValueError(f"the mean and keep rows span {len(Q.T)} directions, more than rank {rank}")
         rest = (P - P.mean(0)) - ((P - P.mean(0)) @ Q) @ Q.T
         _, sv, Vt = np.linalg.svd(rest, full_matrices=False)
         need = rank - len(Q.T)
@@ -139,6 +141,8 @@ def _slots(Y, p, sigma_T, rail, q, rail_std):
     totals (K, q) with standard deviations rail_std (K, q). rail_std is the meter's stated error, not a function
     of the true total. Every value must be finite: one NaN would poison the Kalman state for all later slots."""
     Y = np.asarray(Y, float)
+    if not (np.isfinite(sigma_T) and sigma_T > 0):
+        raise ValueError("sigma_T must be finite and positive")
     if Y.ndim != 2 or Y.shape[1] != p or not np.all(np.isfinite(Y)):
         raise ValueError(f"readings must be a finite (K, {p}) array")
     var_T = np.full(p, float(sigma_T) ** 2)
